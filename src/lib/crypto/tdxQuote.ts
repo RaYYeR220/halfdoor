@@ -8,7 +8,7 @@
 //
 // Signature: @phala/dcap-qvl verifies Intel's DCAP chain (PCK certificate chain to Intel's root CA, CRLs,
 // TCB info, QE identity, quote signature), which is what makes the binding mean something. It needs Intel
-// collateral (public data) from a PCCS, with a bundled snapshot as fallback; any failure is reported as
+// collateral (public data) from a PCCS, with a bundled snapshot (<= 14 days old) as fallback; any failure is reported as
 // `unverified` with a reason, never as verified.
 //
 // Not checked: the enclave's software measurement (MRTD/RTMRs) against a published list (see HONEST_LIMITS).
@@ -124,12 +124,17 @@ export function checkQuoteBinding(att: unknown, nonce: string): QuoteBinding {
   };
 }
 
-/// ---------------------------------------------------------------- Intel signature chain
+//// ---------------------------------------------------------------- Intel signature chain
 
-export type SignatureReasonCode = 'collateral_unavailable' | 'verification_failed' | 'verifier_unavailable';
+export type SignatureReasonCode =
+  | 'quote_malformed'
+  | 'collateral_unavailable'
+  | 'snapshot_too_old'
+  | 'verification_failed'
+  | 'verifier_unavailable';
 export type CheckedIn = 'browser' | 'node';
-/** Where the Intel collateral came from: fetched live from the PCCS, or the bundled snapshot (with its capture date). */
-export type CollateralSource = 'live' | `snapshot ${string}`;
+/** 'live' = collateral fetched from the PCCS now; 'snapshot' = the bundled copy, a weaker fallback (no fresh revocation data). */
+export type SignatureSource = 'live' | 'snapshot';
 
 export type QuoteSignatureResult = {
   status: 'verified' | 'unverified';
@@ -141,8 +146,10 @@ export type QuoteSignatureResult = {
   reason?: string;
   /** Where this check actually ran. */
   checkedIn: CheckedIn;
-  /** Which collateral the chain was checked against (absent when none could be obtained). */
-  collateral?: CollateralSource;
+  /** Which collateral the chain was checked against (absent when none could be used). */
+  source?: SignatureSource;
+  /** Capture time of the snapshot, when source is 'snapshot'. */
+  snapshotCapturedAt?: string;
 };
 
 /** Collateral as @phala/dcap-qvl expects it (public Intel data). */
@@ -154,20 +161,50 @@ export type CollateralSnapshot = { capturedAt: string; source?: string; validUnt
 export type VerifyQuoteOpts = {
   /** Live collateral. Default: the library's fetcher against the public PCCS (CORS-enabled, so it runs in the browser). */
   getCollateral?: (quote: Uint8Array) => Promise<Collateral>;
-  /** Fallback when the live fetch fails. Default: the bundled snapshot (loaded lazily). */
+  /** Fallback when both live attempts fail. Default: the bundled snapshot (loaded lazily). */
   snapshot?: () => Promise<CollateralSnapshot | null>;
   /** Verification time; default now. */
   nowSecs?: number;
-  /** Deadline for the live PCCS fetch before falling back to the snapshot (default 4 s). */
+  /** Deadline per live PCCS attempt (default 8 s; one retry before any fallback). */
   liveTimeoutMs?: number;
 };
 
 export const PCCS_URL = 'https://pccs.phala.network';
-const LIVE_TIMEOUT_MS = 4_000;
+const LIVE_TIMEOUT_MS = 8_000;
+/** Downgrade guard: older snapshots are refused (fail closed) even if Intel's own validity window would still allow them. */
+export const SNAPSHOT_MAX_AGE_DAYS = 14;
 const COLLATERAL_TTL_MS = 60 * 60_000;
 const MAX_REASON = 200;
 
 export const runtimeName = (): CheckedIn => (typeof window !== 'undefined' && typeof document !== 'undefined' ? 'browser' : 'node');
+
+/** AbortSignal.any + AbortSignal.timeout (missing in e.g. iOS 16 Safari; the library needs both for its deadline). */
+export const hasModernAbortSignal = (): boolean =>
+  typeof AbortSignal !== 'undefined' && typeof AbortSignal.any === 'function' && typeof AbortSignal.timeout === 'function';
+
+/**
+ * Runs a collateral fetch with a deadline. Modern runtimes pass it to the library. Older ones run the library
+ * without its own deadline (which would call AbortSignal.any) and enforce it with an AbortController +
+ * setTimeout race instead; the slow request is then ignored rather than cancelled.
+ */
+export function withDeadline<T>(run: (o: { timeoutMs: number }) => Promise<T>, ms: number, modern = hasModernAbortSignal()): Promise<T> {
+  if (modern) return run({ timeoutMs: ms });
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), ms);
+  return new Promise<T>((resolve, reject) => {
+    ac.signal.addEventListener('abort', () => reject(new Error(`Collateral fetch timed out after ${ms} ms`)), { once: true });
+    run({ timeoutMs: 0 }).then(
+      (v) => {
+        clearTimeout(timer);
+        resolve(v);
+      },
+      (e) => {
+        clearTimeout(timer);
+        reject(e);
+      },
+    );
+  });
+}
 
 type Dcap = typeof import('@phala/dcap-qvl');
 let dcap: Promise<Dcap> | null = null;
@@ -206,56 +243,73 @@ export function clearCollateralCache(): void {
 const msg = (e: unknown) => (e instanceof Error ? e.message : String(e)).slice(0, MAX_REASON);
 
 /**
- * Full DCAP check of the quote. Live collateral first; only if it cannot be FETCHED is the bundled snapshot
- * used (still a full chain check, labelled with its date). A verification failure never falls back.
+ * Full DCAP check of the quote. Live collateral first (8 s, one retry); only if it cannot be FETCHED is the
+ * bundled snapshot used, and only while it is at most 14 days old (still a full chain check, labelled as the
+ * weaker 'snapshot' source). A verification failure never falls back.
  */
 export async function verifyQuoteSignature(quote: Uint8Array, opts: VerifyQuoteOpts = {}): Promise<QuoteSignatureResult> {
   const checkedIn = runtimeName();
+  const unverified = (reasonCode: SignatureReasonCode, reason: string, extra: Partial<QuoteSignatureResult> = {}): QuoteSignatureResult => ({
+    status: 'unverified', reasonCode, reason: reason.slice(0, MAX_REASON), checkedIn, ...extra,
+  });
+
   let lib: Dcap;
   try {
     lib = await loadDcap();
   } catch (e) {
-    return { status: 'unverified', reasonCode: 'verifier_unavailable', reason: msg(e), checkedIn };
+    return unverified('verifier_unavailable', msg(e));
   }
 
+  let parsed: ReturnType<Dcap['Quote']['parse']>;
+  let machine: string;
+  try {
+    parsed = lib.Quote.parse(quote);
+    machine = bytesToHex(sha256(parsed.rawCertChain()));
+  } catch (e) {
+    return unverified('quote_malformed', msg(e));
+  }
+
+  const now = opts.nowSecs ?? Math.floor(Date.now() / 1000);
   let collateral: Collateral;
-  let source: CollateralSource;
-  try {
-    const parsed = lib.Quote.parse(quote);
-    const machine = bytesToHex(sha256(parsed.rawCertChain()));
-    const hit = collateralCache.get(machine);
-    if (hit && Date.now() - hit.at < COLLATERAL_TTL_MS) {
-      collateral = hit.collateral;
-      source = 'live';
-    } else {
-      const live =
-        opts.getCollateral ??
-        (async (q: Uint8Array) =>
-          (await lib.getCollateral(PCCS_URL, q, { timeoutMs: opts.liveTimeoutMs ?? LIVE_TIMEOUT_MS })) as unknown as Collateral);
+  let source: SignatureSource = 'live';
+  let snapshotCapturedAt: string | undefined;
+  const hit = collateralCache.get(machine);
+  if (hit && Date.now() - hit.at < COLLATERAL_TTL_MS) {
+    collateral = hit.collateral;
+  } else {
+    const fetchLive =
+      opts.getCollateral ??
+      ((q: Uint8Array) =>
+        withDeadline((o) => lib.getCollateral(PCCS_URL, q, o), opts.liveTimeoutMs ?? LIVE_TIMEOUT_MS) as unknown as Promise<Collateral>);
+    try {
+      collateral = await fetchLive(quote).catch(() => fetchLive(quote));
+      collateralCache.set(machine, { at: Date.now(), collateral });
+    } catch (liveErr) {
+      const live = `live PCCS: ${msg(liveErr)}`;
+      let platform = '?';
       try {
-        collateral = await live(quote);
-        source = 'live';
-        collateralCache.set(machine, { at: Date.now(), collateral });
-      } catch (liveErr) {
-        const snap = await (opts.snapshot ?? loadCollateralSnapshot)().catch(() => null);
-        const platform = `${bytesToHex(lib.intel.getFmspc(parsed)).toUpperCase()}:${lib.intel.getCa(parsed)}`;
-        const entry = snap?.entries[platform];
-        if (!snap || !entry) {
-          throw new Error(`live PCCS: ${msg(liveErr)}; snapshot: ${snap ? `no entry for ${platform}` : 'unavailable'}`);
-        }
-        collateral = entry;
-        source = `snapshot ${snap.capturedAt.slice(0, 10)}`;
+        platform = `${bytesToHex(lib.intel.getFmspc(parsed)).toUpperCase()}:${lib.intel.getCa(parsed)}`;
+      } catch {
+        /* no FMSPC: no snapshot entry can match */
       }
+      const snap = await (opts.snapshot ?? loadCollateralSnapshot)().catch(() => null);
+      const entry = snap?.entries[platform];
+      if (!snap || !entry) return unverified('collateral_unavailable', `${live}; snapshot: ${snap ? `no entry for ${platform}` : 'unavailable'}`);
+      const ageSecs = now - Date.parse(snap.capturedAt) / 1000;
+      if (!(ageSecs <= SNAPSHOT_MAX_AGE_DAYS * 86400)) {
+        return unverified('snapshot_too_old', `${live}; snapshot from ${snap.capturedAt.slice(0, 10)} is older than ${SNAPSHOT_MAX_AGE_DAYS} days`);
+      }
+      collateral = entry;
+      source = 'snapshot';
+      snapshotCapturedAt = snap.capturedAt;
     }
-  } catch (e) {
-    return { status: 'unverified', reasonCode: 'collateral_unavailable', reason: msg(e), checkedIn };
   }
 
+  const label: Partial<QuoteSignatureResult> = snapshotCapturedAt ? { source, snapshotCapturedAt } : { source };
   try {
-    const now = opts.nowSecs ?? Math.floor(Date.now() / 1000);
     const r = lib.verify(quote, collateral as unknown as Parameters<Dcap['verify']>[1], now);
-    return { status: 'verified', tcbStatus: String(r.status), advisoryIds: [...(r.advisory_ids ?? [])], checkedIn, collateral: source };
+    return { status: 'verified', tcbStatus: String(r.status), advisoryIds: [...(r.advisory_ids ?? [])], checkedIn, ...label };
   } catch (e) {
-    return { status: 'unverified', reasonCode: 'verification_failed', reason: msg(e), checkedIn, collateral: source };
+    return unverified('verification_failed', msg(e), label);
   }
 }

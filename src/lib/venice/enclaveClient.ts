@@ -20,8 +20,6 @@ export type EnclaveChatOpts = {
   /** Node variant (eval): call Venice directly with this key. Absent = browser, via our two routes. */
   node?: NodeAccess;
   fetchImpl?: typeof fetch;
-  /** Injectable for tests; default verifyQuoteSignature (@phala/dcap-qvl, runs where this code runs). */
-  verifyQuote?: (quote: Uint8Array) => Promise<QuoteSignatureResult>;
 };
 
 export type EnclaveResult = { text: string; attestation: AttestationSummary; usage: Usage | null };
@@ -105,13 +103,22 @@ type Attested = { summary: AttestationSummary; expiresAt: number };
 
 /**
  * Browser only: Venice rate-limits attestation per key+model (~4 s), so a verified attestation is reused per
- * model for 10 minutes. Our fresh nonce proves freshness when the session's check ran (summary.checkedAt);
- * later calls in the window encrypt to that same checked key. Only verified attestations are cached (an
- * in-flight check is shared but never used before it verifies; a failure is dropped). The Node (eval) path
- * always attests fresh.
+ * model for 10 minutes. Our fresh nonce shows freshness when the session's check ran (summary.checkedAt);
+ * later calls in the window encrypt to that same checked key and are marked `reused` with their `ageMs`.
+ * Only verified attestations are cached: an in-flight check is shared but never used before it verifies, and
+ * if it fails every waiter gets that same failure (no serial re-attesting); only a cancellation by the first
+ * caller's own signal lets waiters start a fresh check. The Node (eval) path always attests fresh.
  */
 export const ATTESTATION_TTL_MS = 10 * 60_000;
-const browserAttestations = new Map<string, Promise<Attested>>();
+type Shared = { promise: Promise<Attested>; signal?: AbortSignal };
+const browserAttestations = new Map<string, Shared>();
+
+/** Signature check used by enclaveChat. Swappable only through the test seam below, never per call. */
+let quoteVerifier: (quote: Uint8Array) => Promise<QuoteSignatureResult> = verifyQuoteSignature;
+/** Tests only: replace the Intel signature verifier (null restores the real one). */
+export function __setQuoteVerifierForTests(fn: ((quote: Uint8Array) => Promise<QuoteSignatureResult>) | null): void {
+  quoteVerifier = fn ?? verifyQuoteSignature;
+}
 
 /** Forget cached attestations (tests, or a UI "check again" action). */
 export function clearAttestationCache(): void {
@@ -131,10 +138,9 @@ async function attestFresh(opts: EnclaveChatOpts, f: typeof fetch, base: string)
   const bound = checkAttestation(raw, nonce, opts.model); // binding; throws on mismatch
 
   // Binding alone is forgeable (anyone can build a quote with our nonce and their key): fail closed on the signature.
-  const verify = opts.verifyQuote ?? verifyQuoteSignature;
   let r: QuoteSignatureResult;
   try {
-    r = await verify(quoteBytesFrom(raw.intel_quote));
+    r = await quoteVerifier(quoteBytesFrom(raw.intel_quote));
   } catch (e) {
     r = { status: 'unverified', reasonCode: 'verifier_unavailable', reason: (e instanceof Error ? e.message : 'verifier failed').slice(0, 200), checkedIn: runtimeName() };
   }
@@ -143,34 +149,50 @@ async function attestFresh(opts: EnclaveChatOpts, f: typeof fetch, base: string)
   return { summary, expiresAt: Date.now() + ATTESTATION_TTL_MS };
 }
 
-async function attested(opts: EnclaveChatOpts, f: typeof fetch, base: string): Promise<Attested> {
-  if (opts.node) return attestFresh(opts, f, base);
+const isAbort = (e: unknown) => {
+  const n = (e as { name?: unknown } | null)?.name;
+  return n === 'AbortError' || n === 'TimeoutError';
+};
+
+/** `reused` = this call did not start the check it is using. */
+async function attested(opts: EnclaveChatOpts, f: typeof fetch, base: string): Promise<{ entry: Attested; reused: boolean }> {
+  if (opts.node) return { entry: await attestFresh(opts, f, base), reused: false };
   const hit = browserAttestations.get(opts.model);
   if (hit) {
-    const e = await hit.catch(() => null);
-    if (e && Date.now() < e.expiresAt) return e;
+    let e: Attested;
+    try {
+      e = await hit.promise;
+    } catch (err) {
+      // Same failure for everyone who waited on this check, unless the first caller cancelled it with its own signal.
+      if (!(hit.signal?.aborted && isAbort(err))) throw err;
+      if (browserAttestations.get(opts.model) === hit) browserAttestations.delete(opts.model);
+      return attested(opts, f, base);
+    }
+    if (Date.now() < e.expiresAt) return { entry: e, reused: true };
     if (browserAttestations.get(opts.model) === hit) browserAttestations.delete(opts.model);
-    else return attested(opts, f, base); // someone else already refreshed it
+    return attested(opts, f, base); // expired (or already refreshed by someone else)
   }
-  const p = attestFresh(opts, f, base);
-  browserAttestations.set(opts.model, p);
-  p.catch(() => {
-    if (browserAttestations.get(opts.model) === p) browserAttestations.delete(opts.model);
+  const shared: Shared = { promise: attestFresh(opts, f, base), signal: opts.signal };
+  browserAttestations.set(opts.model, shared);
+  shared.promise.catch(() => {
+    if (browserAttestations.get(opts.model) === shared) browserAttestations.delete(opts.model);
   });
-  return p;
+  return { entry: await shared.promise, reused: false };
 }
 
 function dropCached(model: string, entry: Attested): void {
-  const p = browserAttestations.get(model);
-  if (p) void p.then((e) => e === entry && browserAttestations.get(model) === p && browserAttestations.delete(model), () => undefined);
+  const s = browserAttestations.get(model);
+  if (s) void s.promise.then((e) => e === entry && browserAttestations.get(model) === s && browserAttestations.delete(model), () => undefined);
 }
 
 export const enclaveChat: EnclaveChat = async (opts) => {
   const f = opts.fetchImpl ?? fetch;
   const base = opts.node ? (opts.node.baseUrl ?? VENICE_BASE) : '';
 
-  const entry = await attested(opts, f, base);
-  const attestation = entry.summary;
+  const { entry, reused } = await attested(opts, f, base);
+  const attestation: AttestationSummary = reused
+    ? { ...entry.summary, reused: true, ageMs: Math.max(0, Date.now() - Date.parse(entry.summary.checkedAt)) }
+    : entry.summary;
   opts.onAttestation?.(attestation);
 
   const keys = newClientKeys();

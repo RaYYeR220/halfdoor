@@ -2,8 +2,8 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils.js';
 import { newClientKeys } from '@/lib/crypto/e2ee';
 import {
-  QuoteParseError, addressFromPublicKey, checkQuoteBinding, clearCollateralCache, loadCollateralSnapshot,
-  parseTdxQuote, quoteBytesFrom, verifyQuoteSignature, type CollateralSnapshot,
+  QuoteParseError, addressFromPublicKey, checkQuoteBinding, clearCollateralCache, hasModernAbortSignal, loadCollateralSnapshot,
+  parseTdxQuote, quoteBytesFrom, verifyQuoteSignature, withDeadline, type CollateralSnapshot,
 } from '@/lib/crypto/tdxQuote';
 import { FIXTURES, capturedSecs, quoteBytesOf, withDebugBit, withReportData } from '../fixtures/attestation';
 
@@ -108,18 +108,26 @@ describe('verifyQuoteSignature', () => {
     throw new Error('pccs down');
   };
   const noSnapshot = async () => null;
+  const DAY = 86400;
 
   test.each(cases)('%s: Intel signature chain verifies with live collateral', async (_n, f) => {
     const r = await verifyQuoteSignature(quoteBytesOf(f), { getCollateral: async () => f.collateral, nowSecs: capturedSecs(f), snapshot: noSnapshot });
-    expect(r).toMatchObject({ status: 'verified', tcbStatus: 'UpToDate', advisoryIds: [], checkedIn: 'node', collateral: 'live' });
+    expect(r).toMatchObject({ status: 'verified', tcbStatus: 'UpToDate', advisoryIds: [], checkedIn: 'node', source: 'live' });
     expect(r.reason).toBeUndefined();
+    expect(r.snapshotCapturedAt).toBeUndefined();
   });
   test('a quote whose REPORTDATA was rewritten is unverified (signature no longer matches)', async () => {
     const key = newClientKeys().publicKeyHex;
     const forged = withReportData(near.attestation.intel_quote, addressFromPublicKey(key), near.requestNonce);
     const r = await verifyQuoteSignature(hexToBytes(forged), { getCollateral: async () => near.collateral, nowSecs: capturedSecs(near) });
-    expect(r).toMatchObject({ status: 'unverified', reasonCode: 'verification_failed', collateral: 'live' });
+    expect(r).toMatchObject({ status: 'unverified', reasonCode: 'verification_failed', source: 'live' });
     expect(r.reason).toMatch(/signature is invalid/i);
+  });
+  test('a malformed quote is reported as quote_malformed, not as a collateral problem', async () => {
+    const getCollateral = vi.fn(async () => near.collateral);
+    const r = await verifyQuoteSignature(quoteBytesOf(near).slice(0, 700), { getCollateral, snapshot: noSnapshot });
+    expect(r).toMatchObject({ status: 'unverified', reasonCode: 'quote_malformed' });
+    expect(getCollateral).not.toHaveBeenCalled();
   });
   test('a verification failure on live collateral never falls back to the snapshot', async () => {
     const snapshot = vi.fn(async () => snapshotOf('near-ai'));
@@ -127,43 +135,59 @@ describe('verifyQuoteSignature', () => {
     expect(r.status).toBe('unverified');
     expect(snapshot).not.toHaveBeenCalled();
   });
-  test('PCCS failure -> snapshot used -> still a full chain check -> verified, labelled with its date', async () => {
-    const r = await verifyQuoteSignature(quoteBytesOf(near), { getCollateral: down, snapshot: async () => snapshotOf('near-ai'), nowSecs: capturedSecs(near) });
-    expect(r).toMatchObject({ status: 'verified', tcbStatus: 'UpToDate', collateral: `snapshot ${near.capturedAt.slice(0, 10)}` });
+  test('the live fetch is retried once before any fallback; a retry that works stays live', async () => {
+    const snapshot = vi.fn(async () => snapshotOf('near-ai'));
+    let n = 0;
+    const flaky = vi.fn(async () => {
+      if (n++ === 0) throw new Error('stall');
+      return near.collateral;
+    });
+    const r = await verifyQuoteSignature(quoteBytesOf(near), { getCollateral: flaky, snapshot, nowSecs: capturedSecs(near) });
+    expect(r).toMatchObject({ status: 'verified', source: 'live' });
+    expect(flaky).toHaveBeenCalledTimes(2);
+    expect(snapshot).not.toHaveBeenCalled();
+  });
+  test('PCCS failing twice -> snapshot used -> full chain check -> verified, labelled as the weaker snapshot source', async () => {
+    const live = vi.fn(down);
+    const r = await verifyQuoteSignature(quoteBytesOf(near), { getCollateral: live, snapshot: async () => snapshotOf('near-ai'), nowSecs: capturedSecs(near) });
+    expect(live).toHaveBeenCalledTimes(2);
+    expect(r).toMatchObject({ status: 'verified', tcbStatus: 'UpToDate', source: 'snapshot', snapshotCapturedAt: near.capturedAt });
+  });
+  test('a snapshot up to 14 days old is accepted; older fails closed with snapshot_too_old', async () => {
+    const opts = (days: number) => ({ getCollateral: down, snapshot: async () => snapshotOf('near-ai'), nowSecs: capturedSecs(near) + days * DAY });
+    expect(await verifyQuoteSignature(quoteBytesOf(near), opts(13.9))).toMatchObject({ status: 'verified', source: 'snapshot' });
+    const old = await verifyQuoteSignature(quoteBytesOf(near), opts(15));
+    expect(old).toMatchObject({ status: 'unverified', reasonCode: 'snapshot_too_old' });
+    expect(old.reason).toMatch(/pccs down/);
+    expect(await verifyQuoteSignature(quoteBytesOf(near), opts(400))).toMatchObject({ status: 'unverified', reasonCode: 'snapshot_too_old' });
   });
   test('a forged quote is still unverified against the snapshot', async () => {
     const forged = withReportData(near.attestation.intel_quote, addressFromPublicKey(newClientKeys().publicKeyHex), near.requestNonce);
     const r = await verifyQuoteSignature(hexToBytes(forged), { getCollateral: down, snapshot: async () => snapshotOf('near-ai'), nowSecs: capturedSecs(near) });
-    expect(r).toMatchObject({ status: 'unverified', reasonCode: 'verification_failed' });
-  });
-  test('an expired snapshot gives whatever the verifier says (unverified), never a fake verified', async () => {
-    const r = await verifyQuoteSignature(quoteBytesOf(near), {
-      getCollateral: down, snapshot: async () => snapshotOf('near-ai'), nowSecs: capturedSecs(near) + 400 * 86400,
-    });
-    expect(r).toMatchObject({ status: 'unverified', reasonCode: 'verification_failed', reason: expect.stringMatching(/expired/) });
+    expect(r).toMatchObject({ status: 'unverified', reasonCode: 'verification_failed', source: 'snapshot' });
   });
   test('PCCS failure and no snapshot entry for this platform -> unverified with both reasons', async () => {
     const r = await verifyQuoteSignature(quoteBytesOf(near), { getCollateral: down, snapshot: async () => snapshotOf('phala') });
     expect(r).toMatchObject({ status: 'unverified', reasonCode: 'collateral_unavailable', checkedIn: 'node' });
     expect(r.reason).toMatch(/pccs down/);
     expect(r.reason).toMatch(/snapshot/);
-    expect(r.collateral).toBeUndefined();
+    expect(r.source).toBeUndefined();
     const r2 = await verifyQuoteSignature(quoteBytesOf(near), { getCollateral: down, snapshot: noSnapshot });
     expect(r2).toMatchObject({ status: 'unverified', reasonCode: 'collateral_unavailable' });
   });
-  test('real path: PCCS fetch failing -> the bundled snapshot verifies the fixtures (one live attempt, no retry)', async () => {
+  test('real path: PCCS fetch failing -> two live attempts, then the bundled snapshot verifies the fixtures', async () => {
     const pccs = vi.fn(async () => {
       throw new TypeError('fetch failed');
     });
     vi.stubGlobal('fetch', pccs);
     const capturedAt = (await loadCollateralSnapshot())!.capturedAt;
-    const at = Math.floor(Date.parse(capturedAt) / 1000); // the bundled snapshot expires; verify as of its capture
+    const at = Math.floor(Date.parse(capturedAt) / 1000); // the bundled snapshot ages out; verify as of its capture
     for (const f of [near, FIXTURES.phala]) {
       clearCollateralCache();
       const r = await verifyQuoteSignature(quoteBytesOf(f), { nowSecs: at });
-      expect(r).toMatchObject({ status: 'verified', collateral: `snapshot ${capturedAt.slice(0, 10)}` });
+      expect(r).toMatchObject({ status: 'verified', source: 'snapshot', snapshotCapturedAt: capturedAt });
     }
-    expect(pccs).toHaveBeenCalledTimes(2);
+    expect(pccs).toHaveBeenCalledTimes(4);
     expect(String((pccs.mock.calls[0] as unknown[])[0])).toMatch(/^https:\/\/pccs\.phala\.network\//);
   });
   test('the bundled snapshot covers both Venice TDX platforms seen today', async () => {
@@ -187,7 +211,7 @@ describe('verifyQuoteSignature', () => {
       const failing = vi.fn(down);
       await verifyQuoteSignature(quoteBytesOf(near), { getCollateral: failing, snapshot: noSnapshot });
       await verifyQuoteSignature(quoteBytesOf(near), { getCollateral: failing, snapshot: noSnapshot });
-      expect(failing).toHaveBeenCalledTimes(2);
+      expect(failing).toHaveBeenCalledTimes(4); // 2 attempts per call, nothing cached
     } finally {
       vi.useRealTimers();
     }
@@ -195,6 +219,56 @@ describe('verifyQuoteSignature', () => {
   test('network: live collateral from the public PCCS verifies the fixture (skipped offline)', async (ctx) => {
     const r = await verifyQuoteSignature(quoteBytesOf(near), { liveTimeoutMs: 15_000, snapshot: noSnapshot });
     if (r.status === 'unverified' && r.reasonCode === 'collateral_unavailable') ctx.skip();
-    expect(r).toMatchObject({ status: 'verified', collateral: 'live' });
+    expect(r).toMatchObject({ status: 'verified', source: 'live' });
+  });
+});
+
+describe('withDeadline (live collateral deadline, incl. browsers without AbortSignal.any/timeout)', () => {
+  afterEach(() => vi.useRealTimers());
+
+  test('modern runtimes hand the deadline to the library', async () => {
+    const run = vi.fn(async (o: { timeoutMs: number }) => o.timeoutMs);
+    expect(await withDeadline(run, 8000, true)).toBe(8000);
+  });
+  test('old runtimes: the library gets no deadline of its own (it would call AbortSignal.any); a manual timer enforces it', async () => {
+    vi.useFakeTimers();
+    const run = vi.fn<(o: { timeoutMs: number }) => Promise<never>>(() => new Promise<never>(() => undefined));
+    const p = withDeadline(run, 8000, false);
+    const settled = vi.fn();
+    p.catch(settled);
+    expect(run).toHaveBeenCalledWith({ timeoutMs: 0 });
+    await vi.advanceTimersByTimeAsync(7999);
+    expect(settled).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(1);
+    await expect(p).rejects.toThrow(/timed out after 8000 ms/);
+  });
+  test('old runtimes: a result in time wins and the timer is cleared', async () => {
+    vi.useFakeTimers();
+    const p = withDeadline(async () => 'ok', 8000, false);
+    await expect(p).resolves.toBe('ok');
+    expect(vi.getTimerCount()).toBe(0);
+  });
+  test('feature detection', () => {
+    expect(hasModernAbortSignal()).toBe(typeof AbortSignal.any === 'function' && typeof AbortSignal.timeout === 'function');
+  });
+});
+
+describe('old runtime end to end', () => {
+  test('network: with AbortSignal.any/timeout missing (iOS 16 Safari), live collateral still verifies (skipped offline)', async (ctx) => {
+    const S = AbortSignal as unknown as Record<string, unknown>;
+    const saved = { any: S.any, timeout: S.timeout };
+    S.any = undefined;
+    S.timeout = undefined;
+    try {
+      clearCollateralCache();
+      expect(hasModernAbortSignal()).toBe(false);
+      const r = await verifyQuoteSignature(quoteBytesOf(near), { snapshot: async () => null });
+      if (r.reasonCode === 'collateral_unavailable' && !/AbortSignal/.test(r.reason ?? '')) ctx.skip();
+      expect(r).toMatchObject({ status: 'verified', source: 'live' });
+    } finally {
+      S.any = saved.any;
+      S.timeout = saved.timeout;
+      clearCollateralCache();
+    }
   });
 });

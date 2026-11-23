@@ -123,20 +123,24 @@ describe('checkAttestation', () => {
 describe('withSignature', () => {
   const f = FIXTURES['near-ai'];
   const s = checkAttestation(f.attestation, f.requestNonce, f.model);
-  test('verified result records where it ran, the TCB status and which collateral was used', () => {
-    const v = withSignature(s, { status: 'verified', tcbStatus: 'OutOfDate', advisoryIds: ['INTEL-SA-1'], checkedIn: 'browser', collateral: 'snapshot 2026-11-23' });
+  test('verified result records where it ran, the TCB status and the (weaker) snapshot source', () => {
+    const v = withSignature(s, {
+      status: 'verified', tcbStatus: 'OutOfDate', advisoryIds: ['INTEL-SA-1'], checkedIn: 'browser', source: 'snapshot', snapshotCapturedAt: '2026-11-23T18:18:38.608Z',
+    });
     expect(v.quote).toMatchObject({
-      signature: 'verified', signatureCheckedIn: 'browser', tcbStatus: 'OutOfDate', advisoryIds: ['INTEL-SA-1'], collateral: 'snapshot 2026-11-23', mrtd: s.quote.mrtd,
+      signature: 'verified', signatureCheckedIn: 'browser', tcbStatus: 'OutOfDate', advisoryIds: ['INTEL-SA-1'],
+      signatureSource: 'snapshot', snapshotCapturedAt: '2026-11-23T18:18:38.608Z', mrtd: s.quote.mrtd,
     });
     expect(s.quote.signature).toBe('pending'); // original untouched
   });
   test('unverified result keeps the reason', () => {
-    const v = withSignature(s, { status: 'unverified', reasonCode: 'collateral_unavailable', reason: 'pccs down', checkedIn: 'node' });
-    expect(v.quote).toMatchObject({ signature: 'unverified', signatureCheckedIn: 'node', reasonCode: 'collateral_unavailable', reason: 'pccs down' });
+    const v = withSignature(s, { status: 'unverified', reasonCode: 'snapshot_too_old', reason: 'pccs down', checkedIn: 'node' });
+    expect(v.quote).toMatchObject({ signature: 'unverified', signatureCheckedIn: 'node', reasonCode: 'snapshot_too_old', reason: 'pccs down' });
   });
-  test('summary carries a short MRTD for display', () => {
+  test('summary carries a short MRTD and fresh-check markers', () => {
     expect(s.quote.mrtdShort).toBe(shortMrtd(s.quote.mrtd));
     expect(shortMrtd('e107136c99ae1745ab299e9462927890')).toBe('e107136c99ae1745…');
+    expect(s).toMatchObject({ reused: false, ageMs: 0 });
   });
 });
 
@@ -154,23 +158,27 @@ describe('ENCLAVE_COPY', () => {
     );
     expect(ENCLAVE_COPY.limits).toBe(HONEST_LIMITS);
     expect(ENCLAVE_COPY.pccsNote).toMatch(/Phala's PCCS.*IP address.*No child data/);
+    expect(ENCLAVE_COPY.signatureVerifiedWithSnapshot('2026-11-23', 'UpToDate')).toMatch(
+      /^Intel signature checked with saved Intel data from 2026-11-23 \(live data was unreachable\)/,
+    );
+    expect(ENCLAVE_COPY.freshness('12:00')).toMatch(/one-time code shows the report was fresh/);
+    expect(ENCLAVE_COPY.freshness('12:00')).not.toMatch(/proves/);
   });
-  test('signature texts name where the check ran, the collateral used, and that nothing is sent when unverified', () => {
-    expect(ENCLAVE_COPY.signatureVerifiedInBrowser('UpToDate', 'live')).toMatch(/in your browser.*UpToDate.*live/);
-    expect(ENCLAVE_COPY.signatureVerifiedInBrowser('UpToDate', 'snapshot 2026-11-23')).toMatch(/snapshot from 2026-11-23/);
-    expect(ENCLAVE_COPY.signatureVerifiedOnServer('UpToDate', 'live')).toMatch(/not in your browser/);
+  test('signature texts name where the check ran and that nothing is sent when unverified', () => {
+    expect(ENCLAVE_COPY.signatureVerifiedInBrowser('UpToDate')).toMatch(/in your browser.*live Intel data.*UpToDate/);
+    expect(ENCLAVE_COPY.signatureVerifiedOnServer('UpToDate')).toMatch(/not in your browser/);
     expect(ENCLAVE_COPY.signatureNotVerified('pccs down')).toMatch(/could not be verified.*pccs down.*nothing was sent/);
     expect(ENCLAVE_COPY.measurement('e107136c99ae1745…')).toMatch(/e107136c99ae1745…/);
   });
   test('signatureText picks the right string for a summary', () => {
     const f = FIXTURES['near-ai'];
     const s = checkAttestation(f.attestation, f.requestNonce, f.model);
+    const ok = { status: 'verified' as const, tcbStatus: 'UpToDate', advisoryIds: [] as string[] };
     expect(signatureText(s)).toBe(ENCLAVE_COPY.signaturePending);
-    expect(signatureText(withSignature(s, { status: 'verified', tcbStatus: 'UpToDate', advisoryIds: [], checkedIn: 'browser', collateral: 'live' }))).toBe(
-      ENCLAVE_COPY.signatureVerifiedInBrowser('UpToDate', 'live'),
-    );
-    expect(signatureText(withSignature(s, { status: 'verified', tcbStatus: 'UpToDate', advisoryIds: [], checkedIn: 'node', collateral: 'live' }), 'es')).toBe(
-      ENCLAVE_COPY_ES.signatureVerifiedOnServer('UpToDate', 'live'),
+    expect(signatureText(withSignature(s, { ...ok, checkedIn: 'browser', source: 'live' }))).toBe(ENCLAVE_COPY.signatureVerifiedInBrowser('UpToDate'));
+    expect(signatureText(withSignature(s, { ...ok, checkedIn: 'node', source: 'live' }), 'es')).toBe(ENCLAVE_COPY_ES.signatureVerifiedOnServer('UpToDate'));
+    expect(signatureText(withSignature(s, { ...ok, checkedIn: 'browser', source: 'snapshot', snapshotCapturedAt: '2026-11-23T18:18:38.608Z' }))).toBe(
+      ENCLAVE_COPY.signatureVerifiedWithSnapshot('2026-11-23', 'UpToDate'),
     );
     expect(signatureText(withSignature(s, { status: 'unverified', reason: 'x', checkedIn: 'browser' }), 'es')).toBe(ENCLAVE_COPY_ES.signatureNotVerified('x'));
   });

@@ -23,6 +23,8 @@ export const AttestationSummarySchema = z.object({
   signingAddress: z.string().max(100).nullable(),
   modelPublicKey: z.string().max(200),
   checkedAt: z.string().max(40),
+  reused: z.boolean(),
+  ageMs: z.number().int().nonnegative().max(86_400_000),
   binding: z.object({
     addressMatches: z.boolean(),
     nonceMatches: z.boolean(),
@@ -35,13 +37,15 @@ export const AttestationSummarySchema = z.object({
     mrtd: z.string().max(96),
     mrtdShort: z.string().max(20),
     tdAttributes: z.string().max(16),
-    signature: z.enum(['pending', 'verified', 'unverified']),
+    /** The browser only encrypts after Intel's signature verified, so nothing else is accepted. */
+    signature: z.literal('verified'),
     signatureCheckedIn: z.enum(['browser', 'node']).optional(),
     signatureCheckedAt: z.string().max(40).optional(),
-    collateral: z.string().max(40).optional(),
+    signatureSource: z.enum(['live', 'snapshot']).optional(),
+    snapshotCapturedAt: z.string().max(40).optional(),
     tcbStatus: z.string().max(60).optional(),
     advisoryIds: z.array(z.string().max(40)).max(50).optional(),
-    reasonCode: z.enum(['collateral_unavailable', 'verification_failed', 'verifier_unavailable']).optional(),
+    reasonCode: z.enum(['quote_malformed', 'collateral_unavailable', 'snapshot_too_old', 'verification_failed', 'verifier_unavailable']).optional(),
     reason: z.string().max(200).optional(),
   }),
 });

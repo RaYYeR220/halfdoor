@@ -1,6 +1,6 @@
 import {
   QuoteParseError, addressFromPublicKey, checkQuoteBinding, enclaveKeyOf, parseTdxQuote, quoteBytesFrom, TDX_TEE_TYPE,
-  type CheckedIn, type CollateralSource, type QuoteBinding, type QuoteSignatureResult, type SignatureReasonCode,
+  type CheckedIn, type QuoteBinding, type QuoteSignatureResult, type SignatureReasonCode, type SignatureSource,
 } from './tdxQuote';
 
 export type AttestationErrorCode = 'not_verified' | 'nonce_mismatch' | 'no_key' | 'model_mismatch' | 'quote_binding_failed';
@@ -28,8 +28,9 @@ export type QuoteSummary = {
   /** Where the signature check ran: 'browser' = this tab; 'node' = a server/eval process, NOT the user's browser. */
   signatureCheckedIn?: CheckedIn;
   signatureCheckedAt?: string;
-  /** 'live' (PCCS) or 'snapshot <date>' (bundled fallback). */
-  collateral?: CollateralSource;
+  /** 'live' (PCCS now) or 'snapshot' (bundled fallback, weaker: no fresh revocation data; see snapshotCapturedAt). */
+  signatureSource?: SignatureSource;
+  snapshotCapturedAt?: string;
   /** Any TCB status is accepted once the chain verifies, but it is always recorded and shown. */
   tcbStatus?: string;
   advisoryIds?: string[];
@@ -49,6 +50,9 @@ export type AttestationSummary = {
   signingAddress: string | null;
   modelPublicKey: string;
   checkedAt: string;
+  /** true when this call reused a cached, already verified attestation (browser, <= 10 min); ageMs = now - checkedAt. */
+  reused: boolean;
+  ageMs: number;
   /** Our own check of the quote: key address + our nonce in REPORTDATA, non-debug TDX. Always all-true in a summary. */
   binding: QuoteBinding;
   quote: QuoteSummary;
@@ -96,6 +100,8 @@ export function checkAttestation(raw: unknown, nonce: string, model: string): At
     signingAddress: `0x${addressFromPublicKey(key)}`,
     modelPublicKey: key,
     checkedAt: new Date().toISOString(),
+    reused: false,
+    ageMs: 0,
     binding,
     quote: { mrtd: binding.mrtd, mrtdShort: shortMrtd(binding.mrtd), tdAttributes, signature: 'pending' },
   };
@@ -111,7 +117,8 @@ export function withSignature(s: AttestationSummary, r: QuoteSignatureResult): A
     signatureCheckedIn: r.checkedIn,
     signatureCheckedAt: new Date().toISOString(),
   };
-  if (r.collateral) quote.collateral = r.collateral;
+  if (r.source) quote.signatureSource = r.source;
+  if (r.snapshotCapturedAt) quote.snapshotCapturedAt = r.snapshotCapturedAt;
   if (r.status === 'verified') {
     quote.tcbStatus = r.tcbStatus;
     quote.advisoryIds = r.advisoryIds ?? [];
@@ -135,8 +142,10 @@ export type EnclaveCopy = {
   bindingFailed: string;
   freshness: (checkedAt: string) => string;
   signaturePending: string;
-  signatureVerifiedInBrowser: (tcbStatus: string, collateral: CollateralSource) => string;
-  signatureVerifiedOnServer: (tcbStatus: string, collateral: CollateralSource) => string;
+  signatureVerifiedInBrowser: (tcbStatus: string) => string;
+  signatureVerifiedOnServer: (tcbStatus: string) => string;
+  /** The weaker fallback: checked against the bundled snapshot because live Intel data was unreachable. */
+  signatureVerifiedWithSnapshot: (date: string, tcbStatus: string) => string;
   signatureNotVerified: (reason: string) => string;
   /** Shown when enclaveChat throws EnclaveError('quote_unverified'). */
   unverifiedNothingSent: string;
@@ -147,23 +156,20 @@ export type EnclaveCopy = {
   claim: string;
 };
 
-const collateralEn = (c: CollateralSource) =>
-  c === 'live' ? "Intel data fetched live from Phala's PCCS" : `Intel data from a bundled snapshot from ${c.slice('snapshot '.length)}`;
-const collateralEs = (c: CollateralSource) =>
-  c === 'live' ? 'datos de Intel obtenidos en directo del PCCS de Phala' : `datos de Intel de una copia incluida del ${c.slice('snapshot '.length)}`;
-
 export const ENCLAVE_COPY: EnclaveCopy = {
   bindingOk:
     "Your browser checked that this enclave's key and your one-time code are sealed in an Intel TDX report from a non-debug enclave.",
   bindingFailed:
     "Your browser could not match this enclave's key and your one-time code to an Intel TDX report from a non-debug enclave, so nothing was sent.",
   freshness: (checkedAt) =>
-    `Checked at ${checkedAt}. The one-time code proves the report was fresh at that moment; requests in the next 10 minutes reuse the same checked key.`,
+    `Checked at ${checkedAt}. The one-time code shows the report was fresh at that moment; requests in the next 10 minutes reuse the same checked key.`,
   signaturePending: "Checking Intel's signature on that report…",
-  signatureVerifiedInBrowser: (tcb, c) =>
-    `Intel's signature chain on that report was verified in your browser (platform status: ${tcb}; ${collateralEn(c)}).`,
-  signatureVerifiedOnServer: (tcb, c) =>
-    `Intel's signature chain on that report was verified on the server, not in your browser (platform status: ${tcb}; ${collateralEn(c)}).`,
+  signatureVerifiedInBrowser: (tcb) =>
+    `Intel's signature chain on that report was verified in your browser with live Intel data (platform status: ${tcb}).`,
+  signatureVerifiedOnServer: (tcb) =>
+    `Intel's signature chain on that report was verified on the server, not in your browser, with live Intel data (platform status: ${tcb}).`,
+  signatureVerifiedWithSnapshot: (date, tcb) =>
+    `Intel signature checked with saved Intel data from ${date} (live data was unreachable). Platform status: ${tcb}.`,
   signatureNotVerified: (reason) => `Intel's signature on that report could not be verified (${reason}), so nothing was sent.`,
   unverifiedNothingSent: "We couldn't verify the enclave right now — nothing was sent. Try again in a minute.",
   measurement: (short) => `Enclave software measurement (MRTD): ${short}. Shown for reference; not yet checked against a published list.`,
@@ -180,12 +186,14 @@ export const ENCLAVE_COPY_ES: EnclaveCopy = {
   bindingFailed:
     'Su navegador no pudo vincular la clave de este enclave y su código de un solo uso a un informe Intel TDX de un enclave sin modo de depuración, así que no se envió nada.',
   freshness: (checkedAt) =>
-    `Comprobado a las ${checkedAt}. El código de un solo uso demuestra que el informe era reciente en ese momento; las solicitudes de los próximos 10 minutos reutilizan la misma clave comprobada.`,
+    `Comprobado a las ${checkedAt}. El código de un solo uso muestra que el informe era reciente en ese momento; las solicitudes de los próximos 10 minutos reutilizan la misma clave comprobada.`,
   signaturePending: 'Comprobando la firma de Intel en ese informe…',
-  signatureVerifiedInBrowser: (tcb, c) =>
-    `La cadena de firmas de Intel en ese informe se verificó en su navegador (estado de la plataforma: ${tcb}; ${collateralEs(c)}).`,
-  signatureVerifiedOnServer: (tcb, c) =>
-    `La cadena de firmas de Intel en ese informe se verificó en el servidor, no en su navegador (estado de la plataforma: ${tcb}; ${collateralEs(c)}).`,
+  signatureVerifiedInBrowser: (tcb) =>
+    `La cadena de firmas de Intel en ese informe se verificó en su navegador con datos de Intel en directo (estado de la plataforma: ${tcb}).`,
+  signatureVerifiedOnServer: (tcb) =>
+    `La cadena de firmas de Intel en ese informe se verificó en el servidor, no en su navegador, con datos de Intel en directo (estado de la plataforma: ${tcb}).`,
+  signatureVerifiedWithSnapshot: (date, tcb) =>
+    `La firma de Intel se comprobó con datos de Intel guardados del ${date} (no se pudo acceder a los datos en directo). Estado de la plataforma: ${tcb}.`,
   signatureNotVerified: (reason) => `No se pudo verificar la firma de Intel en ese informe (${reason}), así que no se envió nada.`,
   unverifiedNothingSent: 'No pudimos verificar el enclave en este momento; no se envió nada. Inténtelo de nuevo en un minuto.',
   measurement: (short) =>
@@ -204,6 +212,6 @@ export function signatureText(s: AttestationSummary, lang: 'en' | 'es' = 'en'): 
   if (q.signature === 'pending') return c.signaturePending;
   if (q.signature === 'unverified') return c.signatureNotVerified(q.reason ?? q.reasonCode ?? 'unknown');
   const tcb = q.tcbStatus ?? 'unknown';
-  const col = q.collateral ?? 'live';
-  return q.signatureCheckedIn === 'browser' ? c.signatureVerifiedInBrowser(tcb, col) : c.signatureVerifiedOnServer(tcb, col);
+  if (q.signatureSource === 'snapshot') return c.signatureVerifiedWithSnapshot((q.snapshotCapturedAt ?? 'unknown date').slice(0, 10), tcb);
+  return q.signatureCheckedIn === 'browser' ? c.signatureVerifiedInBrowser(tcb) : c.signatureVerifiedOnServer(tcb);
 }

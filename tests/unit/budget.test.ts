@@ -36,10 +36,12 @@ const slug = (p: string) => `${p}-${randomBytes(4).toString('hex')}`;
 
 /** Binding + quote parts of a browser-side AttestationSummary (see checkAttestation). */
 const ATT_QUOTE = {
+  reused: false,
+  ageMs: 0,
   binding: { addressMatches: true, nonceMatches: true, paddingZero: true, debug: false, teeType: 0x81, mrtd: 'ab'.repeat(48) },
   quote: {
     mrtd: 'ab'.repeat(48), mrtdShort: 'abababababababab…', tdAttributes: '0000001000000000',
-    signature: 'verified' as const, signatureCheckedIn: 'browser' as const, collateral: 'live' as const, tcbStatus: 'UpToDate',
+    signature: 'verified' as const, signatureCheckedIn: 'browser' as const, signatureSource: 'live' as const, tcbStatus: 'UpToDate',
   },
 };
 
@@ -245,8 +247,20 @@ describe('POST /api/tee/chat', () => {
     };
     await (await POST(body({ attestation: att }))).text();
     const rows = await listAiCalls(churchId);
-    expect(rows[0].attestation).toMatchObject({ verified: true, binding: { nonceMatches: true }, quote: { signature: 'verified', collateral: 'live' } });
+    expect(rows[0].attestation).toMatchObject({ verified: true, binding: { nonceMatches: true }, quote: { signature: 'verified', signatureSource: 'live' } });
     expect(rows[0].attestationMismatch).toBe(false);
+  });
+  test('a client attestation whose Intel signature is not verified is rejected (the browser never sends one)', async () => {
+    const f = vi.fn();
+    vi.stubGlobal('fetch', f);
+    for (const signature of ['pending', 'unverified']) {
+      const att = {
+        verified: true, nonceOk: true, provider: 'p', hardware: null, model: 'e2ee-deepseek-v4-flash',
+        signingAddress: null, modelPublicKey: model.publicKeyHex, checkedAt: 'now', ...ATT_QUOTE, quote: { ...ATT_QUOTE.quote, signature },
+      };
+      expect((await POST(body({ attestation: att }))).status).toBe(400);
+    }
+    expect(f).not.toHaveBeenCalled();
   });
   test('stream error records exactly one ok=false row', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(sse(['data: {"choices":[]}\n\n'], true)));
