@@ -4,7 +4,7 @@ import { enclaveChat, type EnclaveChat, type NodeAccess } from '@/lib/venice/enc
 import { detectLang } from '@/lib/text/lang';
 import { limiterTokens } from '@/lib/text/polarity';
 import { sentenceContaining } from '@/lib/text/sentences';
-import { buildCardPrompt, buildTranslatePrompt, redactName, restoreName, toOriginalOffset } from './prompts';
+import { TRANSLATE_PLACEHOLDER, buildCardPrompt, buildTranslatePrompt, redactName, restoreName, toOriginalOffset } from './prompts';
 import { findSafetyPrompts } from './safetyNet';
 import { DraftCard, type CardItem, type VerifiedCard } from './schema';
 import { verifyCard } from './verify';
@@ -20,6 +20,8 @@ export class StoryLengthError extends Error {
 }
 
 export type PipelineOpts = {
+  /** translateCard: the child's first name, redacted before every enclave call and restored after. */
+  childName?: string;
   model: string;
   onAttestation?: (a: AttestationSummary) => void;
   signal?: AbortSignal;
@@ -78,11 +80,15 @@ export async function draftCard(
     });
     let text = restoreName(it.text, childName);
     if (it.kind === 'verbatim') {
-      const at = red.text.indexOf(it.text);
-      if (at >= 0) {
-        const s = back({ start: at, end: at + it.text.length });
-        text = story.slice(s.start, s.end);
+      // Rebuild from the original story's sentences; never run verbatim text through name restoration.
+      const sents = it.quotes.map((q) => sentenceContaining(red.text, q.span));
+      const used = sents.filter((s) => it.text.includes(red.text.slice(s.start, s.end)));
+      const uniq = new Map<number, { start: number; end: number }>();
+      for (const s of used.length > 0 ? used : sents) {
+        const o = back(s);
+        uniq.set(o.start, o);
       }
+      text = [...uniq.values()].sort((x, y) => x.start - y.start).map((o) => story.slice(o.start, o.end)).join(' ');
     }
     return { ...it, text, quotes };
   });
@@ -103,7 +109,7 @@ export async function translateCard(card: VerifiedCard, opts: PipelineOpts): Pro
   if (card.lang === 'other' || card.items.length === 0) return card;
   const target = card.lang === 'en' ? 'es' : 'en';
   const chat = opts.chat ?? enclaveChat;
-  const { system, user } = buildTranslatePrompt(card.items);
+  const { system, user } = buildTranslatePrompt(card.items, opts.childName ?? '');
   const res = await chat({
     model: opts.model, purpose: 'translate', system, user, signal: opts.signal, onAttestation: opts.onAttestation, node: opts.node,
   });
@@ -112,7 +118,7 @@ export async function translateCard(card: VerifiedCard, opts: PipelineOpts): Pro
   try {
     const j = extractJson(res.text) as { translations?: { id?: unknown; text?: unknown }[] };
     byId = new Map(
-      (j.translations ?? []).flatMap((t) => (typeof t.id === 'string' && typeof t.text === 'string' && t.text.trim() ? [[t.id, t.text] as const] : [])),
+      (j.translations ?? []).flatMap((t) => (typeof t.id === 'string' && typeof t.text === 'string' && t.text.trim() ? [[t.id, restoreName(t.text, opts.childName ?? '', TRANSLATE_PLACEHOLDER)] as const] : [])),
     );
   } catch {
     throw new Error('the model did not return usable translations');

@@ -92,8 +92,35 @@ describe('draftCard', () => {
   });
 });
 
+describe('verbatim safety text keeps the original wording', () => {
+  test('a literal "the child" in the story survives (no name restoration on verbatim)', async () => {
+    const story = 'Leo is allergic to peanuts. He loves trains and yellow things. Never seat him beside the child with the nut snacks.';
+    const draft: DraftCard = {
+      items: [{ section: 'safety', text: 'x', quotes: ['allergic to peanuts', 'Never seat him beside the child with the nut snacks'] }],
+      tags: [],
+    };
+    const chat = vi.fn().mockResolvedValue({ text: JSON.stringify(draft), attestation: A, usage: null });
+    const { card } = await draftCard(story, 'Leo', { model: 'e2ee-x', chat });
+    expect(card.items[0].kind).toBe('verbatim');
+    expect(card.items[0].text).toBe('Leo is allergic to peanuts. Never seat him beside the child with the nut snacks.');
+    expect(card.items[0].text).toContain('beside the child with the nut snacks');
+  });
+});
+
 describe('translateCard', () => {
   const base = () => verifyCard(LEO, GOOD_LEO_DRAFT);
+  test('child name is redacted before the call and restored after', async () => {
+    const draft: DraftCard = { items: [{ section: 'loves', text: 'x', quotes: ['Leo is 7'] }], tags: [] };
+    const card = verifyCard(LEO, draft);
+    expect(card.items[0].text).toContain('Leo');
+    const chat = vi.fn().mockImplementation(async (o: { user: string }) => {
+      expect(o.user).not.toMatch(/Leo/);
+      expect(o.user).toContain('[CHILD]');
+      return { text: JSON.stringify({ translations: [{ id: 'i0', text: '[CHILD] tiene 7 anos.' }] }), attestation: A, usage: null };
+    });
+    const out = await translateCard(card, { model: 'e2ee-x', chat, childName: 'Leo' });
+    expect(out.items[0].translation?.text).toBe('Leo tiene 7 anos.');
+  });
   test('EN to ES, withholds a translation that lost the limiter', async () => {
     const card = base();
     const neg = card.items.find((i) => i.text.includes('NOT'))!;
