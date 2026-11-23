@@ -67,3 +67,8 @@ export function verifyValue(signed: string): string | null {
   if (given.length !== expected.length || !timingSafeEqual(given, expected)) return null;
   return value;
 }
+
+/** Salted (LINK_SECRET-keyed) hash of a client IP; the raw IP is never stored. */
+export function hashClient(ip: string): string {
+  return createHmac('sha256', secret()).update(`creator:${ip}`).digest('hex');
+}
