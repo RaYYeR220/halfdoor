@@ -1,5 +1,6 @@
 // Scoring per eval/stories/README.md: facts are AND-of-OR regex groups over the whole output,
 // limiter facts carry their negation inside the pattern, traps fire when their pattern matches.
+import { normalizeOutput } from './normalize';
 import type { EvalStory } from './types';
 
 const FLAGS = 'iu';
@@ -38,8 +39,12 @@ export type Score = {
   trapClasses: Record<TrapClass, string[]>;
 };
 
-export function scoreOutput(story: EvalStory, text: string): Score {
-  const out = text.normalize('NFC');
+/**
+ * `normalize` (default true) runs the markdown-aware normalizer first (eval/normalize.ts);
+ * false scores the raw text exactly as the README rules read it (used to compare the two).
+ */
+export function scoreOutput(story: EvalStory, text: string, opts: { normalize?: boolean } = {}): Score {
+  const out = opts.normalize === false ? text.normalize('NFC') : normalizeOutput(text);
   const missing: string[] = [];
   let present = 0;
   let limiterPresent = 0;
