@@ -4,7 +4,7 @@ const EN = new Set(
   'the and is are was were of to in it his her he she they them with for on at that this my your has have had not but be as from by him up may can will do does'.split(' '),
 );
 const ES = new Set(
-  'el la los las un una y es son era de del en que con por para su sus mi me le lo se al muy como pero no tiene tienen hijo hija a'.split(' '),
+  'el la los las un una y es era de del en que con por para su sus mi le lo se al muy como pero tiene tienen hijo hija'.split(' '),
 );
 
 /** Stopword-ratio heuristic between English and Spanish. */

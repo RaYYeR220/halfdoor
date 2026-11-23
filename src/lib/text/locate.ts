@@ -2,8 +2,10 @@ import { normalizeForMatch } from './normalize';
 
 export type Span = { start: number; end: number };
 
-function toSpan(map: number[], from: number, len: number): Span {
-  return { start: map[from], end: map[from + len - 1] + 1 };
+function toSpan(source: string, map: number[], from: number, len: number): Span {
+  let end = map[from + len - 1] + 1;
+  while (end < source.length && /\p{M}/u.test(source[end])) end++;
+  return { start: map[from], end };
 }
 
 /** Drop everything except letters, digits and single spaces; keep a map back to the input indices. */
@@ -33,11 +35,11 @@ export function locateQuote(source: string, quote: string): Span | null {
   const q = normalizeForMatch(quote).norm;
   if (!q) return null;
   const idx = src.norm.indexOf(q);
-  if (idx >= 0) return toSpan(src.map, idx, q.length);
+  if (idx >= 0) return toSpan(source, src.map, idx, q.length);
 
   const ls = stripPunctuation(src.norm, src.map);
   const lq = stripPunctuation(q, Array.from(q, (_, i) => i)).text;
   if (!lq) return null;
   const j = ls.text.indexOf(lq);
-  return j >= 0 ? toSpan(ls.map, j, lq.length) : null;
+  return j >= 0 ? toSpan(source, ls.map, j, lq.length) : null;
 }
