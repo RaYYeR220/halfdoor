@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getCardForChild } from '@/db/repo/cards';
 import { getChurch } from '@/db/repo/churches';
 import { listMoments } from '@/db/repo/moments';
-import { getNoteFor, insertNote, listNotesForChild, updateNote } from '@/db/repo/notes';
+import { listNotesForChild, upsertNote } from '@/db/repo/notes';
 import { getServiceInChurch } from '@/db/repo/services';
 import { UUID, childInChurch, fail, isParentOf, readJson, requireViewer } from '@/lib/access/api';
 import { openJson, sealJson } from '@/lib/crypto/atrest';
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
   if (viewer instanceof NextResponse) return viewer;
   const body = await readJson(req);
   if (!body) return fail('invalid_note', 400);
-  const { serviceId, childId, sentences, approve } = body;
+  const { serviceId, childId, sentences, approve, acknowledgeFlags } = body;
   if (typeof serviceId !== 'string' || !UUID.test(serviceId) || typeof childId !== 'string') return fail('invalid_note', 400);
   if (typeof approve !== 'boolean') return fail('invalid_note', 400);
   const parsed = NoteDraft.safeParse({ sentences });
@@ -34,6 +34,12 @@ export async function POST(req: Request) {
   const lang = card?.lang === 'es' ? 'es' : 'en';
   const verified = verifyNote(parsed.data, ids, lang);
 
+  // Flags first: nothing is written when an approval still needs the director's eyes on them.
+  const flags = verified.sentences.map((s) => s.flags);
+  if (approve && flags.some((f) => f.length > 0) && acknowledgeFlags !== true) {
+    return NextResponse.json({ error: 'flags_need_review', flags }, { status: 409 });
+  }
+
   const values = {
     lang,
     draftEnc: sealJson(church.wrappedDek, parsed.data.sentences),
@@ -41,16 +47,9 @@ export async function POST(req: Request) {
     status: approve ? ('approved' as const) : ('draft' as const),
     approvedAt: approve ? new Date() : null,
   };
-  const existing = await getNoteFor(serviceId, childId);
-  let id: string;
-  if (existing) {
-    await updateNote(existing.id, values);
-    id = existing.id;
-  } else {
-    id = (await insertNote({ serviceId, childId, ...values })).id;
-  }
+  const { id } = await upsertNote({ serviceId, childId, ...values });
   // Judgment words are shown to the director, never silently removed.
-  return NextResponse.json({ id, status: values.status, flags: verified.sentences.map((s) => s.flags) });
+  return NextResponse.json({ id, status: values.status, flags });
 }
 
 /** Parent of the child: approved notes only. Director: drafts and approved. Decrypted. */

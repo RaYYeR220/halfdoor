@@ -66,6 +66,17 @@ describe('draftParentNote', () => {
     expect(note.sentences).toEqual([{ text: "Leo's worship was loud, and headphones helped.", evidence: ['m1'], flags: [] }]);
     expect(note.dropped).toEqual([{ text: 'Invented sentence.', reason: 'no_evidence' }]);
   });
+  test('reports sentences discarded for shape, length and the 8 cap', async () => {
+    const ok = (i: number) => ({ text: `S${i}.`, evidence: ['m1'] });
+    const sentences = [
+      ...Array.from({ length: 9 }, (_, i) => ok(i)),
+      { text: 'x'.repeat(301), evidence: ['m1'] },
+      { text: 'no evidence array' },
+    ];
+    const { note } = await draftParentNote(MOMENTS, 'en', { chat: reply(JSON.stringify({ sentences })) });
+    expect(note.sentences).toHaveLength(8);
+    expect(note.dropped.map((d) => d.reason).sort()).toEqual(['invalid_shape', 'over_limit', 'too_long']);
+  });
   test('throws after two unusable replies', async () => {
     await expect(draftParentNote(MOMENTS, 'en', { chat: reply('nope') })).rejects.toThrow('usable note');
   });

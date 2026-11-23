@@ -27,3 +27,12 @@ export async function getNoteFor(serviceId: string, childId: string): Promise<Pa
   const [row] = await getDb().select().from(parentNotes).where(and(eq(parentNotes.serviceId, serviceId), eq(parentNotes.childId, childId)));
   return row;
 }
+
+/** Atomic: one note per (service, child), concurrent saves land on the same row. */
+export async function upsertNote(values: NewParentNote): Promise<ParentNote> {
+  const { serviceId: _s, childId: _c, ...patch } = values;
+  void _s; void _c;
+  const [row] = await getDb().insert(parentNotes).values(values)
+    .onConflictDoUpdate({ target: [parentNotes.serviceId, parentNotes.childId], set: patch }).returning();
+  return row;
+}

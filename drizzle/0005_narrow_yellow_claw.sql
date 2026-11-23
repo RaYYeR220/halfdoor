@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "parent_notes_service_child_idx" ON "parent_notes" USING btree ("service_id","child_id");

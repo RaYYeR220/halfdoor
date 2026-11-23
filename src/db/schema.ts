@@ -128,7 +128,7 @@ export const parentNotes = pgTable('parent_notes', {
   evidence: jsonb('evidence').notNull().default(sql`'[]'::jsonb`),
   status: text('status', { enum: ['draft', 'approved'] }).notNull(),
   approvedAt: ts('approved_at'),
-});
+}, (t) => [uniqueIndex('parent_notes_service_child_idx').on(t.serviceId, t.childId)]);
 
 export const cardAccessLog = pgTable('card_access_log', {
   id: id(),

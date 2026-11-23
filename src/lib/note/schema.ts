@@ -16,5 +16,6 @@ export type NoteDraft = z.infer<typeof NoteDraft>;
 /** What the model (and the director's browser) sees of a moment. No child name, no ids other than the moment's own. */
 export type MomentView = { id: string; step: string; kind: MomentKind; helped: string[]; note?: string };
 
+export type DropReason = 'no_evidence' | 'invalid_shape' | 'too_long' | 'over_limit';
 export type VerifiedNoteSentence = { text: string; evidence: string[]; flags: string[] };
-export type VerifiedNote = { sentences: VerifiedNoteSentence[]; dropped: { text: string; reason: 'no_evidence' }[] };
+export type VerifiedNote = { sentences: VerifiedNoteSentence[]; dropped: { text: string; reason: DropReason }[] };

@@ -20,6 +20,7 @@ export async function POST(req: Request) {
   if (typeof stepKey !== 'string' || !stepKey || stepKey.length > 64) return fail('invalid_moment', 400);
   if (typeof kind !== 'string' || !(MOMENT_KINDS as readonly string[]).includes(kind)) return fail('invalid_moment', 400);
   if (helpedItemIds !== undefined && (!Array.isArray(helpedItemIds) || helpedItemIds.some((x) => typeof x !== 'string'))) return fail('invalid_moment', 400);
+  if (kind === 'note' && (typeof note !== 'string' || !note.trim())) return fail('note_required', 400);
   if (note !== undefined && (typeof note !== 'string' || note.length > MAX_MOMENT_NOTE_CHARS)) return fail('invalid_moment', 400);
 
   if (!(await childInChurch(viewer, childId))) return fail('not_found', 404);

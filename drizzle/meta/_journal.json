@@ -36,6 +36,13 @@
       "when": 1795472053994,
       "tag": "0004_medical_black_crow",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1795472720578,
+      "tag": "0005_narrow_yellow_claw",
+      "breakpoints": true
     }
   ]
 }

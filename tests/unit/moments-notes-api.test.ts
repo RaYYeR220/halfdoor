@@ -98,6 +98,14 @@ describe('POST /api/moments', () => {
     expect((await log(w, { kind: 'angry' })).status).toBe(400);
     expect((await log(w, { note: 'x'.repeat(281) })).status).toBe(400);
   });
+  it("kind 'note' needs text", async () => {
+    const w = await world();
+    await checkIn(w, 'in');
+    h.viewer = w.as('Priya', 'buddy');
+    expect((await log(w, { kind: 'note' })).status).toBe(400);
+    expect((await log(w, { kind: 'note', note: '   ' })).status).toBe(400);
+    expect((await log(w, { kind: 'note', note: 'said grace' })).status).toBe(200);
+  });
   it('tenant isolation: a buddy of another church cannot log here', async () => {
     const w = await world();
     const other = await world();
@@ -155,13 +163,37 @@ describe('notes: context, save, approve, read', () => {
     expect(dir[0]).toMatchObject({ status: 'draft', approvedAt: null });
     expect(dir[0].sentences[0].evidence).toEqual([a]);
 
-    expect((await save(w, sentences, true)).status).toBe(200);
+    // flagged sentences need an explicit acknowledgement; nothing is written on 409
+    const refused = await save(w, sentences, true);
+    expect(refused.status).toBe(409);
+    expect(await refused.json()).toEqual({ error: 'flags_need_review', flags: [['meltdown'], []] });
+    h.viewer = w.as('Maria', 'parent');
+    expect((await (await read(w)).json()).notes).toEqual([]);
+    h.viewer = w.as('Hannah', 'director');
+    expect((await notesRoute.POST(post('/api/notes', { serviceId: w.service.id, childId: w.p('Leo').id, sentences, approve: true, acknowledgeFlags: true }))).status).toBe(200);
     h.viewer = w.as('Maria', 'parent');
     const par = (await (await read(w)).json()).notes;
     expect(par).toHaveLength(1);
     expect(par[0]).toMatchObject({ status: 'approved', sentences: [{ text: sentences[0].text }, { text: sentences[1].text }] });
     expect(par[0].sentences[0].evidence).toBeUndefined();
     expect(par[0].approvedAt).toBeTruthy();
+  });
+  it('two concurrent saves leave one row', async () => {
+    const { w, a, b } = await withMoments();
+    h.viewer = w.as('Hannah', 'director');
+    const rs = await Promise.all([save(w, [{ text: 'One.', evidence: [a] }], false), save(w, [{ text: 'Two.', evidence: [b] }], true)]);
+    expect(rs.map((r) => r.status)).toEqual([200, 200]);
+    expect((await rs[0].json()).id).toBe((await rs[1].json()).id);
+    expect((await (await read(w)).json()).notes).toHaveLength(1);
+  });
+  it('other children names in a buddy note are scrubbed from the context', async () => {
+    const w = await world();
+    await checkIn(w, 'in');
+    h.viewer = w.as('Priya', 'buddy');
+    expect((await log(w, { note: "He hid with Ana and ana's sister while Malik cried" })).status).toBe(200);
+    h.viewer = w.as('Hannah', 'director');
+    const body = await (await ctx(w)).json();
+    expect(body.moments[0].note).toBe("He hid with another child and another child's sister while another child cried");
   });
   it('other parents, buddies and other churches get nothing', async () => {
     const { w } = await withMoments();
