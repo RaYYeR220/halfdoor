@@ -1,0 +1,130 @@
+import { randomBytes } from 'node:crypto';
+import { verifyCard } from '@/lib/card/verify';
+import { newWrappedDek, sealJson } from '@/lib/crypto/atrest';
+import { deleteChurch, insertChurch, listExpiredSandboxes } from './repo/churches';
+import { insertAssignments } from './repo/assignments';
+import { insertCard } from './repo/cards';
+import { insertLesson } from './repo/lessons';
+import { insertMoments, type NewMoment } from './repo/moments';
+import { insertHouseholdLinks, insertPeople, type NewPerson } from './repo/people';
+import { insertServices } from './repo/services';
+import {
+  CARDS, FERNBROOK_NAME, FERNBROOK_TZ, HOUSEHOLDS, LESSON, PEOPLE, SERVICE_ROOM,
+} from './seed/fernbrook';
+
+const MIN = 60_000;
+const DAY = 24 * 60 * MIN;
+const SANDBOX_TTL = DAY;
+const RETENTION = 365 * DAY;
+const PAST_WEEKS = 5;
+
+/** Copy the Fernbrook fixture into a fresh church with its own DEK. Times are relative to now. */
+export async function createSandbox(): Promise<{ churchId: string; slug: string }> {
+  const T = Date.now();
+  const at = (offsetMs: number) => new Date(T + offsetMs);
+  const wrappedDek = newWrappedDek();
+  const slug = `fernbrook-${randomBytes(5).toString('hex')}`;
+
+  const church = await insertChurch({
+    name: FERNBROOK_NAME, slug, tz: FERNBROOK_TZ, mode: 'sandbox', wrappedDek,
+    createdAt: at(0), expiresAt: at(SANDBOX_TTL),
+  });
+  try {
+    await seed(church.id, wrappedDek, T);
+  } catch (err) {
+    await deleteChurch(church.id);
+    throw err;
+  }
+  return { churchId: church.id, slug };
+}
+
+async function seed(churchId: string, wrappedDek: string, T: number): Promise<void> {
+  const at = (offsetMs: number) => new Date(T + offsetMs);
+
+  const rows: NewPerson[] = PEOPLE.map((p) => ({
+    churchId,
+    role: p.role,
+    firstName: p.firstName,
+    lang: p.lang ?? 'en',
+    gender: p.gender ?? null,
+    grade: p.grade ?? null,
+    skills: p.skills ?? [],
+    langs: p.langs ?? [p.lang ?? 'en'],
+    inclusionTrainingAt: p.trainingAt ? new Date(p.trainingAt) : p.trainingDaysAgo ? at(-p.trainingDaysAgo * DAY) : null,
+    backgroundExpiresAt: p.backgroundExpiresAt ? new Date(p.backgroundExpiresAt) : null,
+  }));
+  const inserted = await insertPeople(rows);
+  const id = Object.fromEntries(PEOPLE.map((p, i) => [p.key, inserted[i].id])) as Record<string, string>;
+
+  await insertHouseholdLinks(HOUSEHOLDS.map(([parent, child]) => ({ parentId: id[parent], childId: id[child] })));
+
+  const leoItemIds: string[] = [];
+  for (const [key, seedCard] of Object.entries(CARDS)) {
+    const verified = verifyCard(seedCard.story, seedCard.draft);
+    if (key === 'leo') leoItemIds.push(...verified.items.map((i) => i.id));
+    const approved = seedCard.status === 'acknowledged' ? at(-2 * DAY) : at(-DAY);
+    await insertCard({
+      churchId,
+      childId: id[key],
+      status: seedCard.status,
+      lang: verified.lang === 'other' ? 'en' : verified.lang,
+      supportLevel: seedCard.supportLevel,
+      itemsEnc: sealJson(wrappedDek, verified.items),
+      tags: verified.tags,
+      parentApprovedAt: approved,
+      directorAckAt: seedCard.status === 'acknowledged' ? at(-DAY) : null,
+      retainUntil: at(RETENTION),
+    });
+  }
+
+  const [nine, eleven] = await insertServices([
+    { churchId, label: '9:00 service', startsAt: at(-5 * MIN), endsAt: at(70 * MIN), room: SERVICE_ROOM },
+    { churchId, label: '11:00 service', startsAt: at(115 * MIN), endsAt: at(190 * MIN), room: SERVICE_ROOM },
+  ]);
+  void nine; void eleven;
+
+  const pastServices = await insertServices(
+    Array.from({ length: PAST_WEEKS }, (_, k) => {
+      const start = -5 * MIN - (k + 1) * 7 * DAY;
+      return { churchId, label: '9:00 service', startsAt: at(start), endsAt: at(start + 75 * MIN), room: SERVICE_ROOM };
+    }),
+  );
+
+  await insertAssignments(
+    pastServices.flatMap((s) => [
+      { serviceId: s.id, childId: id.leo, buddyId: id.priya, status: 'approved' as const },
+      { serviceId: s.id, childId: id.ana, buddyId: id.marco, status: 'approved' as const },
+    ]),
+  );
+
+  // Leo: hard at worship in 4 of 5 past Sundays; the fifth goes well with the headphones.
+  const headphones = leoItemIds[2] ? [leoItemIds[2]] : [];
+  const moments: NewMoment[] = pastServices.flatMap((s, k): NewMoment[] => {
+    const base = { serviceId: s.id, childId: id.leo, buddyId: id.priya };
+    const worshipAt = new Date(s.startsAt.getTime() + 10 * MIN);
+    const out: NewMoment[] = k < 4
+      ? [{ ...base, stepKey: 'worship', kind: 'hard', at: worshipAt }]
+      : [{ ...base, stepKey: 'worship', kind: 'good', helpedItemIds: headphones, at: worshipAt }];
+    if (k % 2 === 0) out.push({ ...base, stepKey: 'craft', kind: 'good', at: new Date(s.startsAt.getTime() + 50 * MIN) });
+    return out;
+  });
+  await insertMoments(moments);
+
+  await insertLesson({
+    churchId,
+    serviceDate: at(115 * MIN),
+    sourceText: LESSON.sourceText,
+    title: LESSON.title,
+    bigIdeaQuote: LESSON.bigIdea,
+    verseRef: LESSON.verseRef,
+    verseText: null,
+    steps: LESSON.steps,
+  });
+}
+
+/** Deletes expired sandboxes (everything under them cascades). Returns how many went. */
+export async function purgeExpiredSandboxes(now: Date = new Date()): Promise<number> {
+  const expired = await listExpiredSandboxes(now);
+  for (const c of expired) await deleteChurch(c.id);
+  return expired.length;
+}
