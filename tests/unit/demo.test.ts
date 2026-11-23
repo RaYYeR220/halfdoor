@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { PGlite } from '@electric-sql/pglite';
 import { drizzle } from 'drizzle-orm/pglite';
 import { migrate } from 'drizzle-orm/pglite/migrator';
-import { beforeAll, describe, expect, test } from 'vitest';
+import { beforeAll, describe, expect, test, vi } from 'vitest';
 import { setDbForTests, type Db } from '@/db/client';
 import * as schema from '@/db/schema';
 import { GET, HEAD } from '@/app/demo/route';
@@ -61,11 +61,19 @@ describe('GET /demo', () => {
 
 describe('clientIp precedence', () => {
   const ip = (h: Record<string, string>) => clientIp(new Request('http://x/', { headers: h }));
-  test('vercel header, then x-real-ip, then right-most XFF, else unknown', () => {
+  test('on Vercel: vercel header, then x-real-ip, then right-most XFF', () => {
+    vi.stubEnv('VERCEL', '1');
     expect(ip({ 'x-vercel-forwarded-for': '1.1.1.1', 'x-real-ip': '2.2.2.2', 'x-forwarded-for': '9.9.9.9, 3.3.3.3' })).toBe('1.1.1.1');
     expect(ip({ 'x-real-ip': '2.2.2.2', 'x-forwarded-for': '9.9.9.9, 3.3.3.3' })).toBe('2.2.2.2');
     expect(ip({ 'x-forwarded-for': 'spoofed, 3.3.3.3' })).toBe('3.3.3.3');
     expect(ip({})).toBe('unknown');
+    vi.unstubAllEnvs();
+  });
+  test('off Vercel: platform headers are ignored, right-most XFF is used', () => {
+    vi.stubEnv('VERCEL', '');
+    expect(ip({ 'x-vercel-forwarded-for': '1.1.1.1', 'x-real-ip': '2.2.2.2', 'x-forwarded-for': '9.9.9.9, 3.3.3.3' })).toBe('3.3.3.3');
+    expect(ip({ 'x-vercel-forwarded-for': '1.1.1.1', 'x-real-ip': '2.2.2.2' })).toBe('unknown');
+    vi.unstubAllEnvs();
   });
   test('a spoofed leftmost XFF cannot dodge the limit', async () => {
     await db.delete(schema.churches);

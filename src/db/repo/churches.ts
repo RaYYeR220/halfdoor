@@ -35,13 +35,6 @@ export async function deleteChurch(id: string): Promise<void> {
   await getDb().delete(churches).where(eq(churches.id, id));
 }
 
-/** Sandboxes created since `since`, optionally only by one creator hash (demo rate limiting). */
-export async function countSandboxesSince(since: Date, creatorHash?: string): Promise<number> {
-  const where = and(eq(churches.mode, 'sandbox'), gte(churches.createdAt, since), creatorHash ? eq(churches.creatorHash, creatorHash) : undefined);
-  const [row] = await getDb().select({ n: count() }).from(churches).where(where);
-  return Number(row?.n ?? 0);
-}
-
 export type SandboxLimits = { creatorHash: string; perHash: number; hashSince: Date; perDay: number; daySince: Date };
 
 const DEMO_LOCK_KEY = 7340118;

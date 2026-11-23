@@ -20,8 +20,6 @@ export class StoryLengthError extends Error {
 }
 
 export type PipelineOpts = {
-  /** translateCard: the child's first name, redacted before every enclave call and restored after. */
-  childName?: string;
   model: string;
   onAttestation?: (a: AttestationSummary) => void;
   signal?: AbortSignal;
@@ -105,11 +103,12 @@ export async function draftCard(
   return { card, attestation: res.attestation };
 }
 
-export async function translateCard(card: VerifiedCard, opts: PipelineOpts): Promise<VerifiedCard> {
+/** `childName` is required so a caller cannot forget redaction. */
+export async function translateCard(card: VerifiedCard, opts: PipelineOpts & { childName: string }): Promise<VerifiedCard> {
   if (card.lang === 'other' || card.items.length === 0) return card;
   const target = card.lang === 'en' ? 'es' : 'en';
   const chat = opts.chat ?? enclaveChat;
-  const { system, user } = buildTranslatePrompt(card.items, opts.childName ?? '');
+  const { system, user } = buildTranslatePrompt(card.items, opts.childName);
   const res = await chat({
     model: opts.model, purpose: 'translate', system, user, signal: opts.signal, onAttestation: opts.onAttestation, node: opts.node,
   });
@@ -118,7 +117,7 @@ export async function translateCard(card: VerifiedCard, opts: PipelineOpts): Pro
   try {
     const j = extractJson(res.text) as { translations?: { id?: unknown; text?: unknown }[] };
     byId = new Map(
-      (j.translations ?? []).flatMap((t) => (typeof t.id === 'string' && typeof t.text === 'string' && t.text.trim() ? [[t.id, restoreName(t.text, opts.childName ?? '', TRANSLATE_PLACEHOLDER)] as const] : [])),
+      (j.translations ?? []).flatMap((t) => (typeof t.id === 'string' && typeof t.text === 'string' && t.text.trim() ? [[t.id, restoreName(t.text, opts.childName, TRANSLATE_PLACEHOLDER)] as const] : [])),
     );
   } catch {
     throw new Error('the model did not return usable translations');

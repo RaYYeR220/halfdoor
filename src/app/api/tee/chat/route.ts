@@ -43,12 +43,12 @@ export async function POST(req: Request) {
       signal: req.signal,
     });
   } catch {
-    await failReserved(row);
+    await failReserved(row, false); // aborted/timed out: the enclave may have run, keep the estimate
     return upstreamError();
   }
   if (upstream.status !== 200 || !upstream.body) {
     await upstream.body?.cancel().catch(() => undefined);
-    await failReserved(row);
+    await failReserved(row, true); // real non-200: refused, not billed
     return upstreamError();
   }
   return new Response(relayAndRecord(upstream.body, row), {

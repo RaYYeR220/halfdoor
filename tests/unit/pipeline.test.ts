@@ -129,7 +129,7 @@ describe('translateCard', () => {
       attestation: A,
       usage: null,
     });
-    const out = await translateCard(card, { model: 'e2ee-x', chat });
+    const out = await translateCard(card, { model: 'e2ee-x', chat, childName: 'Leo' });
     expect(chat).toHaveBeenCalledTimes(1);
     expect(out.items[0].translation).toMatchObject({ lang: 'es', withheld: false });
     expect(out.items.find((i) => i.id === neg.id)!.translation).toMatchObject({ lang: 'es', withheld: true });
@@ -139,13 +139,13 @@ describe('translateCard', () => {
     const card = base();
     const neg = card.items.find((i) => i.text.includes('NOT'))!;
     const chat = vi.fn().mockResolvedValue({ text: JSON.stringify({ translations: [{ id: neg.id, text: 'El papa NO puede recogerlo' }] }), attestation: A, usage: null });
-    const out = await translateCard(card, { model: 'e2ee-x', chat });
+    const out = await translateCard(card, { model: 'e2ee-x', chat, childName: 'Leo' });
     expect(out.items.find((i) => i.id === neg.id)!.translation?.withheld).toBe(false);
   });
   test('lang other returns unchanged without a call', async () => {
     const card = { ...base(), lang: 'other' as const };
     const chat = vi.fn();
-    expect(await translateCard(card, { model: 'e2ee-x', chat })).toBe(card);
+    expect(await translateCard(card, { model: 'e2ee-x', chat, childName: 'Leo' })).toBe(card);
     expect(chat).not.toHaveBeenCalled();
   });
 });

@@ -202,11 +202,20 @@ describe('POST /api/tee/chat', () => {
     expect(rows[0].ok).toBe(false);
     expect(Number(rows[0].costUsd)).toBeGreaterThan(0);
   });
+  test('fetch rejecting (abort/timeout) keeps the estimate, ok=false', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new DOMException('aborted', 'AbortError')));
+    const r = await POST(body());
+    expect(r.status).toBe(502);
+    const rows = await listAiCalls(churchId);
+    expect(rows).toHaveLength(1);
+    expect(rows[0].ok).toBe(false);
+    expect(Number(rows[0].costUsd)).toBeGreaterThan(0);
+  });
   test('allowlist: only the default model, size cap, pubkey shape', async () => {
     expect((await POST(body({ model: 'e2ee-kimi-k3-1-pro-p' }))).status).toBe(400);
     expect((await POST(body({ messages: [{ role: 'user', content: 'a'.repeat(100_001) }] }))).status).toBe(400);
     expect((await POST(body({ clientPubKey: 'f'.repeat(130) }))).status).toBe(400);
-    expect((await POST(body({ clientPubKey: client.publicKeyHex.slice(2) + '00' }))).status).toBe(400);
+    expect((await POST(body({ clientPubKey: '05' + 'a'.repeat(128) }))).status).toBe(400);
   });
   test('attestation that does not match the request is not stored and flagged', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(sse([USAGE])));

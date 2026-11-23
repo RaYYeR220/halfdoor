@@ -103,9 +103,9 @@ export function relayAndRecord(upstream: ReadableStream<Uint8Array>, row: { id: 
   });
 }
 
-/** Upstream refused before streaming: not billed, but the call still counts. */
-export async function failReserved(row: { id: string; model: string }): Promise<void> {
+/** `free` only for a real non-200 upstream status (not billed); otherwise the estimate stays. */
+export async function failReserved(row: { id: string; model: string }, free: boolean): Promise<void> {
   try {
-    await finalizeAiCall(row.id, { ok: false, model: row.model, free: true });
+    await finalizeAiCall(row.id, { ok: false, model: row.model, free });
   } catch { /* ignore */ }
 }
