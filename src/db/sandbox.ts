@@ -1,7 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import { verifyCard } from '@/lib/card/verify';
 import { newWrappedDek, sealJson } from '@/lib/crypto/atrest';
-import { deleteChurch, insertChurch, listExpiredSandboxes } from './repo/churches';
+import { deleteChurch, insertChurch, insertSandboxChurchLimited, listExpiredSandboxes } from './repo/churches';
 import { insertAssignments } from './repo/assignments';
 import { insertCard } from './repo/cards';
 import { insertLesson } from './repo/lessons';
@@ -20,15 +20,41 @@ const PAST_WEEKS = 5;
 
 /** Copy the Fernbrook fixture into a fresh church with its own DEK. Times are relative to now. */
 export async function createSandbox(opts: { creatorHash?: string } = {}): Promise<{ churchId: string; slug: string }> {
+  return (await build((values) => insertChurch({ ...values, creatorHash: opts.creatorHash ?? null })))!;
+}
+
+export const DEMO_LIMITS = { perHash: 5, perHashWindowMs: 3600_000, perDay: 300 } as const;
+
+/** Rate-limited creation: the counts and the church insert happen under one lock. Null = over the limit. */
+export async function createSandboxReserved(
+  creatorHash: string,
+  now: Date = new Date(),
+): Promise<{ churchId: string; slug: string } | null> {
+  const dayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  return build((values) =>
+    insertSandboxChurchLimited(values, {
+      creatorHash,
+      perHash: DEMO_LIMITS.perHash,
+      hashSince: new Date(now.getTime() - DEMO_LIMITS.perHashWindowMs),
+      perDay: DEMO_LIMITS.perDay,
+      daySince: dayStart,
+    }),
+  );
+}
+
+async function build(
+  insert: (values: Parameters<typeof insertChurch>[0]) => Promise<Awaited<ReturnType<typeof insertChurch>> | null>,
+): Promise<{ churchId: string; slug: string } | null> {
   const T = Date.now();
   const at = (offsetMs: number) => new Date(T + offsetMs);
   const wrappedDek = newWrappedDek();
   const slug = `fernbrook-${randomBytes(5).toString('hex')}`;
 
-  const church = await insertChurch({
+  const church = await insert({
     name: FERNBROOK_NAME, slug, tz: FERNBROOK_TZ, mode: 'sandbox', wrappedDek,
-    createdAt: at(0), expiresAt: at(SANDBOX_TTL), creatorHash: opts.creatorHash ?? null,
+    createdAt: at(0), expiresAt: at(SANDBOX_TTL),
   });
+  if (!church) return null;
   try {
     await seed(church.id, wrappedDek, T);
   } catch (err) {

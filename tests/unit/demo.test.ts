@@ -7,6 +7,8 @@ import { beforeAll, describe, expect, test } from 'vitest';
 import { setDbForTests, type Db } from '@/db/client';
 import * as schema from '@/db/schema';
 import { GET, HEAD } from '@/app/demo/route';
+import { clientIp } from '@/lib/auth/clientIp';
+import { createSandboxReserved } from '@/db/sandbox';
 
 let db: ReturnType<typeof drizzle>;
 beforeAll(async () => {
@@ -54,5 +56,34 @@ describe('GET /demo', () => {
     );
     const r = await get({ 'x-forwarded-for': '198.51.100.1', 'user-agent': 'Mozilla/5.0' });
     expect(r.status).toBe(429);
+  });
+});
+
+describe('clientIp precedence', () => {
+  const ip = (h: Record<string, string>) => clientIp(new Request('http://x/', { headers: h }));
+  test('vercel header, then x-real-ip, then right-most XFF, else unknown', () => {
+    expect(ip({ 'x-vercel-forwarded-for': '1.1.1.1', 'x-real-ip': '2.2.2.2', 'x-forwarded-for': '9.9.9.9, 3.3.3.3' })).toBe('1.1.1.1');
+    expect(ip({ 'x-real-ip': '2.2.2.2', 'x-forwarded-for': '9.9.9.9, 3.3.3.3' })).toBe('2.2.2.2');
+    expect(ip({ 'x-forwarded-for': 'spoofed, 3.3.3.3' })).toBe('3.3.3.3');
+    expect(ip({})).toBe('unknown');
+  });
+  test('a spoofed leftmost XFF cannot dodge the limit', async () => {
+    await db.delete(schema.churches);
+    for (let i = 0; i < 5; i++) {
+      expect((await get({ 'x-forwarded-for': `spoof-${i}, 203.0.113.99`, 'user-agent': 'Mozilla/5.0' })).status).toBe(303);
+    }
+    expect((await get({ 'x-forwarded-for': 'spoof-new, 203.0.113.99', 'user-agent': 'Mozilla/5.0' })).status).toBe(429);
+  });
+});
+
+describe('createSandboxReserved', () => {
+  test('concurrent calls at the limit: only the remaining slots succeed', async () => {
+    await db.delete(schema.churches);
+    const h = 'c'.repeat(64);
+    for (let i = 0; i < 3; i++) expect(await createSandboxReserved(h)).not.toBeNull();
+    const results = await Promise.all(Array.from({ length: 6 }, () => createSandboxReserved(h)));
+    expect(results.filter((r) => r !== null)).toHaveLength(2);
+    const rows = await db.select().from(schema.churches);
+    expect(rows.filter((c) => c.creatorHash === h)).toHaveLength(5);
   });
 });
