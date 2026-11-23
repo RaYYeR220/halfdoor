@@ -33,10 +33,12 @@ export const AttestationSummarySchema = z.object({
   }),
   quote: z.object({
     mrtd: z.string().max(96),
+    mrtdShort: z.string().max(20),
     tdAttributes: z.string().max(16),
     signature: z.enum(['pending', 'verified', 'unverified']),
     signatureCheckedIn: z.enum(['browser', 'node']).optional(),
     signatureCheckedAt: z.string().max(40).optional(),
+    collateral: z.string().max(40).optional(),
     tcbStatus: z.string().max(60).optional(),
     advisoryIds: z.array(z.string().max(40)).max(50).optional(),
     reasonCode: z.enum(['collateral_unavailable', 'verification_failed', 'verifier_unavailable']).optional(),

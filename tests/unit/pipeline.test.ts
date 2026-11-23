@@ -13,7 +13,7 @@ const LEO =
 const A: AttestationSummary = {
   verified: true, nonceOk: true, provider: 'p', hardware: null, model: 'e2ee-x', signingAddress: null, modelPublicKey: 'k', checkedAt: 'now',
   binding: { addressMatches: true, nonceMatches: true, paddingZero: true, debug: false, teeType: 0x81, mrtd: 'm' },
-  quote: { mrtd: 'm', tdAttributes: '0000001000000000', signature: 'pending' },
+  quote: { mrtd: 'm', mrtdShort: 'm…', tdAttributes: '0000001000000000', signature: 'verified' },
 };
 
 const GOOD_LEO_DRAFT: DraftCard = {

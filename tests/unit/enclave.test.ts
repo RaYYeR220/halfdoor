@@ -36,7 +36,7 @@ const delta = (content: string) => `data: ${JSON.stringify({ choices: [{ delta: 
 
 type Handler = (url: string, init?: RequestInit) => Response | Promise<Response>;
 const REAL = FIXTURES['near-ai'].attestation;
-/** A real quote with REPORTDATA rewritten to bind the test enclave key and this request's nonce (binding passes; Intel's signature would not). */
+/** A real quote with REPORTDATA rewritten to bind the test enclave key and this request's nonce (binding passes; Intel's signature would not, so tests inject verifyQuote). */
 const boundAttestation = (nonce: string) => ({
   ...REAL,
   verified: true,
@@ -60,7 +60,7 @@ function fakeFetch(chat: Handler, att: Partial<Record<string, unknown>> | (() =>
   return { f: f as unknown as typeof fetch, calls };
 }
 const attCalls = (calls: { url: string }[]) => calls.filter((c) => c.url.includes('/tee/attestation')).length;
-const VERIFIED: QuoteSignatureResult = { status: 'verified', tcbStatus: 'UpToDate', advisoryIds: [], checkedIn: 'node' };
+const VERIFIED: QuoteSignatureResult = { status: 'verified', tcbStatus: 'UpToDate', advisoryIds: [], checkedIn: 'node', collateral: 'live' };
 /** Never touch the network for Intel collateral in unit tests. */
 const verifyQuote = vi.fn(async () => VERIFIED);
 const opts = (o: Partial<EnclaveChatOpts>): EnclaveChatOpts => ({ model: MODEL, purpose: 'card', system: 's', user: STORY, verifyQuote, ...o });
@@ -133,38 +133,56 @@ describe('enclaveChat quote checks', () => {
     expect(calls.some((c) => c.url.includes('chat'))).toBe(false);
   });
 
-  test('encryption does not wait for the signature check; onQuoteVerified fires when it completes', async () => {
+  test('nothing is encrypted or sent until Intel\'s signature on the quote verifies', async () => {
     let finish!: (r: QuoteSignatureResult) => void;
     const slow = vi.fn<(q: Uint8Array) => Promise<QuoteSignatureResult>>(() => new Promise((r) => (finish = r)));
     const onAtt = vi.fn();
-    const onQv = vi.fn();
     const { f, calls } = okNodeChat();
-    const r = await enclaveChat(opts({ node, fetchImpl: f, verifyQuote: slow, onAttestation: onAtt, onQuoteVerified: onQv }));
+    const p = enclaveChat(opts({ node, fetchImpl: f, verifyQuote: slow, onAttestation: onAtt }));
+    await vi.waitFor(() => expect(slow).toHaveBeenCalledOnce());
+    await new Promise((r) => setTimeout(r, 20));
+    expect(calls.some((c) => c.url.includes('chat'))).toBe(false);
+    expect(onAtt).not.toHaveBeenCalled();
+    finish({ ...VERIFIED, tcbStatus: 'OutOfDate' });
+    const r = await p;
     expect(r.text).toBe('ok');
     expect(calls.some((c) => c.url.endsWith('/chat/completions'))).toBe(true);
-    expect(r.attestation.quote.signature).toBe('pending');
-    expect((onAtt.mock.calls[0][0] as AttestationSummary).binding).toMatchObject({ addressMatches: true, nonceMatches: true });
-    expect(onQv).not.toHaveBeenCalled();
-    finish({ status: 'verified', tcbStatus: 'UpToDate', advisoryIds: [], checkedIn: 'node' });
-    const done = (await r.quoteVerified)!;
-    expect(done.quote).toMatchObject({ signature: 'verified', signatureCheckedIn: 'node', tcbStatus: 'UpToDate' });
-    expect(onQv).toHaveBeenCalledWith(done);
+    expect(r.attestation.quote).toMatchObject({ signature: 'verified', signatureCheckedIn: 'node', tcbStatus: 'OutOfDate', collateral: 'live' });
+    expect((onAtt.mock.calls[0][0] as AttestationSummary).quote.signature).toBe('verified');
     // Intel's chain is checked on the very quote the binding was read from
     const nonce = new URL(calls.find((c) => c.url.includes('/tee/attestation'))!.url).searchParams.get('nonce')!;
     expect(Buffer.from(slow.mock.calls[0][0] as Uint8Array).toString('hex')).toBe(boundAttestation(nonce).intel_quote);
   });
 
-  test('a throwing verifier is reported as unverified, the call still succeeds', async () => {
-    const { f } = okNodeChat();
+  test.each([
+    ['browser', false],
+    ['node', true],
+  ])('%s path: an unverified signature fails closed with quote_unverified and sends nothing', async (_n, isNode) => {
+    const { f, calls } = isNode ? okNodeChat() : okChat();
+    const bad = vi.fn(async (): Promise<QuoteSignatureResult> => ({
+      status: 'unverified', reasonCode: 'verification_failed', reason: 'ISV enclave report signature is invalid', checkedIn: 'browser',
+    }));
+    captured.keys = null;
+    const err = await enclaveChat(opts({ node: isNode ? node : undefined, fetchImpl: f, verifyQuote: bad })).catch((e) => e);
+    expect(err).toBeInstanceOf(EnclaveError);
+    expect(err.code).toBe('quote_unverified');
+    expect(err.attestation.quote).toMatchObject({ signature: 'unverified', reasonCode: 'verification_failed', reason: 'ISV enclave report signature is invalid' });
+    expect(calls.some((c) => c.url.includes('chat'))).toBe(false);
+    expect(captured.keys).toBeNull(); // no client keys were even generated: nothing was encrypted
+  });
+
+  test('a throwing verifier fails closed too', async () => {
+    const { f, calls } = okChat();
     const boom = vi.fn(async (): Promise<QuoteSignatureResult> => {
       throw new Error('verifier exploded');
     });
-    const r = await enclaveChat(opts({ node, fetchImpl: f, verifyQuote: boom }));
-    expect(r.text).toBe('ok');
-    expect((await r.quoteVerified)!.quote).toMatchObject({ signature: 'unverified', reasonCode: 'verifier_unavailable', reason: 'verifier exploded' });
+    const err = await enclaveChat(opts({ fetchImpl: f, verifyQuote: boom })).catch((e) => e);
+    expect(err).toMatchObject({ code: 'quote_unverified' });
+    expect(err.attestation.quote).toMatchObject({ signature: 'unverified', reasonCode: 'verifier_unavailable', reason: 'verifier exploded' });
+    expect(calls.some((c) => c.url.includes('chat'))).toBe(false);
   });
 
-  test('browser path reuses a checked attestation per model for 10 minutes', async () => {
+  test('browser path reuses a verified attestation per model for 10 minutes', async () => {
     vi.useFakeTimers({ toFake: ['Date'] });
     try {
       const { f, calls } = okChat();
@@ -176,6 +194,7 @@ describe('enclaveChat quote checks', () => {
       const posts = calls.filter((c) => c.url === '/api/tee/chat').map((c) => JSON.parse(c.init!.body as string));
       expect(posts[1].modelPubKey).toBe(posts[0].modelPubKey);
       expect(posts[1].attestation.checkedAt).toBe(posts[0].attestation.checkedAt);
+      expect(posts[0].attestation.quote.signature).toBe('verified');
       expect(posts[1].clientPubKey).not.toBe(posts[0].clientPubKey); // fresh client keys every call
       vi.setSystemTime(Date.now() + 10 * 60_000 + 1000);
       await enclaveChat(opts({ fetchImpl: f }));
@@ -185,16 +204,34 @@ describe('enclaveChat quote checks', () => {
     }
   });
 
-  test('concurrent browser calls share one attestation fetch; the signature check runs once', async () => {
+  test('an unverified attestation is never cached: the next call attests and verifies again', async () => {
+    const { f, calls } = okChat();
+    const results: QuoteSignatureResult[] = [{ status: 'unverified', reasonCode: 'collateral_unavailable', reason: 'pccs down', checkedIn: 'browser' }, VERIFIED];
+    const flaky = vi.fn(async () => results.shift() ?? VERIFIED);
+    await expect(enclaveChat(opts({ fetchImpl: f, verifyQuote: flaky }))).rejects.toMatchObject({ code: 'quote_unverified' });
+    expect((await enclaveChat(opts({ fetchImpl: f, verifyQuote: flaky }))).text).toBe('ok');
+    expect(attCalls(calls)).toBe(2);
+    expect(flaky).toHaveBeenCalledTimes(2);
+    await enclaveChat(opts({ fetchImpl: f, verifyQuote: flaky })); // now verified -> cached
+    expect(attCalls(calls)).toBe(2);
+    expect(flaky).toHaveBeenCalledTimes(2);
+  });
+
+  test('concurrent browser calls share one attestation fetch and one signature check', async () => {
     const { f, calls } = okChat();
     verifyQuote.mockClear();
-    const onQv = vi.fn();
-    const rs = await Promise.all([1, 2, 3].map(() => enclaveChat(opts({ fetchImpl: f, onQuoteVerified: onQv }))));
+    const rs = await Promise.all([1, 2, 3].map(() => enclaveChat(opts({ fetchImpl: f }))));
     expect(rs.map((r) => r.text)).toEqual(['ok', 'ok', 'ok']);
     expect(attCalls(calls)).toBe(1);
     expect(verifyQuote).toHaveBeenCalledTimes(1);
-    await Promise.all(rs.map((r) => r.quoteVerified));
-    expect(onQv).toHaveBeenCalledTimes(3);
+  });
+
+  test('concurrent browser calls all fail closed when the shared check is unverified', async () => {
+    const { f, calls } = okChat();
+    const bad = vi.fn(async (): Promise<QuoteSignatureResult> => ({ status: 'unverified', reason: 'x', checkedIn: 'browser' }));
+    const rs = await Promise.allSettled([1, 2].map(() => enclaveChat(opts({ fetchImpl: f, verifyQuote: bad }))));
+    expect(rs.every((r) => r.status === 'rejected')).toBe(true);
+    expect(calls.some((c) => c.url.includes('chat'))).toBe(false);
   });
 
   test('a failed attestation is not cached', async () => {

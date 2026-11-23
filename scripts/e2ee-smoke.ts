@@ -20,7 +20,7 @@ async function pipeline() {
 
 async function main() {
   if (process.argv.includes('--pipeline')) return pipeline();
-  // One attestation (binding checked here, Intel signature checked here) + one tiny encrypted call.
+  // One attestation (binding + Intel signature checked here, both before encrypting) + one tiny encrypted call.
   const r = await enclaveChat({
     model: MODEL,
     purpose: 'card',
@@ -32,10 +32,9 @@ async function main() {
   const a = r.attestation;
   console.log('attestation:', { veniceVerified: a.verified, provider: a.provider, hardware: a.hardware, signingAddress: a.signingAddress });
   console.log('binding (checked by this process):', a.binding);
+  console.log('intel signature (checked before encrypting):', a.quote);
+  console.log(signatureText(a));
   console.log('reply:', JSON.stringify(r.text), 'usage:', r.usage);
-  const done = await r.quoteVerified!;
-  console.log('intel signature:', done.quote);
-  console.log(signatureText(done));
 }
 
 main().catch((e) => { console.error(e instanceof Error ? e.message : 'failed'); process.exit(1); });

@@ -1,7 +1,9 @@
 import { describe, expect, test } from 'vitest';
 import { decryptFromEnclave, encryptForEnclave, looksEncrypted, newClientKeys } from '@/lib/crypto/e2ee';
 import { bytesToHex } from '@noble/hashes/utils.js';
-import { AttestationError, ENCLAVE_COPY, ENCLAVE_COPY_ES, checkAttestation, signatureText, withSignature } from '@/lib/crypto/attestation';
+import {
+  AttestationError, ENCLAVE_COPY, ENCLAVE_COPY_ES, HONEST_LIMITS, checkAttestation, shortMrtd, signatureText, withSignature,
+} from '@/lib/crypto/attestation';
 import { addressFromPublicKey, checkQuoteBinding } from '@/lib/crypto/tdxQuote';
 import { FIXTURES, withDebugBit, withReportData } from '../fixtures/attestation';
 
@@ -82,7 +84,7 @@ describe('checkAttestation', () => {
       signingAddress: good.signing_address.toLowerCase(),
       modelPublicKey: good.signing_key,
       binding: { addressMatches: true, nonceMatches: true, paddingZero: true, debug: false, teeType: 0x81 },
-      quote: { signature: 'pending', mrtd: checkQuoteBinding(good, nonce).mrtd, tdAttributes: '0000001000000000' },
+      quote: { signature: 'pending', mrtd: checkQuoteBinding(good, nonce).mrtd, mrtdShort: 'e107136c99ae1745…', tdAttributes: '0000001000000000' },
     });
     expect(new Date(s.checkedAt).toISOString()).toBe(s.checkedAt);
   });
@@ -121,33 +123,54 @@ describe('checkAttestation', () => {
 describe('withSignature', () => {
   const f = FIXTURES['near-ai'];
   const s = checkAttestation(f.attestation, f.requestNonce, f.model);
-  test('verified result records where it ran and the TCB status', () => {
-    const v = withSignature(s, { status: 'verified', tcbStatus: 'UpToDate', advisoryIds: [], checkedIn: 'browser' });
-    expect(v.quote).toMatchObject({ signature: 'verified', signatureCheckedIn: 'browser', tcbStatus: 'UpToDate', mrtd: s.quote.mrtd });
+  test('verified result records where it ran, the TCB status and which collateral was used', () => {
+    const v = withSignature(s, { status: 'verified', tcbStatus: 'OutOfDate', advisoryIds: ['INTEL-SA-1'], checkedIn: 'browser', collateral: 'snapshot 2026-11-23' });
+    expect(v.quote).toMatchObject({
+      signature: 'verified', signatureCheckedIn: 'browser', tcbStatus: 'OutOfDate', advisoryIds: ['INTEL-SA-1'], collateral: 'snapshot 2026-11-23', mrtd: s.quote.mrtd,
+    });
     expect(s.quote.signature).toBe('pending'); // original untouched
   });
   test('unverified result keeps the reason', () => {
     const v = withSignature(s, { status: 'unverified', reasonCode: 'collateral_unavailable', reason: 'pccs down', checkedIn: 'node' });
     expect(v.quote).toMatchObject({ signature: 'unverified', signatureCheckedIn: 'node', reasonCode: 'collateral_unavailable', reason: 'pccs down' });
   });
+  test('summary carries a short MRTD for display', () => {
+    expect(s.quote.mrtdShort).toBe(shortMrtd(s.quote.mrtd));
+    expect(shortMrtd('e107136c99ae1745ab299e9462927890')).toBe('e107136c99ae1745…');
+  });
 });
 
 describe('ENCLAVE_COPY', () => {
-  test('EN and ES carry the same keys; signature texts name where the check ran', () => {
+  test('EN and ES carry the same keys', () => {
     expect(Object.keys(ENCLAVE_COPY_ES).sort()).toEqual(Object.keys(ENCLAVE_COPY).sort());
+  });
+  test('fixed wording from the rulings', () => {
     expect(ENCLAVE_COPY.bindingOk).toBe(
       "Your browser checked that this enclave's key and your one-time code are sealed in an Intel TDX report from a non-debug enclave.",
     );
-    expect(ENCLAVE_COPY.signatureVerifiedInBrowser('UpToDate')).toMatch(/in your browser/);
-    expect(ENCLAVE_COPY.signatureVerifiedOnServer('UpToDate')).toMatch(/not in your browser/);
-    expect(ENCLAVE_COPY.signatureNotVerified('pccs down')).toMatch(/not verified.*pccs down/);
+    expect(ENCLAVE_COPY.unverifiedNothingSent).toBe("We couldn't verify the enclave right now — nothing was sent. Try again in a minute.");
+    expect(HONEST_LIMITS).toBe(
+      "We verify Intel's signature, non-debug mode and that the key and your one-time code are sealed in the report. We don't yet check the enclave's software measurement against a published list.",
+    );
+    expect(ENCLAVE_COPY.limits).toBe(HONEST_LIMITS);
+    expect(ENCLAVE_COPY.pccsNote).toMatch(/Phala's PCCS.*IP address.*No child data/);
+  });
+  test('signature texts name where the check ran, the collateral used, and that nothing is sent when unverified', () => {
+    expect(ENCLAVE_COPY.signatureVerifiedInBrowser('UpToDate', 'live')).toMatch(/in your browser.*UpToDate.*live/);
+    expect(ENCLAVE_COPY.signatureVerifiedInBrowser('UpToDate', 'snapshot 2026-11-23')).toMatch(/snapshot from 2026-11-23/);
+    expect(ENCLAVE_COPY.signatureVerifiedOnServer('UpToDate', 'live')).toMatch(/not in your browser/);
+    expect(ENCLAVE_COPY.signatureNotVerified('pccs down')).toMatch(/could not be verified.*pccs down.*nothing was sent/);
+    expect(ENCLAVE_COPY.measurement('e107136c99ae1745…')).toMatch(/e107136c99ae1745…/);
   });
   test('signatureText picks the right string for a summary', () => {
     const f = FIXTURES['near-ai'];
     const s = checkAttestation(f.attestation, f.requestNonce, f.model);
     expect(signatureText(s)).toBe(ENCLAVE_COPY.signaturePending);
-    expect(signatureText(withSignature(s, { status: 'verified', tcbStatus: 'UpToDate', advisoryIds: [], checkedIn: 'browser' }))).toBe(
-      ENCLAVE_COPY.signatureVerifiedInBrowser('UpToDate'),
+    expect(signatureText(withSignature(s, { status: 'verified', tcbStatus: 'UpToDate', advisoryIds: [], checkedIn: 'browser', collateral: 'live' }))).toBe(
+      ENCLAVE_COPY.signatureVerifiedInBrowser('UpToDate', 'live'),
+    );
+    expect(signatureText(withSignature(s, { status: 'verified', tcbStatus: 'UpToDate', advisoryIds: [], checkedIn: 'node', collateral: 'live' }), 'es')).toBe(
+      ENCLAVE_COPY_ES.signatureVerifiedOnServer('UpToDate', 'live'),
     );
     expect(signatureText(withSignature(s, { status: 'unverified', reason: 'x', checkedIn: 'browser' }), 'es')).toBe(ENCLAVE_COPY_ES.signatureNotVerified('x'));
   });

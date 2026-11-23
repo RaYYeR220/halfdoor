@@ -37,7 +37,10 @@ const slug = (p: string) => `${p}-${randomBytes(4).toString('hex')}`;
 /** Binding + quote parts of a browser-side AttestationSummary (see checkAttestation). */
 const ATT_QUOTE = {
   binding: { addressMatches: true, nonceMatches: true, paddingZero: true, debug: false, teeType: 0x81, mrtd: 'ab'.repeat(48) },
-  quote: { mrtd: 'ab'.repeat(48), tdAttributes: '0000001000000000', signature: 'pending' as const },
+  quote: {
+    mrtd: 'ab'.repeat(48), mrtdShort: 'abababababababab…', tdAttributes: '0000001000000000',
+    signature: 'verified' as const, signatureCheckedIn: 'browser' as const, collateral: 'live' as const, tcbStatus: 'UpToDate',
+  },
 };
 
 describe('prices', () => {
@@ -242,7 +245,7 @@ describe('POST /api/tee/chat', () => {
     };
     await (await POST(body({ attestation: att }))).text();
     const rows = await listAiCalls(churchId);
-    expect(rows[0].attestation).toMatchObject({ verified: true, binding: { nonceMatches: true }, quote: { signature: 'pending' } });
+    expect(rows[0].attestation).toMatchObject({ verified: true, binding: { nonceMatches: true }, quote: { signature: 'verified', collateral: 'live' } });
     expect(rows[0].attestationMismatch).toBe(false);
   });
   test('stream error records exactly one ok=false row', async () => {

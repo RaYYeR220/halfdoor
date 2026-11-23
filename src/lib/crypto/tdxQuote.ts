@@ -1,13 +1,17 @@
 // Isomorphic (browser + Node) checks on the Intel TDX quote inside a Venice attestation.
 //
-// Binding (synchronous, mandatory before encrypting): the quote's REPORTDATA must hold the address of
-// the very key we encrypt to and OUR fresh nonce, the TD must not be in debug mode, and the quote must
-// be a TDX (v4, TEE type 0x81) quote. This is plain parsing, so on its own it proves nothing about who
-// produced the quote.
+// Both checks gate encryption (enclaveClient): nothing is encrypted or sent unless both pass.
 //
-// Signature (asynchronous, best effort): @phala/dcap-qvl verifies Intel's DCAP chain (PCK certificate
-// chain to Intel's root CA, CRLs, TCB info, QE identity, quote signature). It needs Intel collateral
-// (public data) from a PCCS; any failure is reported as `unverified` with a reason, never as verified.
+// Binding: the quote's REPORTDATA must hold the address of the very key we encrypt to and OUR fresh
+// nonce, the TD must not be in debug mode, and the quote must be a TDX (v4, TEE type 0x81) quote. This is
+// plain parsing, so on its own it proves nothing about who produced the quote (anyone can build one).
+//
+// Signature: @phala/dcap-qvl verifies Intel's DCAP chain (PCK certificate chain to Intel's root CA, CRLs,
+// TCB info, QE identity, quote signature), which is what makes the binding mean something. It needs Intel
+// collateral (public data) from a PCCS, with a bundled snapshot as fallback; any failure is reported as
+// `unverified` with a reason, never as verified.
+//
+// Not checked: the enclave's software measurement (MRTD/RTMRs) against a published list (see HONEST_LIMITS).
 import { keccak_256 } from '@noble/hashes/sha3.js';
 import { sha256 } from '@noble/hashes/sha2.js';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils.js';
@@ -120,14 +124,16 @@ export function checkQuoteBinding(att: unknown, nonce: string): QuoteBinding {
   };
 }
 
-// ---------------------------------------------------------------- Intel signature chain
+/// ---------------------------------------------------------------- Intel signature chain
 
 export type SignatureReasonCode = 'collateral_unavailable' | 'verification_failed' | 'verifier_unavailable';
 export type CheckedIn = 'browser' | 'node';
+/** Where the Intel collateral came from: fetched live from the PCCS, or the bundled snapshot (with its capture date). */
+export type CollateralSource = 'live' | `snapshot ${string}`;
 
 export type QuoteSignatureResult = {
   status: 'verified' | 'unverified';
-  /** Intel TCB status of the platform, e.g. UpToDate / OutOfDate (only when verified). */
+  /** Intel TCB status of the platform, e.g. UpToDate / OutOfDate (only when verified; any status is accepted but shown). */
   tcbStatus?: string;
   advisoryIds?: string[];
   reasonCode?: SignatureReasonCode;
@@ -135,21 +141,29 @@ export type QuoteSignatureResult = {
   reason?: string;
   /** Where this check actually ran. */
   checkedIn: CheckedIn;
+  /** Which collateral the chain was checked against (absent when none could be obtained). */
+  collateral?: CollateralSource;
 };
 
 /** Collateral as @phala/dcap-qvl expects it (public Intel data). */
 export type Collateral = Record<string, unknown>;
 
+/** Bundled fallback (scripts/capture-collateral.ts), keyed by `${FMSPC}:${ca}`; PCK chains come from each quote. */
+export type CollateralSnapshot = { capturedAt: string; source?: string; validUntil?: string; entries: Record<string, Collateral> };
+
 export type VerifyQuoteOpts = {
-  /** Default: the library's fetcher against the public PCCS (CORS-enabled, so it runs from the browser too). */
+  /** Live collateral. Default: the library's fetcher against the public PCCS (CORS-enabled, so it runs in the browser). */
   getCollateral?: (quote: Uint8Array) => Promise<Collateral>;
+  /** Fallback when the live fetch fails. Default: the bundled snapshot (loaded lazily). */
+  snapshot?: () => Promise<CollateralSnapshot | null>;
   /** Verification time; default now. */
   nowSecs?: number;
-  /** Deadline per PCCS attempt (default 10 s; the default fetcher retries once). */
-  timeoutMs?: number;
+  /** Deadline for the live PCCS fetch before falling back to the snapshot (default 4 s). */
+  liveTimeoutMs?: number;
 };
 
 export const PCCS_URL = 'https://pccs.phala.network';
+const LIVE_TIMEOUT_MS = 4_000;
 const COLLATERAL_TTL_MS = 60 * 60_000;
 const MAX_REASON = 200;
 
@@ -168,7 +182,22 @@ function loadDcap(): Promise<Dcap> {
   return dcap;
 }
 
-/** Per platform (PCK certificate chain inside the quote), successful fetches only. */
+/** Start loading the verifier early (e.g. when an enclave form opens) so the gated call is quicker. */
+export function preloadQuoteVerifier(): void {
+  loadDcap().catch(() => undefined);
+}
+
+/** The bundled collateral snapshot (its own lazy chunk), or null if it cannot be loaded. */
+export async function loadCollateralSnapshot(): Promise<CollateralSnapshot | null> {
+  try {
+    const m = await import('./collateral-snapshot.json');
+    return ((m as { default?: unknown }).default ?? m) as CollateralSnapshot;
+  } catch {
+    return null;
+  }
+}
+
+/** Live collateral per PCK certificate chain (i.e. per machine), successful fetches only. */
 const collateralCache = new Map<string, { at: number; collateral: Collateral }>();
 export function clearCollateralCache(): void {
   collateralCache.clear();
@@ -176,6 +205,10 @@ export function clearCollateralCache(): void {
 
 const msg = (e: unknown) => (e instanceof Error ? e.message : String(e)).slice(0, MAX_REASON);
 
+/**
+ * Full DCAP check of the quote. Live collateral first; only if it cannot be FETCHED is the bundled snapshot
+ * used (still a full chain check, labelled with its date). A verification failure never falls back.
+ */
 export async function verifyQuoteSignature(quote: Uint8Array, opts: VerifyQuoteOpts = {}): Promise<QuoteSignatureResult> {
   const checkedIn = runtimeName();
   let lib: Dcap;
@@ -186,18 +219,33 @@ export async function verifyQuoteSignature(quote: Uint8Array, opts: VerifyQuoteO
   }
 
   let collateral: Collateral;
+  let source: CollateralSource;
   try {
-    const key = bytesToHex(sha256(lib.Quote.parse(quote).rawCertChain()));
-    const hit = collateralCache.get(key);
+    const parsed = lib.Quote.parse(quote);
+    const machine = bytesToHex(sha256(parsed.rawCertChain()));
+    const hit = collateralCache.get(machine);
     if (hit && Date.now() - hit.at < COLLATERAL_TTL_MS) {
       collateral = hit.collateral;
+      source = 'live';
     } else {
-      const fromPccs = async (q: Uint8Array) =>
-        (await lib.getCollateral(PCCS_URL, q, { timeoutMs: opts.timeoutMs ?? 10_000 })) as unknown as Collateral;
-      // One retry: a first connection to the PCCS occasionally stalls (seen once in a headless browser).
-      const fetchIt = opts.getCollateral ?? ((q: Uint8Array) => fromPccs(q).catch(() => fromPccs(q)));
-      collateral = await fetchIt(quote);
-      collateralCache.set(key, { at: Date.now(), collateral });
+      const live =
+        opts.getCollateral ??
+        (async (q: Uint8Array) =>
+          (await lib.getCollateral(PCCS_URL, q, { timeoutMs: opts.liveTimeoutMs ?? LIVE_TIMEOUT_MS })) as unknown as Collateral);
+      try {
+        collateral = await live(quote);
+        source = 'live';
+        collateralCache.set(machine, { at: Date.now(), collateral });
+      } catch (liveErr) {
+        const snap = await (opts.snapshot ?? loadCollateralSnapshot)().catch(() => null);
+        const platform = `${bytesToHex(lib.intel.getFmspc(parsed)).toUpperCase()}:${lib.intel.getCa(parsed)}`;
+        const entry = snap?.entries[platform];
+        if (!snap || !entry) {
+          throw new Error(`live PCCS: ${msg(liveErr)}; snapshot: ${snap ? `no entry for ${platform}` : 'unavailable'}`);
+        }
+        collateral = entry;
+        source = `snapshot ${snap.capturedAt.slice(0, 10)}`;
+      }
     }
   } catch (e) {
     return { status: 'unverified', reasonCode: 'collateral_unavailable', reason: msg(e), checkedIn };
@@ -206,8 +254,8 @@ export async function verifyQuoteSignature(quote: Uint8Array, opts: VerifyQuoteO
   try {
     const now = opts.nowSecs ?? Math.floor(Date.now() / 1000);
     const r = lib.verify(quote, collateral as unknown as Parameters<Dcap['verify']>[1], now);
-    return { status: 'verified', tcbStatus: String(r.status), advisoryIds: [...(r.advisory_ids ?? [])], checkedIn };
+    return { status: 'verified', tcbStatus: String(r.status), advisoryIds: [...(r.advisory_ids ?? [])], checkedIn, collateral: source };
   } catch (e) {
-    return { status: 'unverified', reasonCode: 'verification_failed', reason: msg(e), checkedIn };
+    return { status: 'unverified', reasonCode: 'verification_failed', reason: msg(e), checkedIn, collateral: source };
   }
 }
