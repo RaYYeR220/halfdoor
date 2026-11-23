@@ -31,6 +31,11 @@ export async function checkBudget(churchId: string, now: Date = new Date()): Pro
   return check(getDb(), churchId, now);
 }
 
+/** Worst-case cost of a plain-text call: chars/3 as the prompt-token estimate, plus the full max_tokens out. */
+export function estimatePlainUsd(model: string, promptChars: number, maxTokens: number): number {
+  return costUsd(model, { prompt_tokens: Math.ceil(promptChars / 3), completion_tokens: Math.min(maxTokens, CAPS.maxTokens) });
+}
+
 /** Worst-case cost: ciphertext hex length / 2 / 3 as the prompt-token estimate, plus the full max_tokens out. */
 export function estimateUsd(model: string, ciphertextHexChars: number, maxTokens: number): number {
   return costUsd(model, { prompt_tokens: Math.ceil(ciphertextHexChars / 2 / 3), completion_tokens: Math.min(maxTokens, CAPS.maxTokens) });
@@ -38,10 +43,12 @@ export function estimateUsd(model: string, ciphertextHexChars: number, maxTokens
 
 export type Reservation = {
   churchId: string;
-  purpose: 'card' | 'translate' | 'note';
+  purpose: 'card' | 'translate' | 'note' | 'lesson';
   model: string;
   estimateUsd: number;
-  attestation: unknown;
+  /** Default true. false = a plain (non-enclave) call that carries no child data, e.g. the lesson restructure. */
+  e2ee?: boolean;
+  attestation?: unknown;
   attestationMismatch?: boolean;
 };
 
@@ -58,7 +65,7 @@ export async function reserveBudget(r: Reservation, now: Date = new Date()): Pro
         churchId: r.churchId,
         purpose: r.purpose,
         model: r.model,
-        e2ee: true,
+        e2ee: r.e2ee ?? true,
         attestation: r.attestation ?? null,
         attestationMismatch: r.attestationMismatch ?? false,
         costUsd: r.estimateUsd.toFixed(6),

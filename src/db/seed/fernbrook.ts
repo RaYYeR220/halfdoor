@@ -178,12 +178,18 @@ export const LESSON = {
   bigIdea: 'Waiting is easier when we know someone good is coming.',
   sourceText:
     'This is the first Sunday of Advent, and our theme is waiting with hope. Waiting is hard for everybody, and it is especially hard for kids who just want it to be Christmas already. Long ago, God\'s people waited a very long time for a promised king. Waiting is easier when we know someone good is coming. Today the kids will hear about that promise, sing about it, and make something to remind them that hope can be patient and glad at the same time.',
+  // Verbatim from the Bible SDK (BSB), stored so the demo shows the verse offline.
+  verseText:
+    ['For unto us a child is born,', 'unto us a son is given,', 'and the government will be upon His shoulders.', 'And He will be called', 'Wonderful Counselor, Mighty God,', 'Everlasting Father, Prince of Peace.'].join(String.fromCharCode(10)),
   steps: [
-    { key: 'arrive', label: 'Arrive', minutes: 5, load: 'low' },
-    { key: 'worship', label: 'Worship', minutes: 15, load: 'high' },
-    { key: 'bible_story', label: 'Bible story', minutes: 15, load: 'low' },
-    { key: 'snack', label: 'Snack', minutes: 10, load: 'low' },
-    { key: 'craft', label: 'Craft', minutes: 15, load: 'low' },
-    { key: 'pickup', label: 'Pickup', minutes: 5, load: 'low' },
+    { key: 'arrive', label: 'Arrive', segment: 'arrive', sensoryLoad: 'low', minutes: 5 },
+    { key: 'worship', label: 'Worship', segment: 'worship', sensoryLoad: 'high', minutes: 15 },
+    { key: 'story', label: 'Bible story', segment: 'story', sensoryLoad: 'med', minutes: 15 },
+    { key: 'snack', label: 'Snack', segment: 'snack', sensoryLoad: 'med', minutes: 10 },
+    { key: 'craft', label: 'Craft', segment: 'craft', sensoryLoad: 'low', minutes: 15 },
+    { key: 'pickup', label: 'Pickup', segment: 'pickup', sensoryLoad: 'med', minutes: 5 },
   ],
 };
+
+/** Last weeks' lesson: same shape, so past services resolve their steps (patterns, moments). */
+export const PAST_LESSON_TITLE = 'God keeps his promises';

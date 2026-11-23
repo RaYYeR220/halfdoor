@@ -93,7 +93,7 @@ describe('POST /api/moments', () => {
     h.viewer = w.as('Priya', 'buddy');
     expect((await log(w, { stepKey: 'nonsense' })).status).toBe(400);
     expect((await log(w, { stepKey: 'other' })).status).toBe(200);
-    expect((await log(w, { stepKey: 'bible_story', kind: 'good' })).status).toBe(200);
+    expect((await log(w, { stepKey: 'story', kind: 'good' })).status).toBe(200);
     expect((await log(w, { helpedItemIds: ['i999'] })).status).toBe(400);
     expect((await log(w, { kind: 'angry' })).status).toBe(400);
     expect((await log(w, { note: 'x'.repeat(281) })).status).toBe(400);

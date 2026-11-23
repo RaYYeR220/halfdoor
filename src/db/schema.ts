@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm';
 import {
-  boolean, index, integer, jsonb, numeric, pgTable, primaryKey, text, timestamp, uniqueIndex, uuid,
+  type AnyPgColumn, boolean, index, integer, jsonb, numeric, pgTable, primaryKey, text, timestamp, uniqueIndex, uuid,
 } from 'drizzle-orm/pg-core';
 
 // Tables are unqualified: they land in the `halfdoor` schema via the role's search_path.
@@ -71,6 +71,8 @@ export const services = pgTable('services', {
   pcoEventId: text('pco_event_id'),
   pcoServiceTypeId: text('pco_service_type_id'),
   pcoPlanId: text('pco_plan_id'),
+  /** The lesson taught at this service (null until the director links one). */
+  lessonId: uuid('lesson_id').references((): AnyPgColumn => lessons.id, { onDelete: 'set null' }),
 }, (t) => [index('services_church_idx').on(t.churchId)]);
 
 export const assignments = pgTable('assignments', {

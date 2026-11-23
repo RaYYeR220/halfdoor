@@ -50,6 +50,13 @@
       "when": 1795473203105,
       "tag": "0006_light_jazinda",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1795473601394,
+      "tag": "0007_glorious_franklin_storm",
+      "breakpoints": true
     }
   ]
 }

@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { getDb } from '../client';
 import { lessons } from '../schema';
 
@@ -21,4 +21,10 @@ export async function insertLesson(values: NewLesson): Promise<Lesson> {
 
 export async function updateLesson(id: string, patch: Partial<NewLesson>): Promise<void> {
   await getDb().update(lessons).set(patch).where(eq(lessons.id, id));
+}
+
+/** Tenant-scoped: the lesson must belong to the church. */
+export async function getLessonInChurch(churchId: string, id: string): Promise<Lesson | undefined> {
+  const [row] = await getDb().select().from(lessons).where(and(eq(lessons.churchId, churchId), eq(lessons.id, id)));
+  return row;
 }

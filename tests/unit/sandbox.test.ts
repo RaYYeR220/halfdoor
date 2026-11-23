@@ -119,12 +119,17 @@ describe('createSandbox', () => {
       expect(a.find((x) => x.childId === ana.id)?.buddyId).toBe(marco.id);
     }
 
-    const [lesson] = await listLessons(churchId);
+    const lessons = await listLessons(churchId); // ordered by date: last week's, then this week's
+    expect(lessons).toHaveLength(2);
+    const lesson = lessons[1];
     expect(lesson.title).toBe('Waiting with hope');
     expect(lesson.verseRef).toBe('Isaiah 9:6');
-    expect(lesson.verseText).toBeNull();
+    expect(lesson.verseText).toContain('Wonderful Counselor');
     expect(lesson.bigIdeaQuote && lesson.sourceText.includes(lesson.bigIdeaQuote)).toBe(true);
-    expect((lesson.steps as { key: string; load: string }[]).find((s) => s.key === 'worship')?.load).toBe('high');
+    expect((lesson.steps as { key: string; sensoryLoad: string }[]).find((s) => s.key === 'worship')?.sensoryLoad).toBe('high');
+    const linked = (await listServices(churchId)).map((s) => s.lessonId);
+    expect(linked.every((id) => id !== null)).toBe(true);
+    expect(new Set(linked).size).toBe(2);
   });
 
   it('has the expired and skilled buddies the director demo needs', async () => {

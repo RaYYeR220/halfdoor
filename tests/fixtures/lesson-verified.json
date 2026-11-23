@@ -1,0 +1,65 @@
+{
+  "model": "claude-sonnet-5-5",
+  "source": "fernbrook LESSON.sourceText",
+  "draft": {
+    "title": "Waiting with Hope",
+    "steps": [
+      {
+        "key": "hear_the_promise",
+        "label": "Hear the promise of a king",
+        "segment": "story",
+        "sensoryLoad": "low",
+        "minutes": 10
+      },
+      {
+        "key": "sing_about_it",
+        "label": "Sing about the promise",
+        "segment": "worship",
+        "sensoryLoad": "med",
+        "minutes": 10
+      },
+      {
+        "key": "make_hope_reminder",
+        "label": "Make a hope reminder",
+        "segment": "craft",
+        "sensoryLoad": "med",
+        "minutes": 15
+      }
+    ],
+    "bigIdeaQuote": "Waiting is easier when we know someone good is coming.",
+    "verseRef": null
+  },
+  "lesson": {
+    "title": "Waiting with Hope",
+    "steps": [
+      {
+        "key": "hear_the_promise",
+        "label": "Hear the promise of a king",
+        "segment": "story",
+        "sensoryLoad": "low",
+        "minutes": 10
+      },
+      {
+        "key": "sing_about_it",
+        "label": "Sing about the promise",
+        "segment": "worship",
+        "sensoryLoad": "med",
+        "minutes": 10
+      },
+      {
+        "key": "make_hope_reminder",
+        "label": "Make a hope reminder",
+        "segment": "craft",
+        "sensoryLoad": "med",
+        "minutes": 15
+      }
+    ],
+    "bigIdeaQuote": "Waiting is easier when we know someone good is coming.",
+    "bigIdeaSpan": {
+      "start": 248,
+      "end": 302
+    },
+    "verseRef": null,
+    "totalMinutes": 35
+  }
+}

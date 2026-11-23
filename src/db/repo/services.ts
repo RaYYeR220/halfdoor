@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { getDb } from '../client';
 import { services } from '../schema';
 
@@ -22,4 +22,10 @@ export async function insertServices(rows: NewService[]): Promise<Service[]> {
 export async function getServiceInChurch(churchId: string, id: string): Promise<Service | undefined> {
   const [row] = await getDb().select().from(services).where(and(eq(services.churchId, churchId), eq(services.id, id)));
   return row;
+}
+
+/** Links services of this church to a lesson (ids outside the church are ignored). */
+export async function setServicesLesson(churchId: string, serviceIds: string[], lessonId: string | null): Promise<void> {
+  if (serviceIds.length === 0) return;
+  await getDb().update(services).set({ lessonId }).where(and(eq(services.churchId, churchId), inArray(services.id, serviceIds)));
 }

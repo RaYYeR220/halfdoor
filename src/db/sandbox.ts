@@ -11,7 +11,7 @@ import { insertMoments, type NewMoment } from './repo/moments';
 import { insertHouseholdLinks, insertPeople, type NewPerson } from './repo/people';
 import { insertServices } from './repo/services';
 import {
-  CARDS, FERNBROOK_NAME, FERNBROOK_TZ, HOUSEHOLDS, LESSON, PEOPLE, SERVICE_ROOM,
+  CARDS, FERNBROOK_NAME, FERNBROOK_TZ, HOUSEHOLDS, LESSON, PAST_LESSON_TITLE, PEOPLE, SERVICE_ROOM,
 } from './seed/fernbrook';
 
 const MIN = 60_000;
@@ -105,9 +105,15 @@ async function seed(churchId: string, wrappedDek: string, T: number): Promise<vo
     });
   }
 
+  const lessonBase = {
+    churchId, sourceText: LESSON.sourceText, bigIdeaQuote: LESSON.bigIdea, verseRef: LESSON.verseRef, verseText: LESSON.verseText, steps: LESSON.steps,
+  };
+  const currentLesson = await insertLesson({ ...lessonBase, serviceDate: at(115 * MIN), title: LESSON.title });
+  const pastLesson = await insertLesson({ ...lessonBase, serviceDate: at(-7 * DAY), title: PAST_LESSON_TITLE });
+
   const [nine, eleven] = await insertServices([
-    { churchId, label: '9:00 service', startsAt: at(-5 * MIN), endsAt: at(70 * MIN), room: SERVICE_ROOM },
-    { churchId, label: '11:00 service', startsAt: at(115 * MIN), endsAt: at(190 * MIN), room: SERVICE_ROOM },
+    { churchId, label: '9:00 service', startsAt: at(-5 * MIN), endsAt: at(70 * MIN), room: SERVICE_ROOM, lessonId: currentLesson.id },
+    { churchId, label: '11:00 service', startsAt: at(115 * MIN), endsAt: at(190 * MIN), room: SERVICE_ROOM, lessonId: currentLesson.id },
   ]);
   void nine;
   // Planning Center Services blockout: Priya plays on the worship team during the 11:00.
@@ -118,14 +124,14 @@ async function seed(churchId: string, wrappedDek: string, T: number): Promise<vo
   const pastServices = await insertServices(
     Array.from({ length: PAST_WEEKS }, (_, k) => {
       const start = -5 * MIN - (k + 1) * 7 * DAY;
-      return { churchId, label: '9:00 service', startsAt: at(start), endsAt: at(start + 75 * MIN), room: SERVICE_ROOM };
+      return { churchId, label: '9:00 service', startsAt: at(start), endsAt: at(start + 75 * MIN), room: SERVICE_ROOM, lessonId: pastLesson.id };
     }),
   );
 
   const pastElevens = await insertServices(
     Array.from({ length: PAST_WEEKS }, (_, k) => {
       const start = 115 * MIN - (k + 1) * 7 * DAY;
-      return { churchId, label: '11:00 service', startsAt: at(start), endsAt: at(start + 75 * MIN), room: SERVICE_ROOM };
+      return { churchId, label: '11:00 service', startsAt: at(start), endsAt: at(start + 75 * MIN), room: SERVICE_ROOM, lessonId: pastLesson.id };
     }),
   );
 
@@ -161,16 +167,6 @@ async function seed(churchId: string, wrappedDek: string, T: number): Promise<vo
   });
   await insertMoments(moments);
 
-  await insertLesson({
-    churchId,
-    serviceDate: at(115 * MIN),
-    sourceText: LESSON.sourceText,
-    title: LESSON.title,
-    bigIdeaQuote: LESSON.bigIdea,
-    verseRef: LESSON.verseRef,
-    verseText: null,
-    steps: LESSON.steps,
-  });
 }
 
 /** Deletes expired sandboxes (everything under them cascades). Returns how many went. */
