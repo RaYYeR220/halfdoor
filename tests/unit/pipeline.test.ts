@@ -1,8 +1,10 @@
 import { describe, expect, test, vi } from 'vitest';
 import type { AttestationSummary } from '@/lib/crypto/attestation';
 import { buildCardPrompt, buildTranslatePrompt } from '@/lib/card/prompts';
-import { draftCard, StoryLengthError, translateCard } from '@/lib/card/pipeline';
-import { verifyCard } from '@/lib/card/verify';
+import { draftCard, parseDraft, StoryLengthError, translateCard } from '@/lib/card/pipeline';
+import { acceptSafetyPrompt, verifyCard } from '@/lib/card/verify';
+import { renderCardText } from '@/lib/card/render';
+import { stripListMarker } from '@/lib/text/sentences';
 import type { DraftCard } from '@/lib/card/schema';
 
 const LEO =
@@ -147,5 +149,96 @@ describe('translateCard', () => {
     const chat = vi.fn();
     expect(await translateCard(card, { model: 'e2ee-x', chat, childName: 'Leo' })).toBe(card);
     expect(chat).not.toHaveBeenCalled();
+  });
+});
+
+describe('tolerant draft parsing', () => {
+  test('one bad tag no longer discards the card (no retry, good tags kept)', async () => {
+    const raw = { ...GOOD_LEO_DRAFT, tags: [{ tag: 'safety', item: 3 }, { tag: 'food_allergy', item: 3 }] };
+    const chat = vi.fn().mockResolvedValue({ text: JSON.stringify(raw), attestation: A, usage: null });
+    const { card } = await draftCard(LEO, 'Leo', { model: 'e2ee-x', chat });
+    expect(chat).toHaveBeenCalledTimes(1);
+    expect(card.items.filter((i) => i.section === 'safety')).toHaveLength(2);
+    expect(card.tags).toEqual(['food_allergy']);
+  });
+
+  test('an item with section "foo" is dropped as invalid_shape; tag indexes follow the kept items', async () => {
+    const raw = {
+      items: [
+        { section: 'foo', text: 'Loves trains', quotes: ['loves trains and the color yellow'] },
+        { section: 'safety', text: 'Peanut allergy', quotes: ['IS allergic to peanuts'] },
+      ],
+      tags: [{ tag: 'food_allergy', item: 1 }, { tag: 'noise_sensitive', item: 0 }],
+    };
+    const chat = vi.fn().mockResolvedValue({ text: JSON.stringify(raw), attestation: A, usage: null });
+    const { card } = await draftCard(LEO, 'Leo', { model: 'e2ee-x', chat });
+    expect(chat).toHaveBeenCalledTimes(1);
+    expect(card.items).toHaveLength(1);
+    expect(card.items[0].section).toBe('safety');
+    expect(card.dropped).toEqual([{ section: null, text: 'Loves trains', reason: 'invalid_shape' }]);
+    expect(card.tags).toEqual(['food_allergy']);
+  });
+
+  test('items with no usable quote or wrong types are dropped; empty quotes are filtered, extra quotes capped at 4', () => {
+    const p = parseDraft(
+      JSON.stringify({
+        items: [
+          { section: 'loves', text: '', quotes: [''] },
+          { section: 'hard', text: 'Noise', quotes: [42] },
+          'not an object',
+          { section: 'helps', text: 'Headphones', quotes: ['', 'a', 'b', 'c', 'd', 'e'] },
+        ],
+        tags: [{ tag: 'noise_sensitive', item: 3 }, { tag: 'noise_sensitive', item: -1 }, { tag: 'needs_breaks', item: 9 }],
+      }),
+    )!;
+    expect(p.draft.items).toEqual([{ section: 'helps', text: 'Headphones', quotes: ['a', 'b', 'c', 'd'] }]);
+    expect(p.draft.tags).toEqual([{ tag: 'noise_sensitive', item: 0 }]);
+    expect(p.invalid.map((d) => [d.section, d.reason])).toEqual([
+      ['loves', 'invalid_shape'],
+      ['hard', 'invalid_shape'],
+      [null, 'invalid_shape'],
+    ]);
+  });
+
+  test('only non-JSON text or a missing items array triggers the retry', async () => {
+    expect(parseDraft('not json')).toBeNull();
+    expect(parseDraft('{"cards": []}')).toBeNull();
+    expect(parseDraft('```json\n{"items": []}\n```')).toEqual({ draft: { items: [], tags: [] }, invalid: [] });
+    const chat = vi.fn().mockResolvedValueOnce({ text: '{"cards": []}', attestation: A, usage: null })
+      .mockResolvedValueOnce({ text: JSON.stringify(GOOD_LEO_DRAFT), attestation: A, usage: null });
+    await draftCard(LEO, 'Leo', { model: 'e2ee-x', chat });
+    expect(chat).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('list markers', () => {
+  const BULLETED = 'Valentina, 8 años — diabetes tipo 1\n- Usa bomba de insulina y sensor (Dexcom). Ya no usa plumas de insulina.\n- Si está por encima de 250: avisarme, NO darle insulina.\n1) Le encanta dibujar.';
+  test('verbatim safety text and the rendered card carry no parent bullet ("- - ...")', async () => {
+    const raw = {
+      items: [
+        { section: 'safety', text: 'Bomba y sensor', quotes: ['Usa bomba de insulina y sensor (Dexcom)'] },
+        { section: 'safety', text: 'NO insulina', quotes: ['NO darle insulina'] },
+        { section: 'loves', text: 'Le encanta dibujar', quotes: ['Le encanta dibujar'] },
+      ],
+      tags: [],
+    };
+    const chat = vi.fn().mockResolvedValue({ text: JSON.stringify(raw), attestation: A, usage: null });
+    const { card } = await draftCard(BULLETED, 'Valentina', { model: 'e2ee-x', chat });
+    expect(card.items[0].text).toBe('Usa bomba de insulina y sensor (Dexcom).');
+    expect(card.items[1].text).toBe('Si está por encima de 250: avisarme, NO darle insulina.');
+    for (const it of card.items) for (const q of it.quotes) expect(BULLETED.slice(q.span.start, q.span.end)).toBe(q.text);
+    const text = renderCardText(card);
+    expect(text).not.toMatch(/- - |- 1\) /);
+    expect(text).toContain('- Usa bomba de insulina y sensor (Dexcom).');
+  });
+  test('an accepted safety-net prompt from a bulleted line has no marker', () => {
+    const v = verifyCard(BULLETED, { items: [{ section: 'loves', text: 'Le encanta dibujar', quotes: ['Le encanta dibujar'] }], tags: [] });
+    const p = v.safetyPrompts.find((x) => x.sentence.includes('bomba'))!;
+    const r = acceptSafetyPrompt(v, BULLETED, p.id);
+    expect(r.items.at(-1)!.text).toBe('Usa bomba de insulina y sensor (Dexcom).');
+  });
+  test('stripListMarker handles - * • – 1. 1) and leaves other text alone', () => {
+    for (const s of ['- a b', '* a b', '• a b', '– a b', '1. a b', '12) a b', '  - a b']) expect(stripListMarker(s)).toBe('a b');
+    for (const s of ['-5 degrees', '2.5 mg twice', 'Dad - not allowed']) expect(stripListMarker(s)).toBe(s);
   });
 });

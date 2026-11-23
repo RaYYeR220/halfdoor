@@ -12,17 +12,17 @@ export const TAGS = [
 ] as const;
 export type Tag = (typeof TAGS)[number];
 
+export const MAX_DRAFT_ITEMS = 40;
+export const MAX_DRAFT_TAGS = 20;
+export const DraftItem = z.object({
+  section: z.enum(SECTIONS),
+  text: z.string().min(1).max(400),
+  quotes: z.array(z.string().min(1)).min(1).max(4),
+});
+export const DraftTag = z.object({ tag: z.enum(TAGS), item: z.number().int().min(0) });
 export const DraftCard = z.object({
-  items: z
-    .array(
-      z.object({
-        section: z.enum(SECTIONS),
-        text: z.string().min(1).max(400),
-        quotes: z.array(z.string()).min(1).max(4),
-      }),
-    )
-    .max(40),
-  tags: z.array(z.object({ tag: z.enum(TAGS), item: z.number().int().min(0) })).max(20),
+  items: z.array(DraftItem).max(MAX_DRAFT_ITEMS),
+  tags: z.array(DraftTag).max(MAX_DRAFT_TAGS),
 });
 export type DraftCard = z.infer<typeof DraftCard>;
 
@@ -36,7 +36,8 @@ export type CardItem = {
   translation: { lang: 'en' | 'es'; text: string; withheld: boolean } | null;
 };
 
-export type DroppedItem = { section: Section; text: string; reason: 'quote_not_found' | 'unsaid_label' };
+/** `invalid_shape`: the model's item did not fit the draft schema (unknown section, no usable quote, wrong types); `section` is null when it was not a known section. */
+export type DroppedItem = { section: Section | null; text: string; reason: 'quote_not_found' | 'unsaid_label' | 'invalid_shape' };
 
 /** `id` is `s<start offset of the sentence>`. */
 export type SafetyPrompt = { id: string; sentence: string; span: Span; matched: string };

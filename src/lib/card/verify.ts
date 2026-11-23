@@ -3,7 +3,7 @@ import { unsaidLabels } from '@/lib/text/labels';
 import { locateQuote, type Span } from '@/lib/text/locate';
 import { polarityConsistent } from '@/lib/text/polarity';
 import { normalizeForMatch } from '@/lib/text/normalize';
-import { sentenceContaining } from '@/lib/text/sentences';
+import { sentenceContaining, stripListMarker } from '@/lib/text/sentences';
 import { findSafetyPrompts } from './safetyNet';
 import type { CardItem, DraftCard, DroppedItem, Tag, VerifiedCard } from './schema';
 
@@ -18,7 +18,7 @@ function sentenceText(source: string, spans: Span[]): string {
   }
   return [...uniq.values()]
     .sort((a, b) => a.start - b.start)
-    .map((s) => source.slice(s.start, s.end))
+    .map((s) => stripListMarker(source.slice(s.start, s.end)))
     .join(' ');
 }
 
@@ -102,7 +102,7 @@ export function acceptSafetyPrompt(card: VerifiedCard, source: string, promptId:
   const item: CardItem = {
     id: `i${card.items.length}`,
     section: 'safety',
-    text: sentence,
+    text: stripListMarker(sentence),
     kind: 'verbatim',
     quotes: [{ text: sentence, span: prompt.span }],
     translation: null,

@@ -53,3 +53,11 @@ export function sentenceContaining(source: string, span: Span): Span {
   if (!first || !last || last.end < first.end) return span;
   return { start: first.start, end: last.end };
 }
+
+/** Leading list marker of a line or sentence: "- ", "* ", "• ", "– ", "— ", "+ ", "1. ", "1) ". */
+export const LIST_MARKER = /^\s*(?:[-*•–—+]|\d{1,2}[.)])\s+/u;
+
+/** The sentence without its leading list marker (display only; spans are unchanged). */
+export function stripListMarker(s: string): string {
+  return s.replace(LIST_MARKER, '');
+}

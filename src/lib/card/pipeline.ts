@@ -3,10 +3,10 @@ import type { AttestationSummary } from '@/lib/crypto/attestation';
 import { enclaveChat, type EnclaveChat, type NodeAccess } from '@/lib/venice/enclaveClient';
 import { detectLang } from '@/lib/text/lang';
 import { limiterTokens } from '@/lib/text/polarity';
-import { sentenceContaining } from '@/lib/text/sentences';
+import { sentenceContaining, stripListMarker } from '@/lib/text/sentences';
 import { TRANSLATE_PLACEHOLDER, buildCardPrompt, buildTranslatePrompt, redactName, restoreName, toOriginalOffset } from './prompts';
 import { findSafetyPrompts } from './safetyNet';
-import { DraftCard, type CardItem, type VerifiedCard } from './schema';
+import { DraftItem, DraftTag, MAX_DRAFT_ITEMS, MAX_DRAFT_TAGS, SECTIONS, type CardItem, type DraftCard, type DroppedItem, type Section, type VerifiedCard } from './schema';
 import { verifyCard } from './verify';
 
 export const STORY_MIN = 40;
@@ -35,13 +35,45 @@ function extractJson(text: string): unknown {
   return JSON.parse(a >= 0 && b > a ? t.slice(a, b + 1) : t);
 }
 
-function parseDraft(text: string): DraftCard | null {
+type ParsedDraft = { draft: DraftCard; invalid: DroppedItem[] };
+
+const asSection = (v: unknown): Section | null => ((SECTIONS as readonly unknown[]).includes(v) ? (v as Section) : null);
+
+/**
+ * Tolerant draft parsing: null only when the text is not JSON or has no `items` array (the caller retries).
+ * Items are validated one by one; a bad item is dropped as `invalid_shape`, a bad tag is dropped, the rest is kept.
+ * Tag `item` indexes are remapped onto the kept items.
+ */
+export function parseDraft(text: string): ParsedDraft | null {
+  let raw: unknown;
   try {
-    const r = DraftCard.safeParse(extractJson(text));
-    return r.success ? r.data : null;
+    raw = extractJson(text);
   } catch {
     return null;
   }
+  if (!raw || typeof raw !== 'object' || !Array.isArray((raw as { items?: unknown }).items)) return null;
+  const r = raw as { items: unknown[]; tags?: unknown };
+  const items: DraftCard['items'] = [];
+  const invalid: DroppedItem[] = [];
+  const keptIndex = new Map<number, number>();
+  r.items.forEach((x, i) => {
+    const o = (x && typeof x === 'object' ? x : {}) as { section?: unknown; text?: unknown; quotes?: unknown };
+    const quotes = Array.isArray(o.quotes) ? o.quotes.filter((q): q is string => typeof q === 'string' && q.trim().length > 0).slice(0, 4) : o.quotes;
+    const p = DraftItem.safeParse({ section: o.section, text: o.text, quotes });
+    if (p.success && items.length < MAX_DRAFT_ITEMS) {
+      keptIndex.set(i, items.length);
+      items.push(p.data);
+    } else {
+      invalid.push({ section: asSection(o.section), text: typeof o.text === 'string' ? o.text.slice(0, 400) : '', reason: 'invalid_shape' });
+    }
+  });
+  const tags: DraftCard['tags'] = [];
+  for (const t of Array.isArray(r.tags) ? r.tags : []) {
+    const p = DraftTag.safeParse(t);
+    const item = p.success ? keptIndex.get(p.data.item) : undefined;
+    if (p.success && item !== undefined && tags.length < MAX_DRAFT_TAGS) tags.push({ tag: p.data.tag, item });
+  }
+  return { draft: { items, tags }, invalid };
 }
 
 export async function draftCard(
@@ -56,12 +88,13 @@ export async function draftCard(
     chat({ model: opts.model, purpose: 'card', system, user: u, signal: opts.signal, onAttestation: opts.onAttestation, node: opts.node });
 
   let res = await call(user);
-  let draft = parseDraft(res.text);
-  if (!draft) {
+  let parsed = parseDraft(res.text);
+  if (!parsed) {
     res = await call(`${user}\n\nReturn only JSON of the shape {"items":[{"section","text","quotes"}],"tags":[{"tag","item"}]} and nothing else.`);
-    draft = parseDraft(res.text);
+    parsed = parseDraft(res.text);
   }
-  if (!draft) throw new Error('the model did not return a usable card');
+  if (!parsed) throw new Error('the model did not return a usable card');
+  const { draft } = parsed;
 
   // The model saw the redacted story, so quotes are located there; then everything maps back.
   const red = redactName(story, childName);
@@ -80,13 +113,16 @@ export async function draftCard(
     if (it.kind === 'verbatim') {
       // Rebuild from the original story's sentences; never run verbatim text through name restoration.
       const sents = it.quotes.map((q) => sentenceContaining(red.text, q.span));
-      const used = sents.filter((s) => it.text.includes(red.text.slice(s.start, s.end)));
+      const used = sents.filter((s) => it.text.includes(stripListMarker(red.text.slice(s.start, s.end))));
       const uniq = new Map<number, { start: number; end: number }>();
       for (const s of used.length > 0 ? used : sents) {
         const o = back(s);
         uniq.set(o.start, o);
       }
-      text = [...uniq.values()].sort((x, y) => x.start - y.start).map((o) => story.slice(o.start, o.end)).join(' ');
+      text = [...uniq.values()]
+        .sort((x, y) => x.start - y.start)
+        .map((o) => stripListMarker(story.slice(o.start, o.end)))
+        .join(' ');
     }
     return { ...it, text, quotes };
   });
@@ -97,7 +133,7 @@ export async function draftCard(
     lang,
     items,
     tags: v.tags,
-    dropped: v.dropped.map((d) => ({ ...d, text: restoreName(d.text, childName) })),
+    dropped: [...parsed.invalid, ...v.dropped].map((d) => ({ ...d, text: restoreName(d.text, childName) })),
     safetyPrompts: findSafetyPrompts(story, lang, covered),
   };
   return { card, attestation: res.attestation };
