@@ -26,11 +26,11 @@ export async function getLatestCheckin(serviceId: string, childId: string): Prom
   return row;
 }
 
-/** Latest check-in of the child at any service of the church. */
+/** Latest still-open check-in of the child at any service of the church (past, checked-out attendance does not count). */
 export async function getLatestCheckinInChurch(churchId: string, childId: string): Promise<Checkin | undefined> {
   const [row] = await getDb().select({ c: checkins }).from(checkins)
     .innerJoin(services, eq(services.id, checkins.serviceId))
-    .where(and(eq(services.churchId, churchId), eq(checkins.childId, childId)))
+    .where(and(eq(services.churchId, churchId), eq(checkins.childId, childId), isNull(checkins.checkedOutAt)))
     .orderBy(desc(checkins.checkedInAt)).limit(1);
   return row?.c;
 }
@@ -40,4 +40,17 @@ export async function getOpenCheckin(serviceId: string, childId: string): Promis
     .where(and(eq(checkins.serviceId, serviceId), eq(checkins.childId, childId), isNull(checkins.checkedOutAt)))
     .limit(1);
   return row;
+}
+
+export async function insertCheckins(rows: NewCheckin[]): Promise<void> {
+  if (rows.length > 0) await getDb().insert(checkins).values(rows);
+}
+
+export type CheckinWithService = Checkin & { label: string; startsAt: Date };
+
+/** All check-ins at the church's services, with the service label and start. */
+export async function listCheckinsInChurch(churchId: string): Promise<CheckinWithService[]> {
+  const rows = await getDb().select({ c: checkins, label: services.label, startsAt: services.startsAt })
+    .from(checkins).innerJoin(services, eq(services.id, checkins.serviceId)).where(eq(services.churchId, churchId));
+  return rows.map((r) => ({ ...r.c, label: r.label, startsAt: r.startsAt }));
 }

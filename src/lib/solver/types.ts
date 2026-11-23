@@ -22,6 +22,8 @@ export type SolverBuddy = {
   trainingAt: Date | null;
   backgroundExpiresAt: Date | null;
   busy: boolean;
+  /** Why busy, lowercase and ready to follow "<name> is": "serving on the worship team". */
+  busyReason?: string | null;
 };
 
 export type Violation =
@@ -35,6 +37,8 @@ export type Unassigned = {
   childId: string;
   violationsByBuddy: Record<string, Violation[]>;
   gapHints: { buddyId: string; fix: Violation }[];
+  /** Buddies whose ONLY violation is being busy (explained so the director can free one). */
+  busyBuddyIds: string[];
 };
 
 export type SolveResult = { assignments: Assignment[]; unassigned: Unassigned[] };

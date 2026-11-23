@@ -46,6 +46,7 @@ export function solve(input: SolveInput): SolveResult {
   const unassigned: Unassigned[] = [...morning.missed, ...parts.missed].map((c) => {
     const violationsByBuddy: Record<string, Violation[]> = {};
     const gapHints: Unassigned['gapHints'] = [];
+    const busyBuddyIds: string[] = [];
     for (const b of buddies) {
       const { ok, violations } = eligibility(b, c, serviceDate);
       if (ok) continue; // eligible, just out of capacity
@@ -53,8 +54,9 @@ export function solve(input: SolveInput): SolveResult {
       if (violations.length === 1 && (violations[0] === 'training_expired' || violations[0] === 'background_expired')) {
         gapHints.push({ buddyId: b.id, fix: violations[0] });
       }
+      if (violations.length === 1 && violations[0] === 'busy') busyBuddyIds.push(b.id);
     }
-    return { childId: c.id, violationsByBuddy, gapHints };
+    return { childId: c.id, violationsByBuddy, gapHints, busyBuddyIds };
   });
   return { assignments, unassigned };
 }

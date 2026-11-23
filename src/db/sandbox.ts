@@ -3,7 +3,9 @@ import { verifyCard } from '@/lib/card/verify';
 import { newWrappedDek, sealJson } from '@/lib/crypto/atrest';
 import { deleteChurch, insertChurch, insertSandboxChurchLimited, listExpiredSandboxes } from './repo/churches';
 import { insertAssignments } from './repo/assignments';
+import { insertBlockouts } from './repo/blockouts';
 import { insertCard } from './repo/cards';
+import { insertCheckins, type NewCheckin } from './repo/checkins';
 import { insertLesson } from './repo/lessons';
 import { insertMoments, type NewMoment } from './repo/moments';
 import { insertHouseholdLinks, insertPeople, type NewPerson } from './repo/people';
@@ -107,7 +109,11 @@ async function seed(churchId: string, wrappedDek: string, T: number): Promise<vo
     { churchId, label: '9:00 service', startsAt: at(-5 * MIN), endsAt: at(70 * MIN), room: SERVICE_ROOM },
     { churchId, label: '11:00 service', startsAt: at(115 * MIN), endsAt: at(190 * MIN), room: SERVICE_ROOM },
   ]);
-  void nine; void eleven;
+  void nine;
+  // Planning Center Services blockout: Priya plays on the worship team during the 11:00.
+  await insertBlockouts([{
+    churchId, personId: id.priya, startsAt: eleven.startsAt, endsAt: eleven.endsAt, reason: 'Serving on the worship team',
+  }]);
 
   const pastServices = await insertServices(
     Array.from({ length: PAST_WEEKS }, (_, k) => {
@@ -116,12 +122,31 @@ async function seed(churchId: string, wrappedDek: string, T: number): Promise<vo
     }),
   );
 
-  await insertAssignments(
-    pastServices.flatMap((s) => [
+  const pastElevens = await insertServices(
+    Array.from({ length: PAST_WEEKS }, (_, k) => {
+      const start = 115 * MIN - (k + 1) * 7 * DAY;
+      return { churchId, label: '11:00 service', startsAt: at(start), endsAt: at(start + 75 * MIN), room: SERVICE_ROOM };
+    }),
+  );
+
+  // Past attendance (checked in, checked out): who is expected at which service this Sunday.
+  const attended = (s: { id: string; startsAt: Date; endsAt: Date }, childId: string): NewCheckin => ({
+    serviceId: s.id, childId, source: 'demo_station',
+    checkedInAt: new Date(s.startsAt.getTime() + 3 * MIN), checkedOutAt: s.endsAt,
+  });
+  await insertCheckins([
+    ...pastServices.flatMap((s) => [id.leo, id.ana, id.malik, id.theo].map((c) => attended(s, c))),
+    ...pastElevens.map((s) => attended(s, id.ivy)),
+  ]);
+
+  await insertAssignments([
+    // Ivy's 11:00 buddy: Priya on the 3 most recent Sundays, Dana before that.
+    ...pastElevens.map((s, k) => ({ serviceId: s.id, childId: id.ivy, buddyId: k < 3 ? id.priya : id.dana, status: 'approved' as const })),
+    ...pastServices.flatMap((s) => [
       { serviceId: s.id, childId: id.leo, buddyId: id.priya, status: 'approved' as const },
       { serviceId: s.id, childId: id.ana, buddyId: id.marco, status: 'approved' as const },
     ]),
-  );
+  ]);
 
   // Leo: hard at worship in 4 of 5 past Sundays; the fifth goes well with the headphones.
   const headphones = leoItemIds[2] ? [leoItemIds[2]] : [];

@@ -84,6 +84,16 @@ export const assignments = pgTable('assignments', {
   createdAt: ts('created_at').notNull().defaultNow(),
 }, (t) => [uniqueIndex('assignments_service_child_idx').on(t.serviceId, t.childId)]);
 
+/** Mirrors Planning Center Services blockouts: a buddy who cannot serve in [startsAt, endsAt]. */
+export const blockouts = pgTable('blockouts', {
+  id: id(),
+  churchId: uuid('church_id').notNull().references(() => churches.id, { onDelete: 'cascade' }),
+  personId: uuid('person_id').notNull().references(() => people.id, { onDelete: 'cascade' }),
+  startsAt: ts('starts_at').notNull(),
+  endsAt: ts('ends_at').notNull(),
+  reason: text('reason'),
+}, (t) => [index('blockouts_church_idx').on(t.churchId)]);
+
 export const checkins = pgTable('checkins', {
   id: id(),
   serviceId: uuid('service_id').notNull().references(() => services.id, { onDelete: 'cascade' }),

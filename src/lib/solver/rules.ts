@@ -55,18 +55,26 @@ export function reasonsFor(b: SolverBuddy, c: SolverChild): string[] {
   return out;
 }
 
-/** Plain-language gap explanation for one unassigned child. */
+/** "11:00 service" -> "11:00": reads naturally after "at". */
+function shortLabel(label: string): string {
+  return label.replace(/\s+service$/i, '');
+}
+
+/**
+ * Plain-language gap explanation for one unassigned child: buddies who could be fixed (lapsed training or
+ * background check), then eligible-but-busy buddies with the reason, else a "ask a director" line.
+ */
 export function explainGap(
   child: SolverChild,
-  hints: { buddyId: string; fix: Violation }[],
+  gap: { gapHints: { buddyId: string; fix: Violation }[]; busyBuddyIds?: string[] },
   buddies: SolverBuddy[],
   serviceLabel?: string,
 ): string[] {
   const need = child.tags.includes('nonverbal_or_aac') ? ' with AAC experience'
     : child.tags.includes('medical_plan') ? ' with medical training' : '';
-  const at = serviceLabel ? ` at ${serviceLabel}` : '';
+  const at = serviceLabel ? ` at ${shortLabel(serviceLabel)}` : '';
   const lines: string[] = [];
-  for (const h of hints) {
+  for (const h of gap.gapHints) {
     const b = buddies.find((x) => x.id === h.buddyId);
     if (!b) continue;
     let why: string;
@@ -77,6 +85,10 @@ export function explainGap(
       why = b.backgroundExpiresAt ? `${b.name}'s background check expired ${fmtDay(b.backgroundExpiresAt)}` : `${b.name} has no background check on record`;
     }
     lines.push(`${child.name} needs a buddy${need}${at} — ${why}`);
+  }
+  for (const id of gap.busyBuddyIds ?? []) {
+    const b = buddies.find((x) => x.id === id);
+    if (b) lines.push(`${b.name} is ${b.busyReason ?? 'busy'}${at}`);
   }
   return lines.length > 0 ? lines : ['No trained buddy is free — ask a director to cover'];
 }

@@ -8,8 +8,8 @@ import { setDbForTests, type Db } from '@/db/client';
 import * as schema from '@/db/schema';
 import { createSandbox } from '@/db/sandbox';
 import { listAssignments } from '@/db/repo/assignments';
-import { getCardForChild, updateCard } from '@/db/repo/cards';
-import { listPeople } from '@/db/repo/people';
+import { getCardForChild, insertCard, updateCard } from '@/db/repo/cards';
+import { insertPeople, listPeople, updatePerson } from '@/db/repo/people';
 import { listServices } from '@/db/repo/services';
 import type { Viewer } from '@/lib/auth/viewer';
 
@@ -39,7 +39,7 @@ async function world() {
   const p = (name: string) => people.find((x) => x.firstName === name)!;
   const services = await listServices(churchId);
   const nine = services.find((s) => s.label === '9:00 service' && s.startsAt.getTime() > Date.now() - 3600_000 && s.startsAt.getTime() < Date.now() + 3600_000)!;
-  const eleven = services.find((s) => s.label === '11:00 service')!;
+  const eleven = services.find((s) => s.label === '11:00 service' && s.startsAt.getTime() > Date.now())!;
   const director: Viewer = { churchId, personId: p('Hannah').id, role: 'director', sandbox: true };
   return { churchId, p, nine, eleven, director };
 }
@@ -61,78 +61,96 @@ describe('POST /api/assignments/solve', () => {
     expect((await post(solveRoute, '/api/assignments/solve', { serviceId: w.nine.id })).status).toBe(403);
   });
 
-  it('solves the Fernbrook 9:00 service', async () => {
-    const w = await world();
+  const solve = async (w: Awaited<ReturnType<typeof world>>, service = w.nine, extra: object = {}) => {
     h.viewer = w.director;
-    const res = await post(solveRoute, '/api/assignments/solve', { serviceId: w.nine.id });
+    return post(solveRoute, '/api/assignments/solve', { serviceId: service.id, ...extra });
+  };
+  type Full = Solved & { notExpected: { name: string }[]; newFamily: { name: string; note: string }[] };
+
+  it('solves the Fernbrook 9:00 service: Leo keeps Priya, Ana keeps Marco', async () => {
+    const w = await world();
+    const res = await solve(w);
     expect(res.status).toBe(200);
-    const r = await solved(res);
-    // Ivy (AAC, bathroom help, needs a woman) can only be Priya; Leo's usual buddy yields and Grace is first by name among the rest.
-    expect(by(r, 'Ivy').buddyName).toBe('Priya');
-    expect(by(r, 'Ivy').reasons).toEqual(['AAC experience']);
-    expect(by(r, 'Leo').buddyName).toBe('Grace');
-    expect(by(r, 'Leo').reasons).toEqual([]);
-    // Ana: Spanish-speaking, and her usual buddy.
+    const r = (await res.json()) as Full;
+    expect(r.assignments.map((a) => a.childName).sort()).toEqual(['Ana', 'Leo']);
+    expect(by(r, 'Leo').buddyName).toBe('Priya');
+    expect(by(r, 'Leo').reasons).toEqual(['Same buddy as the last 3 Sundays']);
     expect(by(r, 'Ana').buddyName).toBe('Marco');
     expect(by(r, 'Ana').reasons).toEqual(['Same buddy as the last 3 Sundays', 'Speaks Spanish']);
-    // Malik is only parent-approved, Theo needs no buddy, Sam has no card.
-    expect(r.waitingForReview.map((x) => x.name)).toEqual(['Malik']);
-    expect(r.assignments.map((a) => a.childName).sort()).toEqual(['Ana', 'Ivy', 'Leo']);
+    expect(r.waitingForReview.map((x) => x.name)).toEqual(['Malik']); // parent-approved only
+    expect(r.notExpected.map((x) => x.name)).toEqual(['Ivy']); // comes at 11:00; Theo needs no buddy; Sam has no card
+    expect(r.newFamily).toEqual([]);
     expect(r.unassigned).toEqual([]);
     expect(r.assignments.every((a) => a.status === 'proposed')).toBe(true);
   });
 
-  it('Ana and Malik share a buddy once Malik is acknowledged and buddies run short', async () => {
+  it('11:00: Ivy has a visible gap (Priya is on the worship team, Dana lapsed)', async () => {
+    const w = await world();
+    const r = (await (await solve(w, w.eleven)).json()) as Full;
+    expect(r.assignments).toEqual([]);
+    expect(r.unassigned).toHaveLength(1);
+    expect(r.unassigned[0].childName).toBe('Ivy');
+    expect(r.unassigned[0].hints).toEqual([
+      "Ivy needs a buddy with AAC experience at 11:00 — Dana's inclusion training expired 2 Oct",
+      'Priya is serving on the worship team at 11:00',
+    ]);
+    expect(r.notExpected.map((x) => x.name)).toEqual(['Ana', 'Leo']);
+  });
+
+  it('includeChildIds adds a child who is not expected, and rejects junk', async () => {
+    const w = await world();
+    const r = (await (await solve(w, w.nine, { includeChildIds: [w.p('Ivy').id] })).json()) as Full;
+    expect(r.notExpected).toEqual([]);
+    expect(by(r, 'Ivy').buddyName).toBe('Priya'); // the only trained, female, AAC buddy at 9:00
+    expect(by(r, 'Ivy').reasons).toEqual(['Same buddy as the last 3 Sundays', 'AAC experience']); // her 11:00 buddy history
+    expect(by(r, 'Leo').buddyName).not.toBe('Priya'); // yields to Ivy
+    expect((await solve(w, w.nine, { includeChildIds: ['nope'] })).status).toBe(400);
+  });
+
+  it('a child with no check-in history is expected everywhere, flagged as a new family', async () => {
+    const w = await world();
+    const [kid] = await insertPeople([{ churchId: w.churchId, role: 'child', firstName: 'Noor', gender: 'f' }]);
+    await insertCard({ churchId: w.churchId, childId: kid.id, status: 'acknowledged', lang: 'en', supportLevel: 'parts', itemsEnc: 'x', tags: [] });
+    const r = (await (await solve(w)).json()) as Full;
+    expect(r.newFamily).toEqual([{ childId: kid.id, name: 'Noor', note: 'New family — confirm which service' }]);
+    expect(by(r, 'Noor').reasons).toContain('New family — confirm which service');
+    expect(by(r, 'Leo').buddyName).toBe('Priya');
+  });
+
+  it('once Malik is acknowledged he gets a buddy without disturbing Leo or Ana', async () => {
     const w = await world();
     h.viewer = w.director;
-    const card = (await getCardForChild(w.churchId, w.p('Malik').id))!;
-    await updateCard(card.id, { status: 'acknowledged' });
-    const r = await solved(await post(solveRoute, '/api/assignments/solve', { serviceId: w.nine.id }));
+    await updateCard((await getCardForChild(w.churchId, w.p('Malik').id))!.id, { status: 'acknowledged' });
+    const r = (await (await solve(w)).json()) as Full;
     expect(r.waitingForReview).toEqual([]);
-    expect(by(r, 'Malik').buddyName).not.toBe(by(r, 'Leo').buddyName);
-    expect(by(r, 'Malik').buddyName).not.toBe(by(r, 'Ivy').buddyName);
+    expect(by(r, 'Leo').buddyName).toBe('Priya');
+    expect(by(r, 'Ana').buddyName).toBe('Marco');
+    expect(by(r, 'Malik').buddyName).toBe('Grace');
+  });
 
-    // Only Priya, Marco and Grace are left standing: Leo, Ivy take two, so Ana + Malik share the third.
-    const people = await listPeople(w.churchId);
-    const { updatePerson } = await import('@/db/repo/people');
-    for (const x of people.filter((q) => q.role === 'buddy' && !['Priya', 'Marco', 'Grace'].includes(q.firstName))) {
+  it('Ana and Malik share a buddy when parts children outnumber free buddies', async () => {
+    const w = await world();
+    await updateCard((await getCardForChild(w.churchId, w.p('Malik').id))!.id, { status: 'acknowledged' });
+    for (const x of (await listPeople(w.churchId)).filter((q) => q.role === 'buddy' && !['Priya', 'Marco'].includes(q.firstName))) {
       await updatePerson(x.id, { backgroundExpiresAt: new Date('2020-01-01') });
     }
-    const t = await solved(await post(solveRoute, '/api/assignments/solve', { serviceId: w.nine.id }));
-    expect(by(t, 'Ana').buddyName).toBe('Marco');
-    expect(by(t, 'Malik').buddyName).toBe('Marco');
-    expect(by(t, 'Ana').reasons).toContain('Shares with Malik (both part of the morning)');
-    expect(by(t, 'Malik').reasons).toEqual(['Shares with Ana (both part of the morning)']);
+    const r = (await (await solve(w)).json()) as Full;
+    expect(by(r, 'Ana').buddyName).toBe('Marco');
+    expect(by(r, 'Malik').buddyName).toBe('Marco');
+    expect(by(r, 'Ana').reasons).toContain('Shares with Malik (both part of the morning)');
+    expect(by(r, 'Malik').reasons).toEqual(['Shares with Ana (both part of the morning)']);
   });
 
   it('re-solving replaces proposed rows and leaves approved ones alone', async () => {
     const w = await world();
-    h.viewer = w.director;
-    const first = await solved(await post(solveRoute, '/api/assignments/solve', { serviceId: w.nine.id }));
-    const ivyRow = by(first, 'Ivy');
-    expect((await post(approveRoute, '/api/assignments/approve', { assignmentIds: [ivyRow.id] })).status).toBe(200);
-    const second = await solved(await post(solveRoute, '/api/assignments/solve', { serviceId: w.nine.id }));
-    expect(second.assignments.map((a) => a.childName).sort()).toEqual(['Ana', 'Leo']); // Ivy is already decided
-    const rows = await listAssignments(w.nine.id);
-    expect(rows).toHaveLength(3);
-    expect(rows.find((r) => r.id === ivyRow.id)!.status).toBe('approved');
-    // Priya is Ivy's approved buddy now, so nobody else gets her.
-    expect(second.assignments.some((a) => a.buddyName === 'Priya')).toBe(false);
-  });
-
-  it('explains the AAC gap at 11:00 when Priya is already committed (Dana lapsed)', async () => {
-    const w = await world();
-    h.viewer = w.director;
-    const { insertAssignments } = await import('@/db/repo/assignments');
-    const { insertPeople } = await import('@/db/repo/people');
-    // Priya is approved for another child at the overlapping 11:00 service.
-    const [kid] = await insertPeople([{ churchId: w.churchId, role: 'child', firstName: 'Kai', gender: 'm' }]);
-    await insertAssignments([{ serviceId: w.eleven.id, childId: kid.id, buddyId: w.p('Priya').id, status: 'approved' }]);
-    const r = await solved(await post(solveRoute, '/api/assignments/solve', { serviceId: w.eleven.id }));
-    expect(r.assignments.find((a) => a.childName === 'Ivy')).toBeUndefined();
-    expect(r.unassigned.find((u) => u.childName === 'Ivy')!.hints).toEqual([
-      "Ivy needs a buddy with AAC experience at 11:00 service — Dana's inclusion training expired 2 Oct",
-    ]);
+    const first = await solved(await solve(w));
+    const leoRow = by(first, 'Leo');
+    expect((await post(approveRoute, '/api/assignments/approve', { assignmentIds: [leoRow.id] })).status).toBe(200);
+    const second = await solved(await solve(w));
+    expect(second.assignments.map((a) => a.childName)).toEqual(['Ana']); // Leo is already decided
+    const rows = (await listAssignments(w.nine.id));
+    expect(rows).toHaveLength(2);
+    expect(rows.find((r) => r.id === leoRow.id)!.status).toBe('approved');
   });
 
   it('is tenant-scoped', async () => {
@@ -143,6 +161,7 @@ describe('POST /api/assignments/solve', () => {
     expect((await post(solveRoute, '/api/assignments/solve', { serviceId: 'nope' })).status).toBe(400);
   });
 });
+
 
 describe('POST /api/assignments/approve and GET /api/assignments', () => {
   it('flips proposed to approved, calls the hook, lists with names', async () => {
@@ -160,7 +179,7 @@ describe('POST /api/assignments/approve and GET /api/assignments', () => {
     expect(h.approved).toEqual([]);
 
     const list = await (await listRoute.GET(new Request(`http://x/api/assignments?service=${w.nine.id}`))).json();
-    expect(list.assignments).toHaveLength(3);
+    expect(list.assignments).toHaveLength(2);
     expect(list.assignments.every((a: { status: string; childName: string }) => a.status === 'approved' && a.childName)).toBe(true);
   });
 

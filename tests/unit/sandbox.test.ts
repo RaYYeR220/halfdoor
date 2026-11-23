@@ -87,7 +87,7 @@ describe('createSandbox', () => {
     const { churchId } = await createSandbox();
     const church = (await getChurch(churchId))!;
     const services = await listServices(churchId);
-    expect(services).toHaveLength(7);
+    expect(services).toHaveLength(12); // 2 today + 5 past 9:00 + 5 past 11:00
     const T = church.createdAt.getTime();
     const upcoming = services.filter((s) => s.startsAt.getTime() > T - 6 * 60_000);
     expect(upcoming.map((s) => s.label)).toEqual(['9:00 service', '11:00 service']);
@@ -98,7 +98,9 @@ describe('createSandbox', () => {
     expect(upcoming[1].endsAt.getTime() - T).toBe(190 * 60_000);
     expect(T).toBeGreaterThanOrEqual(before - 1000);
 
-    const past = services.filter((s) => s.startsAt.getTime() < T - 6 * 60_000);
+    const pastAll = services.filter((s) => s.startsAt.getTime() < T - 6 * 60_000);
+    expect(pastAll).toHaveLength(10);
+    const past = pastAll.filter((s) => s.label === '9:00 service');
     expect(past).toHaveLength(5);
 
     const leo = await leoOf(churchId);

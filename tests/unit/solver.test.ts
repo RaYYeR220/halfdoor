@@ -61,8 +61,18 @@ describe('solve', () => {
     const r = solve({ serviceDate: SERVICE, children: [ivy()], buddies: [dana(), { ...priya(), busy: true }, buddy('Grace')] });
     expect(r.assignments).toEqual([]);
     expect(r.unassigned[0].gapHints).toEqual([{ buddyId: 'dana', fix: 'training_expired' }]);
-    expect(explainGap(ivy(), r.unassigned[0].gapHints, [dana()], '11:00 service')).toEqual([
-      "Ivy needs a buddy with AAC experience at 11:00 service — Dana's inclusion training expired 2 Oct",
+    expect(explainGap(ivy(), r.unassigned[0], [dana()], '11:00 service')).toEqual([
+      "Ivy needs a buddy with AAC experience at 11:00 — Dana's inclusion training expired 2 Oct",
+    ]);
+  });
+
+  it('explains busy buddies with their reason', () => {
+    const worship = { ...priya(), busy: true, busyReason: 'serving on the worship team' };
+    const r = solve({ serviceDate: SERVICE, children: [ivy()], buddies: [dana(), worship] });
+    expect(r.unassigned[0].busyBuddyIds).toEqual(['priya']);
+    expect(explainGap(ivy(), r.unassigned[0], [dana(), worship], '11:00 service')).toEqual([
+      "Ivy needs a buddy with AAC experience at 11:00 — Dana's inclusion training expired 2 Oct",
+      'Priya is serving on the worship team at 11:00',
     ]);
   });
 
@@ -84,9 +94,9 @@ describe('solve', () => {
     expect(r.assignments).toEqual([]);
     expect(r.unassigned[0].gapHints).toEqual([{ buddyId: 'ben', fix: 'background_expired' }]);
     expect(r.unassigned[0].violationsByBuddy.tom).toEqual(['busy']);
-    expect(explainGap(child('Leo'), [{ buddyId: 'ben', fix: 'background_expired' }], [buddy('Ben', { backgroundExpiresAt: new Date('2026-11-20T00:00:00Z') })]))
+    expect(explainGap(child('Leo'), { gapHints: [{ buddyId: 'ben', fix: 'background_expired' }] }, [buddy('Ben', { backgroundExpiresAt: new Date('2026-11-20T00:00:00Z') })]))
       .toEqual(["Leo needs a buddy — Ben's background check expired 20 Nov"]);
-    expect(explainGap(child('Leo'), [], [])).toEqual(['No trained buddy is free — ask a director to cover']);
+    expect(explainGap(child('Leo'), { gapHints: [] }, [])).toEqual(['No trained buddy is free — ask a director to cover']);
   });
 
   it('continuity keeps Leo with last Sundays buddy when costs otherwise tie', () => {

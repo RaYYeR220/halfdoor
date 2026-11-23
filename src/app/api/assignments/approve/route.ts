@@ -5,7 +5,10 @@ import { onAssignmentApproved } from '@/lib/pco/hooks';
 
 const MAX_IDS = 200;
 
-/** Director: proposed -> approved. Any id outside the viewer's church fails the whole call with 404. */
+/**
+ * Director: proposed -> approved. If any id is not a row of the viewer's church, the whole call fails with 404
+ * and nothing is approved (no partial success, no hint which id was foreign).
+ */
 export async function POST(req: Request) {
   const viewer = await requireViewer(['director']);
   if (viewer instanceof NextResponse) return viewer;
