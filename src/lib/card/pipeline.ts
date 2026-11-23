@@ -40,7 +40,8 @@ type ParsedDraft = { draft: DraftCard; invalid: DroppedItem[] };
 const asSection = (v: unknown): Section | null => ((SECTIONS as readonly unknown[]).includes(v) ? (v as Section) : null);
 
 /**
- * Tolerant draft parsing: null only when the text is not JSON or has no `items` array (the caller retries).
+ * Tolerant draft parsing: null only when the text is not JSON, has no `items` array, or has no usable item
+ * (the caller retries).
  * Items are validated one by one; a bad item is dropped as `invalid_shape`, a bad tag is dropped, the rest is kept.
  * Tag `item` indexes are remapped onto the kept items.
  */
@@ -67,6 +68,8 @@ export function parseDraft(text: string): ParsedDraft | null {
       invalid.push({ section: asSection(o.section), text: typeof o.text === 'string' ? o.text.slice(0, 400) : '', reason: 'invalid_shape' });
     }
   });
+  // Nothing usable (e.g. a skeleton of empty items) is a failed draft, not an empty card: retry.
+  if (items.length === 0) return null;
   const tags: DraftCard['tags'] = [];
   for (const t of Array.isArray(r.tags) ? r.tags : []) {
     const p = DraftTag.safeParse(t);

@@ -200,14 +200,26 @@ describe('tolerant draft parsing', () => {
     ]);
   });
 
-  test('only non-JSON text or a missing items array triggers the retry', async () => {
+  test('only non-JSON text, a missing items array or no usable item triggers the retry', async () => {
     expect(parseDraft('not json')).toBeNull();
     expect(parseDraft('{"cards": []}')).toBeNull();
-    expect(parseDraft('```json\n{"items": []}\n```')).toEqual({ draft: { items: [], tags: [] }, invalid: [] });
+    expect(parseDraft('```json\n{"items": []}\n```')).toBeNull();
+    expect(parseDraft('```json\n{"items": [{"section":"loves","text":"Trains","quotes":["trains"]}]}\n```')).not.toBeNull();
     const chat = vi.fn().mockResolvedValueOnce({ text: '{"cards": []}', attestation: A, usage: null })
       .mockResolvedValueOnce({ text: JSON.stringify(GOOD_LEO_DRAFT), attestation: A, usage: null });
     await draftCard(LEO, 'Leo', { model: 'e2ee-x', chat });
     expect(chat).toHaveBeenCalledTimes(2);
+  });
+
+  test('a skeleton draft (every item empty) is retried, not turned into an empty card', async () => {
+    const skeleton = { items: ['loves', 'hard', 'safety'].map((section) => ({ section, text: '', quotes: [] })), tags: [] };
+    const chat = vi.fn().mockResolvedValueOnce({ text: JSON.stringify(skeleton), attestation: A, usage: null })
+      .mockResolvedValueOnce({ text: JSON.stringify(GOOD_LEO_DRAFT), attestation: A, usage: null });
+    const { card } = await draftCard(LEO, 'Leo', { model: 'e2ee-x', chat });
+    expect(chat).toHaveBeenCalledTimes(2);
+    expect(card.items.length).toBeGreaterThan(3);
+    const twice = vi.fn().mockResolvedValue({ text: JSON.stringify(skeleton), attestation: A, usage: null });
+    await expect(draftCard(LEO, 'Leo', { model: 'e2ee-x', chat: twice })).rejects.toThrow(/usable card/);
   });
 });
 
