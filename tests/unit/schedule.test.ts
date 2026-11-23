@@ -44,13 +44,23 @@ describe('step labels (the only model prose in the pack)', () => {
     for (const l of ['Arrive', 'Hear the promise of a king', 'Make a hope reminder', 'Snack time 2']) expect(labelOk(l)).toBe(true);
     expect(verifyLesson(SOURCE, withLabel('Sing about the promise')).ok).toBe(true);
   });
+  it('accepts a 40-char label and a 20-char word', () => {
+    expect(labelOk('a'.repeat(20) + ' ' + 'b'.repeat(19))).toBe(true);
+    expect(labelOk('a'.repeat(21))).toBe(false);
+  });
+  it('stores the normalized label', () => {
+    const r = verifyLesson(SOURCE, withLabel('  Sing   '));
+    expect(r.ok && r.lesson.steps[0].label).toBe('Sing');
+  });
   it('rejects more than 6 words, control chars, links, handles, emails, digits-only', () => {
     for (const l of [
       'one two three four five six seven', 'Line one\nline two', 'tab\there', 'zero\u200bwidth', 'see https://x.io now', 'visit www.evil.com',
       'evil.com/free', 'ping @someone', 'mail a@b.co', '12345', '!!! ???', '   ', 'x\ny',
+      'a'.repeat(41), 'word '.repeat(7).trim(), 'Averyveryveryverylongword ok', 'evil.xyz/free', 'go to evil.xyz',
+      'ｈｔｔｐｓ：//x', '＠handle', 'ㅤ', '⠀', 'okᅟok', 'okᅠ', 'okﾠ',
     ]) {
       expect(labelOk(l), l).toBe(false);
-      expect(verifyLesson(SOURCE, withLabel(l.trim() ? l : 'x\ny'))).toMatchObject({ ok: false, errors: expect.arrayContaining(['bad_label']) });
+      expect(verifyLesson(SOURCE, withLabel(l))).toMatchObject({ ok: false, errors: expect.arrayContaining(['bad_label']) });
     }
   });
 });

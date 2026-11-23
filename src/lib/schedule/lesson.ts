@@ -133,14 +133,22 @@ export type VerifiedLesson = {
 export type LessonError = 'big_idea_not_in_lesson' | 'duplicate_step_key' | 'total_minutes_over_120' | 'bad_label';
 
 export const MAX_LABEL_WORDS = 6;
+export const MAX_LABEL_CHARS = 40;
+export const MAX_LABEL_WORD_CHARS = 20;
+
+/** NFKC (folds fullwidth lookalikes) and trim: the form a label is checked in and stored as. */
+export const normalizeLabel = (label: string): string => label.normalize('NFKC').trim();
 
 /** Labels reach the child-facing pack, so code (not the prompt) holds them to short plain words. */
 export function labelOk(label: string): boolean {
-  const t = label.trim();
-  if (!t || /[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/u.test(t)) return false;
-  if (/https?:|www\.|@/i.test(t) || /[\w-]+\.(com|org|net|io|co|app|dev|me|ly)(\W|$)/i.test(t)) return false;
+  const t = normalizeLabel(label);
+  if (!t || t.length > MAX_LABEL_CHARS) return false;
+  // Control/format/separator characters and invisible filler code points (Hangul fillers, braille blank).
+  if (/[\p{Cc}\p{Cf}\p{Zl}\p{Zp}\u3164\u2800\u115F\u1160\uFFA0]/u.test(t)) return false;
+  if (/:\/\/|www\.|@/i.test(t) || /[\p{L}\p{N}-]+\.\p{L}{2,}/u.test(t)) return false;
   if (!/\p{L}/u.test(t)) return false; // digits/symbols only
-  return t.split(/\s+/).length <= MAX_LABEL_WORDS;
+  const words = t.split(/\s+/);
+  return words.length <= MAX_LABEL_WORDS && words.every((w) => w.length <= MAX_LABEL_WORD_CHARS);
 }
 
 export function verifyLesson(source: string, d: LessonDraft): { ok: true; lesson: VerifiedLesson } | { ok: false; errors: LessonError[] } {
@@ -156,7 +164,7 @@ export function verifyLesson(source: string, d: LessonDraft): { ok: true; lesson
     ok: true,
     lesson: {
       title: d.title.trim(),
-      steps: d.steps.map((s) => ({ ...s, label: s.label.trim() })),
+      steps: d.steps.map((s) => ({ ...s, label: normalizeLabel(s.label) })),
       // The church's own words, as they stand in the source (not the model's copy).
       bigIdeaQuote: source.slice(span.start, span.end),
       bigIdeaSpan: span,
