@@ -1,0 +1,60 @@
+{
+  "id": "es-20",
+  "lang": "es",
+  "text": "Valeria tiene 9, spina bifida, uses a manual wheelchair. She does NOT need help to transfer, ella sola se pasa al asiento, please don't lift her, she hates it. Es alérgica al látex, so no globos de látex y guantes sin látex si la tienen que atender. Cateterismo: se hace sola cada 4 horas, solo necesita el baño accesible. Le encanta el basketball en silla.",
+  "facts": [
+    {
+      "id": "latex_allergy",
+      "kind": "allergy",
+      "must": [
+        [
+          "l[aá]tex"
+        ],
+        [
+          "allerg|al[eé]rg|anaphyla|anafil"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "no_latex_balloons_gloves",
+      "kind": "other_safety",
+      "must": [
+        [
+          "globo|balloon|guante|glove"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "cath_every_4h",
+      "kind": "medical",
+      "must": [
+        [
+          "cat[eé]ter|cath|sond"
+        ],
+        [
+          "(?<!\\d)4 ?(?:h|hours?|horas)|four hours|cuatro horas|every 4|cada 4"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "doesnt_need.transfer_help",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|sola|herself|independ|hates))[^.!?\\n;•|]*?(?:(?:needs?|necesita|requires?|requiere)[^.!?\\n;•|]{0,25}(?:help|ayuda|assist)[^.!?\\n;•|]{0,25}(?:transfer|pasar|traslad|lift|levant)|(?:lift|levant|carg)\\w*[^.!?\\n;•|]{0,15}(?:her|la)\\b[^.!?\\n;•|]{0,20}(?:chair|silla|seat|asiento))",
+      "why": "NO necesita ayuda para pasarse; no hay que levantarla."
+    },
+    {
+      "id": "number.cath_interval",
+      "pattern": "(?:cat[eé]ter\\w*|cath\\w*|sond\\w*)[^.!?\\n;]{0,40}(?:every|cada)\\s*(?!4(?!\\d))\\d+\\s*(?:h|hour|hora)",
+      "why": "El cateterismo es cada 4 horas."
+    }
+  ],
+  "tags": [
+    "mobility_aid",
+    "medical_plan",
+    "spanish_home"
+  ]
+}

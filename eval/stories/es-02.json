@@ -1,0 +1,79 @@
+{
+  "id": "es-02",
+  "lang": "es",
+  "text": "Valentina, 8 años — diabetes tipo 1\n- Usa bomba de insulina y sensor (Dexcom). Ya no usa plumas de insulina.\n- Si está por debajo de 70: 15 g de azúcar rápida (jugo en su lonchera) y volver a medir en 15 min.\n- Si está por encima de 250: avisarme por WhatsApp, NO darle insulina.\n- Puede comer la merienda de la clase, ella cuenta sus carbohidratos.\n- Le encanta dibujar.",
+  "facts": [
+    {
+      "id": "t1d",
+      "kind": "medical",
+      "must": [
+        [
+          "diab[eé]t|type 1|tipo 1|t1d"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "low_under_70_sugar",
+      "kind": "medical",
+      "must": [
+        [
+          "(?<!\\d)70(?!\\d)"
+        ],
+        [
+          "jugo|az[uú]car|juice|sugar|glucos|15 ?g"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "high_over_250_notify",
+      "kind": "medical",
+      "must": [
+        [
+          "(?<!\\d)250(?!\\d)"
+        ],
+        [
+          "avis|whatsapp|mensaje|llam|text|call|contact|message|notif"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "no_insulin",
+      "kind": "medication",
+      "must": [
+        [
+          "(?:(?:dar|darle|give|administer|poner|ponerle)[^.!?\\n;•|]{0,15}insulin|\\bno (?:extra )?insulin)[^.!?\\n;•|]{0,40}(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no)|(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no)[^.!?\\n;•|]{0,40}(?:(?:dar|darle|give|administer|poner|ponerle)[^.!?\\n;•|]{0,15}insulin|\\bno (?:extra )?insulin)"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "number.low_threshold",
+      "pattern": "(?:under|below|less than|lower than|<|menos de|debajo de|bajo|baja de)\\s*(?!70(?!\\d))\\d{2,3}(?!\\d)",
+      "why": "El umbral de hipoglucemia es 70."
+    },
+    {
+      "id": "number.high_threshold",
+      "pattern": "(?:over|above|more than|higher than|>|m[aá]s de|arriba de|encima de|mayor (?:a|de|que)|sube de)\\s*(?!250(?!\\d))\\d{3}(?!\\d)",
+      "why": "El umbral para avisar es 250."
+    },
+    {
+      "id": "cancelled_med.insulin_pens",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:outgr|used to|no longer|anymore|former|previous|past|resolved|was allergic|grew out|ya no|super[oó]|de beb[eé]|antes|sol[ií]a|cuando era|n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|bomba|pump))[^.!?\\n;•|]*?(?:plumas? de insulina|insulin pens?|\\bplumas?\\b)",
+      "why": "Ya no usa plumas de insulina; usa bomba."
+    },
+    {
+      "id": "doesnt_need.insulin",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|bomba|pump))[^.!?\\n;•|]*?(?:(?:dar|darle|give|administer|poner|ponerle)[^.!?\\n;•|]{0,20}insulin)",
+      "why": "NO darle insulina; solo avisar."
+    }
+  ],
+  "tags": [
+    "medical_plan",
+    "spanish_home"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "en-11",
+  "lang": "en",
+  "text": "Isaiah is 12, autistic and nonverbal, he talks with his iPad (TouchChat). Please never take the iPad away, it's his voice. He has pica, so he puts crayons, play-doh and small toys in his mouth and swallows them. Keep small stuff out of reach. He runs toward the parking lot if a door is open, he doesn't understand cars. His mom and I are divorced but both of us can pick him up, there is NO restriction (the old form from 2024 was wrong). He likes trains, Thomas especially.",
+  "facts": [
+    {
+      "id": "pica",
+      "kind": "other_safety",
+      "must": [
+        [
+          "pica|eats?|mouth|swallow|\\bcome\\b|traga|boca"
+        ],
+        [
+          "crayon|play-?doh|non-?food|objects|small|cosas|plastilina|toys|juguetes"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "runs_to_parking_lot",
+      "kind": "wandering",
+      "must": [
+        [
+          "bolt|run(?:s|ning)? (?:off|away|out)|wander|elop|escap|sale corriendo|salir corriendo|se va corriendo|se escapa|huye|fuga|deambul|se sale|se va solo|se va sola|parking|estacionamiento"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "both_parents_pickup",
+      "kind": "pickup",
+      "must": [
+        [
+          "\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b"
+        ],
+        [
+          "both|either|ambos|cualquiera|no (?:pickup )?restriction|sin restricci|\\bcan\\b(?!['’]?t| ?not)|\\bmay\\b(?! not)|puede|allowed"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "outgrown.custody_restriction",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:no restriction|\\bno\\b|both|either|old form|ambos|sin restric|wrong|error))[^.!?\\n;•|]*?(?:(?:\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b)[^.!?\\n;•|]{0,40}(?:not allowed|cannot|can['’]?t|may not|restrict|no puede|prohib))",
+      "why": "The old pickup restriction on mom was an error; both parents may pick up."
+    }
+  ],
+  "tags": [
+    "nonverbal_or_aac",
+    "elopement_risk"
+  ]
+}

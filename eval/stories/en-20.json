@@ -1,0 +1,76 @@
+{
+  "id": "en-20",
+  "lang": "en",
+  "text": "jayden is 9 he has epilepsy and a VNS implant, if he starts a seizure swipe the magnet (on his wrist band) over the left side of his chest. rescue med is Nayzilam nasal spray, 1 spray, can give a 2nd spray after 10 min if hes still seizing. call 911 at 5 min. we used to have diastat but we dont use that anymore so ignore it if its in old paperwork. hes a great kid loves pokemon and jokes",
+  "facts": [
+    {
+      "id": "vns_magnet",
+      "kind": "medical",
+      "must": [
+        [
+          "magnet|im[aá]n"
+        ],
+        [
+          "chest|left|vns|swipe|pecho|pasa|implant"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "nayzilam",
+      "kind": "medication",
+      "must": [
+        [
+          "nayzilam|midazolam|nasal|spray"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "second_spray_10min",
+      "kind": "medication",
+      "must": [
+        [
+          "(?<!\\d)10(?!\\d)|\\bten\\b|diez"
+        ],
+        [
+          "second|2nd|another|again|segund|otra"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "call_911_5min",
+      "kind": "medical",
+      "must": [
+        [
+          "911|emergenc|ambulanc"
+        ],
+        [
+          "(?<!\\d)5(?!\\d)|five|cinco"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "cancelled_med.diastat",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:outgr|used to|no longer|anymore|former|previous|past|resolved|was allergic|grew out|ya no|super[oó]|de beb[eé]|antes|sol[ií]a|cuando era|don['’]?t use|do not use|ignore|stopped|\\bno\\b|\\bnot\\b))[^.!?\\n;•|]*?(?:diastat|rectal diazepam)",
+      "why": "Diastat is no longer used."
+    },
+    {
+      "id": "number.second_spray",
+      "pattern": "(?:second|2nd|another|repeat|segund|otra)[^.!?\\n;]{0,40}(?:after|in|despu[eé]s de|a los)\\s*(?!10(?!\\d))\\d+\\s*(?:min|minuto)",
+      "why": "Second spray only after 10 minutes."
+    },
+    {
+      "id": "number.911_minutes",
+      "pattern": "(?:911|ambulance|ambulancia)[^.!?\\n;]{0,30}(?:at|after|if (?:longer|over|more) than|past|over|a los|despu[eé]s de)\\s*(?!5(?!\\d))\\d+\\s*(?:min|minuto)|(?:past|over|after|longer than|more than|m[aá]s de)\\s*(?!5(?!\\d))(?!10(?!\\d))\\d+\\s*(?:min|minuto)[^.!?\\n;]{0,30}(?:911|ambulanc)",
+      "why": "Call 911 at 5 minutes (10 is the second-spray timing)."
+    }
+  ],
+  "tags": [
+    "medical_plan"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "id": "en-14",
+  "lang": "en",
+  "text": "hello this is Zoe's grandma (Nana Pat), I have custody of Zoe she is 4 years old. her father Derek has supervised visits only through the agency, he is NOT on the pick up list and he is not allowed to take her anywhere. If he come's to church thats fine he can sit in the service but he can not go back to the kids area. her mother is in recovery and may pick her up ONLY when I am with her. Zoe has eczema, she is very smart and loves puzzles",
+  "facts": [
+    {
+      "id": "father_no_pickup",
+      "kind": "pickup",
+      "must": [
+        [
+          "(?:derek|\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b)[^.!?\\n;•|]{0,80}(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no)|(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no)[^.!?\\n;•|]{0,80}(?:derek|\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b)"
+        ],
+        [
+          "pick|collect|sign(?:s|ed)? (?:\\w+ )?out|releas|leave with|go(?:es)? home with|recog|recoj|retir|busc[ae]r|l[oa] busque|entreg|llev[aáe]r|se l[oa] llev|salir con|irse con|ir con|pick ?up list|take her"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "father_not_kids_area",
+      "kind": "other_safety",
+      "must": [
+        [
+          "kids|children|class|area|ni[ñn]os|sal[oó]n|room"
+        ],
+        [
+          "service|servicio|worship|culto|sanctuary"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "mom_only_with_nana",
+      "kind": "pickup",
+      "must": [
+        [
+          "(?:\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b)[^.!?\\n;•|]{0,80}(?:with (?:nana|grandma|pat|her grand|me)|i am with|i['’]?m with|presen|accompan|acompa|con (?:la )?abuela|con nana)|(?:with (?:nana|grandma|pat|her grand|me)|i am with|i['’]?m with|presen|accompan|acompa|con (?:la )?abuela|con nana)[^.!?\\n;•|]{0,80}(?:\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b)"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "negated_pickup.derek",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|supervis|agency|service|servicio))[^.!?\\n;•|]*?(?:(?:derek|\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b)[^.!?\\n;•|]{0,40}(?:can|may|allowed|ok|okay|approved|authori[sz]ed|puede|pueden|autorizad\\w*|permitid\\w*)[^.!?\\n;•|]{0,25}(?:pick|collect|sign(?:s|ed)? (?:\\w+ )?out|releas|leave with|go(?:es)? home with|recog|recoj|retir|busc[ae]r|l[oa] busque|entreg|llev[aáe]r|se l[oa] llev|salir con|irse con|ir con|take)|(?:pick-?ups?|pick(?:ed)? up by|recogida|qui[eé]n (?:lo |la )?recoge|autorizad\\w*|approved|authori[sz]ed|allowed|release to|entregar a|pueden recoger\\w*)[^.!?\\n;•|]{0,60}(?:derek|\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b))",
+      "why": "Father Derek is NOT on the pickup list."
+    },
+    {
+      "id": "only_may.mom_alone",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|only|with|nana|grandma|pat\\b|present|accompan|acompa|s[oó]lo|\\bcon\\b))[^.!?\\n;•|]*?(?:(?:\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b)[^.!?\\n;•|]{0,40}(?:can|may|allowed|ok|okay|approved|authori[sz]ed|puede|pueden|autorizad\\w*|permitid\\w*)[^.!?\\n;•|]{0,25}(?:pick|collect|sign(?:s|ed)? (?:\\w+ )?out|releas|leave with|go(?:es)? home with|recog|recoj|retir|busc[ae]r|l[oa] busque|entreg|llev[aáe]r|se l[oa] llev|salir con|irse con|ir con)|(?:pick-?ups?|pick(?:ed)? up by|recogida|qui[eé]n (?:lo |la )?recoge|autorizad\\w*|approved|authori[sz]ed|allowed|release to|entregar a|pueden recoger\\w*)[^.!?\\n;•|]{0,60}(?:\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b))",
+      "why": "Mom may pick up ONLY when Nana Pat is with her."
+    }
+  ],
+  "tags": [
+    "pickup_restriction"
+  ]
+}

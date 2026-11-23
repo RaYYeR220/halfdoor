@@ -1,0 +1,43 @@
+{
+  "id": "en-29",
+  "lang": "en",
+  "text": "Ben is 12, has mild CP and uses a walker. He's allowed to walk himself between the kids wing and the youth room now, he doesn't need an escort anymore, he'd be mortified. Stairs are different: he needs an adult right behind him on the stairs, every time. His brother Josh (17) is allowed to sign him out. He's fine with all foods and has no meds.",
+  "facts": [
+    {
+      "id": "stairs_adult_behind",
+      "kind": "other_safety",
+      "must": [
+        [
+          "stair|escaler|steps"
+        ],
+        [
+          "adult|behind|spot|detr[aá]s|adulto|leader"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "josh_may_sign_out",
+      "kind": "pickup",
+      "must": [
+        [
+          "josh|brother|hermano"
+        ],
+        [
+          "pick|collect|sign(?:s|ed)? (?:\\w+ )?out|releas|leave with|go(?:es)? home with|recog|recoj|retir|busc[ae]r|l[oa] busque|entreg|llev[aáe]r|se l[oa] llev|salir con|irse con|ir con|sign"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "doesnt_need.escort",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|stairs|escaler|anymore|himself|\\bsolo\\b))[^.!?\\n;•|]*?(?:(?:needs?|requires?|necesita|must have|should have)[^.!?\\n;•|]{0,20}(?:an? )?(?:escort|accompan|acompa|walked|someone to walk))",
+      "why": "He doesn't need an escort between rooms anymore (stairs are the exception)."
+    }
+  ],
+  "tags": [
+    "mobility_aid"
+  ]
+}

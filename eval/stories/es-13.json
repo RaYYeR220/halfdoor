@@ -1,0 +1,61 @@
+{
+  "id": "es-13",
+  "lang": "es",
+  "text": "Ximena (12) — epilepsia\n• Medicamento actual: Keppra, dos veces al día, en casa. Ya NO toma Depakote (lo suspendieron en marzo).\n• Si tiene una crisis: proteger la cabeza, ponerla de lado, NO meterle nada en la boca.\n• Si dura más de 5 minutos o tiene dos seguidas: 911 y llamarme.\n• No necesita casco.\n• Le encanta el K-pop.",
+  "facts": [
+    {
+      "id": "seizure_911_5min",
+      "kind": "medical",
+      "must": [
+        [
+          "911|emergenc|ambulanc"
+        ],
+        [
+          "(?<!\\d)5(?!\\d)|five|cinco"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "nothing_in_mouth",
+      "kind": "medical",
+      "must": [
+        [
+          "(?:boca|mouth)[^.!?\\n;•|]{0,80}(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|nada|nothing)|(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|nada|nothing)[^.!?\\n;•|]{0,80}(?:boca|mouth)"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "two_in_a_row_911",
+      "kind": "medical",
+      "must": [
+        [
+          "dos seguidas|seguidas|two in a row|back[- ]to[- ]back|consecutiv|more than one|m[aá]s de una|cluster|two seizures|dos crisis|second seizure|otra crisis"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "cancelled_med.depakote",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:outgr|used to|no longer|anymore|former|previous|past|resolved|was allergic|grew out|ya no|super[oó]|de beb[eé]|antes|sol[ií]a|cuando era|n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|suspend|stopped|discontinu))[^.!?\\n;•|]*?(?:depakote|valpro)",
+      "why": "Ya NO toma Depakote (suspendido en marzo)."
+    },
+    {
+      "id": "doesnt_need.helmet",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no))[^.!?\\n;•|]*?(?:(?:necesita|needs?|usa|uses?|wears?|lleva|requiere|must)[^.!?\\n;•|]{0,20}(?:casco|helmet))",
+      "why": "No necesita casco."
+    },
+    {
+      "id": "number.911_minutes",
+      "pattern": "(?:m[aá]s de|over|after|longer than|more than|past|beyond|despu[eé]s de|pasa de)\\s*(?!5(?!\\d))\\d+\\s*(?:min|minuto)",
+      "why": "El 911 es a los 5 minutos."
+    }
+  ],
+  "tags": [
+    "medical_plan",
+    "spanish_home"
+  ]
+}

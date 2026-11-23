@@ -1,0 +1,54 @@
+{
+  "id": "es-19",
+  "lang": "es",
+  "text": "Matías (6)\n- Alergia al ajonjolí (sésamo): pan con semillas, hummus, galletas. Le da urticaria y vómito. Antihistamínico (Zyrtec) en su mochila; si se le cierra la garganta, autoinyector y 911.\n- NO tiene asma. El del inhalador es su gemelo Lucas, que está en el mismo salón; no se confundan de mochila.\n- Es zurdo y le encanta pintar.",
+  "facts": [
+    {
+      "id": "sesame_allergy",
+      "kind": "allergy",
+      "must": [
+        [
+          "sesame|s[eé]samo|ajonjol[ií]"
+        ],
+        [
+          "allerg|al[eé]rg|anaphyla|anafil"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "zyrtec",
+      "kind": "medication",
+      "must": [
+        [
+          "zyrtec|cetiriz|antihist"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "autoinjector_911",
+      "kind": "medication",
+      "must": [
+        [
+          "epi-?pen|epinephrine|adrenalin|auto-?inject|auto-?inyect|auvi"
+        ],
+        [
+          "911|emergenc|ambulanc"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "sibling.asthma",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|lucas|gemelo|twin|hermano|brother))[^.!?\\n;•|]*?(?:asma|asthma|inhal|salbutamol|albuterol)",
+      "why": "El asma y el inhalador son de su gemelo Lucas."
+    }
+  ],
+  "tags": [
+    "food_allergy",
+    "spanish_home"
+  ]
+}

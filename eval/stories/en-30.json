@@ -1,0 +1,57 @@
+{
+  "id": "en-30",
+  "lang": "en",
+  "text": "Our Hannah is 5 and has Down syndrome, and she is pure joy. A few safety things I have to mention: she has atlantoaxial instability (a loose neck joint), so no somersaults, no headstands, no rough tumbling, and please don't lift her by the arms. She used to have a feeding tube but it came out for good last year and she eats by mouth now. Just cut grapes and hot dogs into small pieces, she still pockets food. She will try to hug every single person in the room.",
+  "facts": [
+    {
+      "id": "neck_no_tumbling",
+      "kind": "medical",
+      "must": [
+        [
+          "neck|cuello|atlanto|instab"
+        ],
+        [
+          "somersault|headstand|tumbl|rough|voltere|marometa|\\bpino\\b|\\broll"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "no_lift_by_arms",
+      "kind": "other_safety",
+      "must": [
+        [
+          "\\barms?\\b|brazo"
+        ],
+        [
+          "lift|pick|carg|levant|jal|pull"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "cut_food_small",
+      "kind": "other_safety",
+      "must": [
+        [
+          "\\bcut\\b|small pieces|cortar|trocitos|peque[ñn]"
+        ],
+        [
+          "grape|hot dog|food|uva|salchicha|comida|chok|atrag"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "outgrown.feeding_tube",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:outgr|used to|no longer|anymore|former|previous|past|resolved|was allergic|grew out|ya no|super[oó]|de beb[eé]|antes|sol[ií]a|cuando era|n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|removed|came out|for good|retir))[^.!?\\n;•|]*?(?:feeding tube|g-?tube|tube[- ]fed|sonda)",
+      "why": "Feeding tube was removed last year; she eats by mouth."
+    }
+  ],
+  "tags": [
+    "medical_plan",
+    "sensory_seeking"
+  ]
+}

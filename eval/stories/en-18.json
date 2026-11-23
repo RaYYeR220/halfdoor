@@ -1,0 +1,46 @@
+{
+  "id": "en-18",
+  "lang": "en",
+  "text": "Theo is 5 and has bilateral cochlear implants. He hears pretty well with them but not in a noisy gym. Take the processors off before he goes on the plastic slide, the static can wipe them. I wouldn't say he never wanders, he does, he follows the music to the worship team. His twin brother Owen is the one with seizures, Theo has never had one. Both boys love Paw Patrol, sorry in advance.",
+  "facts": [
+    {
+      "id": "processors_off_slide",
+      "kind": "other_safety",
+      "must": [
+        [
+          "processor|implant|procesador|cochlear|coclear"
+        ],
+        [
+          "slide|tobog[aá]n|static|est[aá]tic"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "wanders_to_music",
+      "kind": "wandering",
+      "must": [
+        [
+          "bolt|run(?:s|ning)? (?:off|away|out)|wander|elop|escap|sale corriendo|salir corriendo|se va corriendo|se escapa|huye|fuga|deambul|se sale|se va solo|se va sola|follows? the music|sigue la m[uú]sica"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "double_negation.never_wanders",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:wouldn['’]?t say|not that|no dir[ií]a))[^.!?\\n;•|]*?(?:(?:never|does ?n['’]?t|does not|won['’]t|\\bno\\b)\\s+(?:\\w+\\s+)?(?:wander|runs? off|runs? away|bolt|elope|leave)|no (?:wandering|elopement|flight) risk|not (?:a|an) (?:runner|wanderer|flight risk))",
+      "why": "\"I wouldn't say he never wanders\" means he DOES wander."
+    },
+    {
+      "id": "sibling.seizures",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|owen|twin|brother|gemelo|hermano))[^.!?\\n;•|]*?(?:seiz|epilep|convuls|crisis)",
+      "why": "Seizures are his twin Owen's; Theo has never had one."
+    }
+  ],
+  "tags": [
+    "noise_sensitive",
+    "elopement_risk"
+  ]
+}

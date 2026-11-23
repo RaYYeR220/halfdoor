@@ -1,0 +1,62 @@
+{
+  "id": "es-22",
+  "lang": "es",
+  "text": "Alma, 11 años. Epilepsia con estimulador del nervio vago (VNS).\n1) Si empieza una crisis, pasar el imán (en su pulsera) sobre el lado izquierdo del pecho.\n2) Si a los 2 minutos sigue, pasar el imán otra vez.\n3) Si dura más de 5 minutos, llamar al 911 y a nosotros.\n4) No tiene medicamento de rescate en la iglesia.\nLe gusta leer y no le gustan las sorpresas.",
+  "facts": [
+    {
+      "id": "vns_magnet",
+      "kind": "medical",
+      "must": [
+        [
+          "im[aá]n|magnet"
+        ],
+        [
+          "pecho|chest|izquierd|left|vns|pulsera|wrist"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "magnet_again_2min",
+      "kind": "medical",
+      "must": [
+        [
+          "(?<!\\d)2(?!\\d)|\\btwo\\b|\\bdos\\b"
+        ],
+        [
+          "otra vez|again|repeat|repet|second|segund"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "call_911_5min",
+      "kind": "medical",
+      "must": [
+        [
+          "911|emergenc|ambulanc"
+        ],
+        [
+          "(?<!\\d)5(?!\\d)|five|cinco"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "doesnt_need.rescue_med",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no))[^.!?\\n;•|]*?(?:(?:rescue|rescate)[^.!?\\n;•|]{0,30}(?:med|spray|diazepam|midazolam|valtoco|nayzilam)|diastat|valtoco|nayzilam|midazolam|diazepam)",
+      "why": "No tiene medicamento de rescate en la iglesia."
+    },
+    {
+      "id": "number.911_minutes",
+      "pattern": "(?:m[aá]s de|over|after|longer than|more than|past|despu[eé]s de|pasa de)\\s*(?!5(?!\\d))\\d+\\s*(?:min|minuto)s?(?=[^.!?\\n;]{0,40}(?:911|ambulanc))(?![^.!?\\n;]{0,40}(?<!\\d)5\\s*(?:min|minuto))|(?:911|ambulanc)[^.!?\\n;]{0,40}(?:m[aá]s de|over|after|longer than|more than|past|despu[eé]s de|pasa de|a los|\\bat)\\s*(?!5(?!\\d))\\d+\\s*(?:min|minuto)",
+      "why": "El 911 es a los 5 minutos (2 min es repetir el imán)."
+    }
+  ],
+  "tags": [
+    "medical_plan",
+    "spanish_home"
+  ]
+}

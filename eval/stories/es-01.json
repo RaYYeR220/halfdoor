@@ -1,0 +1,66 @@
+{
+  "id": "es-01",
+  "lang": "es",
+  "text": "Mateo tiene 5 años y tiene autismo. Le encantan los trenes y los rompecabezas. Es alérgico al maní (cacahuate); una vez tuvo que ir a urgencias. Su EpiPen está en la mochila azul. Muy importante: su papá NO puede recogerlo, hay una orden del juez. Solo su mamá (yo, Daniela) o su abuela Carmen pueden recogerlo. Los ruidos fuertes lo asustan; si se tapa los oídos, llévenlo a un lugar tranquilo.",
+  "facts": [
+    {
+      "id": "peanut_allergy",
+      "kind": "allergy",
+      "must": [
+        [
+          "peanut|cacahuat|\\bman[ií](?![\\wáéíóúñ])"
+        ],
+        [
+          "allerg|al[eé]rg|anaphyla|anafil"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "epipen",
+      "kind": "medication",
+      "must": [
+        [
+          "epi-?pen|epinephrine|adrenalin|auto-?inject|auto-?inyect|auvi"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "dad_no_pickup",
+      "kind": "pickup",
+      "must": [
+        [
+          "(?:\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b)[^.!?\\n;•|]{0,80}(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|orden|juez|court)|(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|orden|juez|court)[^.!?\\n;•|]{0,80}(?:\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b)"
+        ],
+        [
+          "pick|collect|sign(?:s|ed)? (?:\\w+ )?out|releas|leave with|go(?:es)? home with|recog|recoj|retir|busc[ae]r|l[oa] busque|entreg|llev[aáe]r|se l[oa] llev|salir con|irse con|ir con|orden|juez|court"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "only_mom_grandma",
+      "kind": "pickup",
+      "must": [
+        [
+          "(?:\\bonly\\b|s[oó]lo\\b|solamente|[uú]nicamente|nobody else|no one else|nadie m[aá]s|nadie (?:que|excepto|sino)|exclusiv)[^.!?\\n;•|]{0,80}(?:mam[aá]|madre|daniela|abuela|carmen|\\bmom\\b|mother|grandm)|(?:mam[aá]|madre|daniela|abuela|carmen|\\bmom\\b|mother|grandm)[^.!?\\n;•|]{0,80}(?:\\bonly\\b|s[oó]lo\\b|solamente|[uú]nicamente|nobody else|no one else|nadie m[aá]s|nadie (?:que|excepto|sino)|exclusiv)"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "negated_pickup.papa",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|orden|juez|court))[^.!?\\n;•|]*?(?:(?:\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b)[^.!?\\n;•|]{0,40}(?:can|may|allowed|ok|okay|approved|authori[sz]ed|puede|pueden|autorizad\\w*|permitid\\w*)[^.!?\\n;•|]{0,25}(?:pick|collect|sign(?:s|ed)? (?:\\w+ )?out|releas|leave with|go(?:es)? home with|recog|recoj|retir|busc[ae]r|l[oa] busque|entreg|llev[aáe]r|se l[oa] llev|salir con|irse con|ir con)|(?:pick-?ups?|pick(?:ed)? up by|recogida|qui[eé]n (?:lo |la )?recoge|autorizad\\w*|approved|authori[sz]ed|allowed|release to|entregar a|pueden recoger\\w*)[^.!?\\n;•|]{0,60}(?:\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b))",
+      "why": "El papá NO puede recogerlo (orden judicial)."
+    }
+  ],
+  "tags": [
+    "food_allergy",
+    "noise_sensitive",
+    "pickup_restriction",
+    "spanish_home"
+  ]
+}

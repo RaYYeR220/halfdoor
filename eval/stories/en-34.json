@@ -1,0 +1,56 @@
+{
+  "id": "en-34",
+  "lang": "en",
+  "text": "My grandson Elias is 9 and lives with my wife and me under a guardianship order. Neither of his parents may pick him up or visit him at church, not his mother and not his father. His uncle Joe was on the pickup list until October; he was removed and may no longer pick him up. Only my wife Carmen or I (Frank) may sign him out. Elias startles at sudden loud noises and has nightmares; a calm voice helps.",
+  "facts": [
+    {
+      "id": "parents_no_pickup",
+      "kind": "pickup",
+      "must": [
+        [
+          "(?:parent|\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b|\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b|padres)[^.!?\\n;•|]{0,80}(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|neither|\\bni\\b)|(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|neither|\\bni\\b)[^.!?\\n;•|]{0,80}(?:parent|\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b|\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b|padres)"
+        ],
+        [
+          "pick|collect|sign(?:s|ed)? (?:\\w+ )?out|releas|leave with|go(?:es)? home with|recog|recoj|retir|busc[ae]r|l[oa] busque|entreg|llev[aáe]r|se l[oa] llev|salir con|irse con|ir con|visit|visita"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "uncle_joe_removed",
+      "kind": "pickup",
+      "must": [
+        [
+          "(?:\\bjoe\\b|uncle|t[ií]o\\b)[^.!?\\n;•|]{0,80}(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|removed|quitad|elimin|until)|(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|removed|quitad|elimin|until)[^.!?\\n;•|]{0,80}(?:\\bjoe\\b|uncle|t[ií]o\\b)"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "only_grandparents",
+      "kind": "pickup",
+      "must": [
+        [
+          "(?:\\bonly\\b|s[oó]lo\\b|solamente|[uú]nicamente|nobody else|no one else|nadie m[aá]s|nadie (?:que|excepto|sino)|exclusiv)[^.!?\\n;•|]{0,80}(?:carmen|frank|grand|abuel)|(?:carmen|frank|grand|abuel)[^.!?\\n;•|]{0,80}(?:\\bonly\\b|s[oó]lo\\b|solamente|[uú]nicamente|nobody else|no one else|nadie m[aá]s|nadie (?:que|excepto|sino)|exclusiv)"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "negated_pickup.parents",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|neither|guardianship))[^.!?\\n;•|]*?(?:(?:parents?|\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b|\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b)[^.!?\\n;•|]{0,40}(?:can|may|allowed|ok|okay|approved|authori[sz]ed|puede|pueden|autorizad\\w*|permitid\\w*)[^.!?\\n;•|]{0,25}(?:pick|collect|sign(?:s|ed)? (?:\\w+ )?out|releas|leave with|go(?:es)? home with|recog|recoj|retir|busc[ae]r|l[oa] busque|entreg|llev[aáe]r|se l[oa] llev|salir con|irse con|ir con|visit)|(?:pick-?ups?|pick(?:ed)? up by|recogida|qui[eé]n (?:lo |la )?recoge|autorizad\\w*|approved|authori[sz]ed|allowed|release to|entregar a|pueden recoger\\w*)[^.!?\\n;•|]{0,60}(?:parents?|\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b|\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b))",
+      "why": "Neither parent may pick up or visit."
+    },
+    {
+      "id": "outgrown.uncle_joe",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|removed|until|quitad|elimin|former|previous))[^.!?\\n;•|]*?(?:(?:\\bjoe\\b|uncle|t[ií]o\\b)[^.!?\\n;•|]{0,40}(?:can|may|allowed|approved|on the (?:pickup )?list|puede)|(?:approved|authori[sz]ed|allowed|pickup list)[^.!?\\n;•|]{0,40}\\bjoe\\b)",
+      "why": "Uncle Joe was removed from the pickup list in October."
+    }
+  ],
+  "tags": [
+    "noise_sensitive",
+    "pickup_restriction"
+  ]
+}

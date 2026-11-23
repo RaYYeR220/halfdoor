@@ -1,0 +1,48 @@
+{
+  "id": "es-12",
+  "lang": "es",
+  "text": "Gael tiene 9 años, tiene síndrome de Down y usa audífonos en los dos oídos. Es el niño más feliz del mundo pero se escapa: si ve una puerta abierta sale corriendo y no mira los carros, ya llegó a la calle dos veces. Por favor siempre un adulto con él en el pasillo y la puerta del salón cerrada. Si se moja, quítenle los audífonos. Come de todo.",
+  "facts": [
+    {
+      "id": "elopement_street",
+      "kind": "wandering",
+      "must": [
+        [
+          "bolt|run(?:s|ning)? (?:off|away|out)|wander|elop|escap|sale corriendo|salir corriendo|se va corriendo|se escapa|huye|fuga|deambul|se sale|se va solo|se va sola|calle|street"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "adult_hallway_door_closed",
+      "kind": "wandering",
+      "must": [
+        [
+          "adult|adulto|1:1|one-on-one|acompa|with him|con [eé]l"
+        ],
+        [
+          "hall|pasillo|door|puerta"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "hearing_aids_off_wet",
+      "kind": "other_safety",
+      "must": [
+        [
+          "aud[ií]fon|hearing aid"
+        ],
+        [
+          "moj|\\bwet|water|agua|quit|remove|take (?:them )?(?:out|off)"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [],
+  "tags": [
+    "elopement_risk",
+    "spanish_home"
+  ]
+}

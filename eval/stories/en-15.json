@@ -1,0 +1,67 @@
+{
+  "id": "en-15",
+  "lang": "en",
+  "text": "Wyatt 7, adhd. runner — he WILL leave the room if the door's open, he's gotten to the street before. doesn't need help in bathroom but pls stand outside the door bc he wanders off from there. no meds at church. allergic to bees (epipen in my purse, i'm in the service, text me). likes legos",
+  "facts": [
+    {
+      "id": "runner",
+      "kind": "wandering",
+      "must": [
+        [
+          "bolt|run(?:s|ning)? (?:off|away|out)|wander|elop|escap|sale corriendo|salir corriendo|se va corriendo|se escapa|huye|fuga|deambul|se sale|se va solo|se va sola|leaves? the room|street"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "bathroom_stand_outside",
+      "kind": "wandering",
+      "must": [
+        [
+          "bathroom|restroom|toilet|ba[ñn]o"
+        ],
+        [
+          "outside|door|wait|afuera|puerta|esper"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "bee_allergy",
+      "kind": "allergy",
+      "must": [
+        [
+          "\\bbees?\\b|bee sting|insect|abeja|picadura"
+        ],
+        [
+          "allerg|al[eé]rg|anaphyla|anafil"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "epipen_with_mom",
+      "kind": "medication",
+      "must": [
+        [
+          "epi-?pen|epinephrine|adrenalin|auto-?inject|auto-?inyect|auvi"
+        ],
+        [
+          "purse|\\bmom|parent|bolso|mam[aá]|text|service|cartera"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "doesnt_need.bathroom_help",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|outside|afuera|stand))[^.!?\\n;•|]*?(?:(?:needs?|requires?|necesita)[^.!?\\n;•|]{0,25}(?:help|assist|ayuda)[^.!?\\n;•|]{0,25}(?:bathroom|restroom|toilet|ba[ñn]o)|(?:help|assist)\\w*[^.!?\\n;•|]{0,10}(?:him|with)[^.!?\\n;•|]{0,10}(?:bathroom|toileting))",
+      "why": "He doesn't need help IN the bathroom; staff only wait outside."
+    }
+  ],
+  "tags": [
+    "elopement_risk",
+    "medical_plan"
+  ]
+}

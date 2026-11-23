@@ -1,0 +1,66 @@
+{
+  "id": "en-13",
+  "lang": "en",
+  "text": "Caleb 9\nasthma - albuterol inhaler w/ spacer, 2 puffs if wheezy, can repeat once after 20 min, if still bad call 911\nhe WAS on Singulair but we stoped it in sept (mood side effects) so ignore the old form\nno allergys\ndont let him run laps on cold mornings, that triggers it\nhe gets REALLY competitive in games lol",
+  "facts": [
+    {
+      "id": "albuterol_2_puffs",
+      "kind": "medication",
+      "must": [
+        [
+          "inhal|albuterol|salbutamol|rescue|puffer|bomba|puff"
+        ],
+        [
+          "(?<!\\d)2 (?:puffs?|inhal)|two puffs|dos (?:puff|inhalation|inhalaci|disparo)|2 disparos"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "repeat_20_then_911",
+      "kind": "medical",
+      "must": [
+        [
+          "(?<!\\d)20(?!\\d)|twenty|veinte"
+        ],
+        [
+          "911|emergenc|ambulanc"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "no_cold_laps",
+      "kind": "other_safety",
+      "must": [
+        [
+          "cold|fr[ií]o"
+        ],
+        [
+          "run|laps|vueltas|corr"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "cancelled_med.singulair",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:outgr|used to|no longer|anymore|former|previous|past|resolved|was allergic|grew out|ya no|super[oó]|de beb[eé]|antes|sol[ií]a|cuando era|stopped|stoped|discontinu|\\boff\\b|quit|suspend|dej|was on|ignore))[^.!?\\n;•|]*?(?:singulair|montelukast)",
+      "why": "Singulair was stopped in September."
+    },
+    {
+      "id": "number.puffs",
+      "pattern": "(?<![\\d.])(?!2(?!\\d))\\d+\\s*(?:puff|inhalation|inhalaci|disparo)|\\b(?:one|three|four|six|eight)\\s+puffs?",
+      "why": "Dose is 2 puffs."
+    },
+    {
+      "id": "number.repeat_minutes",
+      "pattern": "(?:repeat|again|otra vez|repetir)[^.!?\\n;]{0,30}(?<!\\d)(?!20(?!\\d))\\d+\\s*(?:min|minuto)",
+      "why": "Repeat is after 20 minutes."
+    }
+  ],
+  "tags": [
+    "medical_plan"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "id": "en-17",
+  "lang": "en",
+  "text": "Penny is 8 and has celiac disease. Even crumbs make her sick for days, so please ONLY give her snacks from her own purple lunchbox, never the class snack, even if the package says gluten free. At communion she can't have the bread but she can have the juice. She doesn't need an EpiPen, it's not that kind of allergy, but if she eats gluten by accident please tell me at pickup. She's a rule follower and will remind you herself!",
+  "facts": [
+    {
+      "id": "celiac",
+      "kind": "medical",
+      "must": [
+        [
+          "gluten|wheat|celiac|cel[ií]ac|trigo"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "only_own_snacks",
+      "kind": "other_safety",
+      "must": [
+        [
+          "own (?:purple )?lunch|lunchbox|lonchera|own snack|her own|su propi|sus propi|class snack|merienda de la clase"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "communion_no_bread",
+      "kind": "other_safety",
+      "must": [
+        [
+          "communion|comuni[oó]n|eucarist|lord['’]?s supper|santa cena"
+        ],
+        [
+          "bread|wafer|\\bpan\\b|\\bhost|hostia"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "doesnt_need.epipen",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|celiac|cel[ií]ac))[^.!?\\n;•|]*?(?:epi-?pen|epinephrine|adrenalin|auto-?inject|auto-?inyect|auvi)",
+      "why": "She doesn't need an EpiPen; listing one is wrong."
+    },
+    {
+      "id": "only_may.gf_class_snack",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|only|own|s[oó]lo|never))[^.!?\\n;•|]*?(?:(?:gluten[- ]free|sin gluten)[^.!?\\n;•|]{0,40}(?:ok|okay|fine|can|allowed|safe|puede)|(?:can|may|ok|okay)[^.!?\\n;•|]{0,20}(?:class snack|gluten[- ]free snack))",
+      "why": "ONLY her own lunchbox snacks; gluten-free class snacks are NOT okay."
+    }
+  ],
+  "tags": [
+    "food_allergy",
+    "medical_plan"
+  ]
+}

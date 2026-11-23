@@ -1,0 +1,49 @@
+{
+  "id": "en-06",
+  "lang": "en",
+  "text": "Sofia is 8 and has Down syndrome. She has lived with us, her foster family, since March. Per the court order her biological mother, Tina, may not have contact with her and may not pick her up. If Tina shows up, please do not release Sofia and call the director. Only Mark or Jen (foster parents) or her caseworker Ms. Ortiz can sign her out, and we will always show ID. Sofia had a heart repair (VSD) as a baby and does not need any special precautions at church. She loves music and hugs everyone, including strangers.",
+  "facts": [
+    {
+      "id": "bio_mom_no_pickup",
+      "kind": "pickup",
+      "must": [
+        [
+          "(?:tina|biolog|birth|bio mom|madre)[^.!?\\n;•|]{0,80}(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no)|(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no)[^.!?\\n;•|]{0,80}(?:tina|biolog|birth|bio mom|madre)"
+        ],
+        [
+          "pick|collect|sign(?:s|ed)? (?:\\w+ )?out|releas|leave with|go(?:es)? home with|recog|recoj|retir|busc[ae]r|l[oa] busque|entreg|llev[aáe]r|se l[oa] llev|salir con|irse con|ir con|contact|contacto"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "only_foster_caseworker",
+      "kind": "pickup",
+      "must": [
+        [
+          "(?:\\bonly\\b|s[oó]lo\\b|solamente|[uú]nicamente|nobody else|no one else|nadie m[aá]s|nadie (?:que|excepto|sino)|exclusiv)[^.!?\\n;•|]{0,80}(?:mark|jen|foster|acogida|caseworker|ortiz)|(?:mark|jen|foster|acogida|caseworker|ortiz)[^.!?\\n;•|]{0,80}(?:\\bonly\\b|s[oó]lo\\b|solamente|[uú]nicamente|nobody else|no one else|nadie m[aá]s|nadie (?:que|excepto|sino)|exclusiv)"
+        ],
+        [
+          "ortiz|caseworker|case worker|social worker|trabajador"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "negated_pickup.bio_mom",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|court|orden))[^.!?\\n;•|]*?(?:(?:tina|birth (?:mother|mom)|bio\\w* (?:mother|mom)|madre biol[oó]gica)[^.!?\\n;•|]{0,40}(?:can|may|allowed|ok|okay|approved|authori[sz]ed|puede|pueden|autorizad\\w*|permitid\\w*)[^.!?\\n;•|]{0,25}(?:pick|collect|sign(?:s|ed)? (?:\\w+ )?out|releas|leave with|go(?:es)? home with|recog|recoj|retir|busc[ae]r|l[oa] busque|entreg|llev[aáe]r|se l[oa] llev|salir con|irse con|ir con|visit|contact)|(?:pick-?ups?|pick(?:ed)? up by|recogida|qui[eé]n (?:lo |la )?recoge|autorizad\\w*|approved|authori[sz]ed|allowed|release to|entregar a|pueden recoger\\w*)[^.!?\\n;•|]{0,60}(?:tina|birth (?:mother|mom)|bio\\w* (?:mother|mom)|madre biol[oó]gica))",
+      "why": "Birth mother Tina may NOT pick up or have contact (court order)."
+    },
+    {
+      "id": "doesnt_need.heart_precautions",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|repaired|reparad|fixed))[^.!?\\n;•|]*?(?:(?:heart|coraz[oó]n|cardiac|vsd)[^.!?\\n;•|]{0,60}(?:precaution|restrict|monitor|limit|careful|cuidado|vigil|avoid|no running))",
+      "why": "Her heart was repaired; parent says she does NOT need special precautions."
+    }
+  ],
+  "tags": [
+    "pickup_restriction",
+    "sensory_seeking"
+  ]
+}

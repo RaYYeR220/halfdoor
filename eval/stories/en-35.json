@@ -1,0 +1,74 @@
+{
+  "id": "en-35",
+  "lang": "en",
+  "text": "Aria 6yo. pickup stuff bc its confusing: her stepdad Marcus CAN pick her up (her school had him flagged by mistake, thats fixed). her bio dad Kevin can NOT, theres a restraining order, if he shows up dont argue just call the police. she has mild asthma, inhaler in her backpack, 2 puffs if she's coughing a lot. she's obsessed w/ cats",
+  "facts": [
+    {
+      "id": "kevin_no_pickup",
+      "kind": "pickup",
+      "must": [
+        [
+          "(?:kevin|bio dad|biological|birth father|padre biol)[^.!?\\n;•|]{0,80}(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|restrain|orden)|(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|restrain|orden)[^.!?\\n;•|]{0,80}(?:kevin|bio dad|biological|birth father|padre biol)"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "call_police",
+      "kind": "other_safety",
+      "must": [
+        [
+          "police|polic|911"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "marcus_can_pickup",
+      "kind": "pickup",
+      "must": [
+        [
+          "marcus|stepdad|step-dad|padrastro"
+        ],
+        [
+          "\\bcan\\b(?!['’]?t| ?not)|\\bmay\\b(?! not)|allowed|approved|puede|autoriz"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "inhaler_2_puffs",
+      "kind": "medication",
+      "must": [
+        [
+          "inhal|albuterol|salbutamol|rescue|puffer|bomba|puff"
+        ],
+        [
+          "(?<!\\d)2 (?:puffs?|inhal)|two puffs|dos (?:puff|inhalation|inhalaci|disparo)"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "negated_pickup.kevin",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|restrain|orden))[^.!?\\n;•|]*?(?:(?:kevin|bio(?:logical)? dad|birth father|padre biol)[^.!?\\n;•|]{0,40}(?:can|may|allowed|ok|okay|approved|authori[sz]ed|puede|pueden|autorizad\\w*|permitid\\w*)[^.!?\\n;•|]{0,25}(?:pick|collect|sign(?:s|ed)? (?:\\w+ )?out|releas|leave with|go(?:es)? home with|recog|recoj|retir|busc[ae]r|l[oa] busque|entreg|llev[aáe]r|se l[oa] llev|salir con|irse con|ir con)|(?:pick-?ups?|pick(?:ed)? up by|recogida|qui[eé]n (?:lo |la )?recoge|autorizad\\w*|approved|authori[sz]ed|allowed|release to|entregar a|pueden recoger\\w*)[^.!?\\n;•|]{0,60}(?:kevin|bio(?:logical)? dad|birth father|padre biol))",
+      "why": "Bio dad Kevin may NOT pick up (restraining order)."
+    },
+    {
+      "id": "outgrown.marcus_flag",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:mistake|error|fixed|resolved|\\bcan pick|old))[^.!?\\n;•|]*?(?:(?:marcus|stepdad|step-dad|padrastro)[^.!?\\n;•|]{0,40}(?:not allowed|cannot|can['’]?t|can not|may not|flag|restrict|no puede))",
+      "why": "The flag on stepdad Marcus was a mistake and is fixed; he CAN pick up."
+    },
+    {
+      "id": "number.puffs",
+      "pattern": "(?<![\\d.])(?!2(?!\\d))\\d+\\s*(?:puff|inhalation|inhalaci|disparo)|\\b(?:one|three|four|six|eight)\\s+puffs?",
+      "why": "Dose is 2 puffs."
+    }
+  ],
+  "tags": [
+    "pickup_restriction",
+    "medical_plan"
+  ]
+}

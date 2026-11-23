@@ -1,0 +1,58 @@
+{
+  "id": "en-22",
+  "lang": "en",
+  "text": "Gabriel is 11 with ADHD and anxiety. He's a sweetheart but hates being singled out. Food: it isn't true that he can't have any dairy, he can have cheese and yogurt, just not a glass of plain milk, it makes him throw up. Meds: he takes guanfacine at home in the morning, he stopped the Adderall back in August so you might see more energy. If he gets panicky let him step into the hallway with a leader, he'll come back on his own in 5 minutes or so.",
+  "facts": [
+    {
+      "id": "no_plain_milk",
+      "kind": "other_safety",
+      "must": [
+        [
+          "milk|leche"
+        ],
+        [
+          "n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|only|just|except|excepto|\\bsolo\\b"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "hallway_with_leader",
+      "kind": "other_safety",
+      "must": [
+        [
+          "hall|pasillo|step out|outside|afuera|break|sal(?:ir|ga)"
+        ],
+        [
+          "leader|adult|staff|volunteer|l[ií]der|adulto|maestr"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "guanfacine_home",
+      "kind": "medication",
+      "must": [
+        [
+          "guanfacin|intuniv"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "double_negation.dairy",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:cheese|yogurt|queso|yogur|isn['’]t true|only|just|except|plain milk|\\bsolo\\b))[^.!?\\n;•|]*?(?:(?:\\bno\\b|avoid|evitar|\\bsin\\b|can['’]?t have|cannot have|must not have)[^.!?\\n;•|]{0,15}(?:dairy|l[aá]cteos)|(?:dairy|l[aá]cteo)[^.!?\\n;•|]{0,15}(?:allerg|free|intoler)|(?:dairy|l[aá]cteos?)\\s*:\\s*(?:no|none))",
+      "why": "\"It isn't true he can't have any dairy\": cheese/yogurt are fine; only plain milk is out."
+    },
+    {
+      "id": "cancelled_med.adderall",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:outgr|used to|no longer|anymore|former|previous|past|resolved|was allergic|grew out|ya no|super[oó]|de beb[eé]|antes|sol[ií]a|cuando era|stopped|discontinu|\\boff\\b|quit|suspend|dej))[^.!?\\n;•|]*?(?:adderall|amphetamin|anfetamin)",
+      "why": "Adderall was stopped in August."
+    }
+  ],
+  "tags": [
+    "needs_breaks"
+  ]
+}

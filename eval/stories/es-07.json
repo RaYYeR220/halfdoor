@@ -1,0 +1,73 @@
+{
+  "id": "es-07",
+  "lang": "es",
+  "text": "Soy Rosa, la abuela de Emiliano (6 años). Tengo su custodia. Solo yo o su tía Marta podemos recogerlo. Su mamá no puede recogerlo ni llevárselo, aunque diga que tiene permiso; si insiste, llamen a la policía. Emiliano tiene asma: su inhalador (salbutamol) está en su mochila, 2 disparos si le falta el aire. Es muy cariñoso y le gustan los carritos.",
+  "facts": [
+    {
+      "id": "only_rosa_marta",
+      "kind": "pickup",
+      "must": [
+        [
+          "(?:\\bonly\\b|s[oó]lo\\b|solamente|[uú]nicamente|nobody else|no one else|nadie m[aá]s|nadie (?:que|excepto|sino)|exclusiv)[^.!?\\n;•|]{0,80}(?:rosa|marta|abuela|t[ií]a|grandm|aunt|\\byo\\b)|(?:rosa|marta|abuela|t[ií]a|grandm|aunt|\\byo\\b)[^.!?\\n;•|]{0,80}(?:\\bonly\\b|s[oó]lo\\b|solamente|[uú]nicamente|nobody else|no one else|nadie m[aá]s|nadie (?:que|excepto|sino)|exclusiv)"
+        ],
+        [
+          "marta|t[ií]a|aunt"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "mom_no_pickup",
+      "kind": "pickup",
+      "must": [
+        [
+          "(?:\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b)[^.!?\\n;•|]{0,80}(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no)|(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no)[^.!?\\n;•|]{0,80}(?:\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b)"
+        ],
+        [
+          "pick|collect|sign(?:s|ed)? (?:\\w+ )?out|releas|leave with|go(?:es)? home with|recog|recoj|retir|busc[ae]r|l[oa] busque|entreg|llev[aáe]r|se l[oa] llev|salir con|irse con|ir con"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "call_police",
+      "kind": "other_safety",
+      "must": [
+        [
+          "polic|911"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "inhaler_2",
+      "kind": "medication",
+      "must": [
+        [
+          "inhal|albuterol|salbutamol|rescue|puffer|bomba|puff"
+        ],
+        [
+          "(?<!\\d)2 (?:disparos|puffs?|inhal)|dos (?:disparos|puff|inhal)|two puffs"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "negated_pickup.mama",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|custodia|custody))[^.!?\\n;•|]*?(?:(?:\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b)[^.!?\\n;•|]{0,40}(?:can|may|allowed|ok|okay|approved|authori[sz]ed|puede|pueden|autorizad\\w*|permitid\\w*)[^.!?\\n;•|]{0,25}(?:pick|collect|sign(?:s|ed)? (?:\\w+ )?out|releas|leave with|go(?:es)? home with|recog|recoj|retir|busc[ae]r|l[oa] busque|entreg|llev[aáe]r|se l[oa] llev|salir con|irse con|ir con)|(?:pick-?ups?|pick(?:ed)? up by|recogida|qui[eé]n (?:lo |la )?recoge|autorizad\\w*|approved|authori[sz]ed|allowed|release to|entregar a|pueden recoger\\w*)[^.!?\\n;•|]{0,60}(?:\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b))",
+      "why": "La mamá NO puede recogerlo, aunque diga que tiene permiso."
+    },
+    {
+      "id": "number.puffs",
+      "pattern": "(?<![\\d.])(?!2(?!\\d))\\d+\\s*(?:puff|inhalation|inhalaci|disparo)|\\b(?:one|three|four|six|eight|uno|tres|cuatro|seis)\\s+(?:puffs?|disparos?)",
+      "why": "La dosis es 2 disparos."
+    }
+  ],
+  "tags": [
+    "pickup_restriction",
+    "medical_plan",
+    "spanish_home"
+  ]
+}

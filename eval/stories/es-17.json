@@ -1,0 +1,55 @@
+{
+  "id": "es-17",
+  "lang": "es",
+  "text": "Benja tiene 10 y tiene TDAH y ansiedad y la verdad es un amor pero hay que estar pendiente porque no es cierto que nunca se escape, sí se ha escapado dos veces cuando hay mucho ruido, se va al estacionamiento, entonces cuando hay alabanza fuerte mejor que esté cerca de un adulto y lejos de la puerta, ah y toma metilfenidato en la mañana en casa, no hay que darle nada en la iglesia",
+  "facts": [
+    {
+      "id": "elopement_when_loud",
+      "kind": "wandering",
+      "must": [
+        [
+          "bolt|run(?:s|ning)? (?:off|away|out)|wander|elop|escap|sale corriendo|salir corriendo|se va corriendo|se escapa|huye|fuga|deambul|se sale|se va solo|se va sola|estacionamiento|parking"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "near_adult_away_from_door",
+      "kind": "wandering",
+      "must": [
+        [
+          "adult|adulto|leader|l[ií]der"
+        ],
+        [
+          "puerta|door|cerca|near|close"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "meds_at_home",
+      "kind": "medication",
+      "must": [
+        [
+          "casa|home"
+        ],
+        [
+          "metilfen|methylphen|ritalin|concerta|med"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "double_negation.never_escapes",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:no es cierto|not true|s[ií] se|isn['’]t true|wouldn['’]t say))[^.!?\\n;•|]*?(?:(?:nunca|\\bno)\\s+(?:se\\s+)?(?:escap|sale corriendo|se va)|(?:never|doesn['’]?t|does not|won['’]?t)\\s+(?:\\w+\\s+)?(?:wander|runs? off|runs? away|bolt|elope)|no (?:es|hay) riesgo de fuga|no (?:wandering|elopement) risk|sin riesgo de fuga)",
+      "why": "\"No es cierto que nunca se escape\": SÍ se escapa."
+    }
+  ],
+  "tags": [
+    "elopement_risk",
+    "noise_sensitive",
+    "spanish_home"
+  ]
+}

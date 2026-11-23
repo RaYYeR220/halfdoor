@@ -1,0 +1,58 @@
+{
+  "id": "es-06",
+  "lang": "es",
+  "text": "Lucía tiene 10 años, tiene parálisis cerebral y usa silla de ruedas eléctrica, es muy lista y le encanta cantar en el coro. No necesita ayuda para comer, come sola y se ofende si la quieren ayudar, pero sí necesita ayuda para ir al baño (dos personas para pasarla, la maestra Inés sabe cómo). Por favor nunca la levanten de la silla una sola persona. Toma baclofeno pero se lo damos en casa. No tiene alergias.",
+  "facts": [
+    {
+      "id": "bathroom_two_person",
+      "kind": "other_safety",
+      "must": [
+        [
+          "ba[ñn]o|bathroom|toilet|restroom|transfer|pasarla"
+        ],
+        [
+          "\\bdos\\b|\\btwo\\b|\\b2\\b|in[eé]s|maestra|teacher"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "no_solo_lift",
+      "kind": "other_safety",
+      "must": [
+        [
+          "levant|lift|carg|pasar|transfer"
+        ],
+        [
+          "n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|\\bdos\\b|\\btwo\\b|una sola|alone|by yourself|\\bsolo\\b"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "baclofen_home",
+      "kind": "medication",
+      "must": [
+        [
+          "baclof"
+        ],
+        [
+          "casa|home"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "doesnt_need.eating_help",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|sola|herself|independ))[^.!?\\n;•|]*?(?:(?:necesita|needs?|requiere)[^.!?\\n;•|]{0,25}(?:ayuda|help|assist)[^.!?\\n;•|]{0,25}(?:comer|eat|feed|alimenta)|dar(?:le)? de comer|feed her|spoon-?feed)",
+      "why": "NO necesita ayuda para comer; come sola."
+    }
+  ],
+  "tags": [
+    "mobility_aid",
+    "bathroom_help",
+    "spanish_home"
+  ]
+}

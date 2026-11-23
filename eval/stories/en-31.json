@@ -1,0 +1,55 @@
+{
+  "id": "en-31",
+  "lang": "en",
+  "text": "Daniel is 7, autistic, uses a talker (LAMP app) and some signs. He used to bolt constantly, but he hasn't run off in over a year, so he's not a runner anymore. What he does now is hide under tables or in closets when it's too loud, so if you can't find him check there first. He's allergic to cashews and pistachios and carries an EpiPen in his talker case. Loves the color orange and counting things.",
+  "facts": [
+    {
+      "id": "hides_when_loud",
+      "kind": "wandering",
+      "must": [
+        [
+          "hide|hiding|hides|under (?:the )?tables?|closet|escond|debajo de|armario"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "cashew_pistachio_allergy",
+      "kind": "allergy",
+      "must": [
+        [
+          "cashew|pistach|anacardo|tree ?nut|nuez|nueces"
+        ],
+        [
+          "allerg|al[eé]rg|anaphyla|anafil"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "epipen_in_talker_case",
+      "kind": "medication",
+      "must": [
+        [
+          "epi-?pen|epinephrine|adrenalin|auto-?inject|auto-?inyect|auvi"
+        ],
+        [
+          "talker|case|device|\\baac\\b|estuche|dispositivo|lamp"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "outgrown.bolting",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:outgr|used to|no longer|anymore|former|previous|past|resolved|was allergic|grew out|ya no|super[oó]|de beb[eé]|antes|sol[ií]a|cuando era|n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|hasn['’]?t|over a year|hide))[^.!?\\n;•|]*?(?:bolt|runner|elop|run(?:s)? off|runs away|flight risk|se escapa|sale corriendo)",
+      "why": "He no longer bolts (over a year); he hides instead."
+    }
+  ],
+  "tags": [
+    "nonverbal_or_aac",
+    "noise_sensitive",
+    "food_allergy"
+  ]
+}

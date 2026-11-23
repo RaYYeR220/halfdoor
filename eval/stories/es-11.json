@@ -1,0 +1,12 @@
+{
+  "id": "es-11",
+  "lang": "es",
+  "text": "Andrés tiene 6 años. Le cuestan mucho los cambios de actividad; avísenle cinco minutos antes con el reloj de arena que trae en su mochila. Le encantan los dinosaurios y se sabe todos los nombres. Es muy cariñoso con los más chiquitos. No tiene alergias ni medicamentos.",
+  "facts": [],
+  "traps": [],
+  "tags": [
+    "transitions_hard",
+    "needs_visual_schedule",
+    "spanish_home"
+  ]
+}

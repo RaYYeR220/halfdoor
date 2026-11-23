@@ -1,0 +1,48 @@
+{
+  "id": "en-09",
+  "lang": "en",
+  "text": "About Elijah (11):\n* hearing loss, wears hearing aids in both ears. If they squeal the battery is low, spares in his bag.\n* he doesn't need an interpreter, he lip-reads, just face him when you talk.\n* anxiety, mostly about loud surprises. If the fire alarm goes off he freezes and cannot hear instructions, someone has to walk him out by the hand.\n* pickup: me or his stepdad Chris. It's not that his uncle Ray can't pick him up, he can, he's on the list, he just never does.",
+  "facts": [
+    {
+      "id": "fire_alarm_walk_out",
+      "kind": "other_safety",
+      "must": [
+        [
+          "alarm|alarma|evacua|drill|simulacro|emergenc"
+        ],
+        [
+          "walk|guide|escort|lead|by the hand|hand|acompa|llev|sac"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "uncle_ray_may_pickup",
+      "kind": "pickup",
+      "must": [
+        [
+          "\\bray\\b"
+        ],
+        [
+          "on the (?:pickup |approved )?list|approved|allowed|authori[sz]|autoriz|permit|\\bcan\\b(?!['’]?t| ?not)|\\bmay\\b(?! not)|puede"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "double_negation.uncle_ray",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:not that|no es que|isn['’]t that))[^.!?\\n;•|]*?(?:\\bray\\b[^.!?\\n;•|]{0,40}(?:cannot|can['’]?t|can not|not allowed|may not|isn['’]t allowed|not on|no puede|no est[aá] autoriz))",
+      "why": "\"It's not that Ray can't pick him up\" means Ray CAN; saying he can't is wrong."
+    },
+    {
+      "id": "doesnt_need.interpreter",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|lip|labio))[^.!?\\n;•|]*?(?:(?:needs?|requires?|necesita|uses?|provide)[^.!?\\n;•|]{0,25}(?:sign language|\\basl\\b|interpret|int[eé]rprete|lengua de se[ñn]as))",
+      "why": "He doesn't need an interpreter; he lip-reads."
+    }
+  ],
+  "tags": [
+    "noise_sensitive"
+  ]
+}

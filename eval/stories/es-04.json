@@ -1,0 +1,54 @@
+{
+  "id": "es-04",
+  "lang": "es",
+  "text": "Camila tiene 4 años y es nuestra alegría. Tiene epilepsia desde bebé. Si tiene una convulsión, por favor tomen el tiempo: si dura más de 3 minutos, denle el Valtoco (spray nasal, está en su bolsita roja) y llamen al 911. Casi siempre duran menos de 1 minuto. Después queda muy cansada y hay que acostarla de lado. No tiene alergias. Le encanta Frozen y bailar.",
+  "facts": [
+    {
+      "id": "spray_after_3min",
+      "kind": "medication",
+      "must": [
+        [
+          "(?<!\\d)3(?!\\d)|three|tres"
+        ],
+        [
+          "valtoco|nasal|spray|diazepam"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "seizure_911",
+      "kind": "medical",
+      "must": [
+        [
+          "seiz|epilep|convuls|crisis"
+        ],
+        [
+          "911|emergenc|ambulanc"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "on_her_side",
+      "kind": "medical",
+      "must": [
+        [
+          "de lado|on (?:her|its|the) side|side|recovery|recuperaci"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "number.seizure_minutes",
+      "pattern": "(?:m[aá]s de|over|after|longer than|more than|past|beyond|despu[eé]s de|pasa de)\\s*(?!3(?!\\d))\\d+\\s*(?:min|minuto)",
+      "why": "El rescate y el 911 son a los 3 minutos (no 1)."
+    }
+  ],
+  "tags": [
+    "medical_plan",
+    "spanish_home"
+  ]
+}

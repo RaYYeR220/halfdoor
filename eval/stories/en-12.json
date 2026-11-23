@@ -1,0 +1,51 @@
+{
+  "id": "en-12",
+  "lang": "en",
+  "text": "Harper is 6. She has selective mutism and a lot of anxiety, and I want to explain because people think she's being rude. She understands everything, she just can't talk outside our house yet. That means if something goes wrong she will NOT call out or answer when you call her name, so in a fire drill or if she gets lost someone needs to physically check she's with the group. ONLY me or her dad can take her out of the room, not her older cousin Bree (14) who helps in the nursery, even though Harper will want to go with her. She will nod or point. Drawing cards help a lot.",
+  "facts": [
+    {
+      "id": "wont_answer_name",
+      "kind": "other_safety",
+      "must": [
+        [
+          "answer|respond|call out|responde|contesta|speak|talk|habl"
+        ],
+        [
+          "name|lost|drill|emergenc|perd|nombre|simulacro|check|head ?count|cuenta"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "only_parents",
+      "kind": "pickup",
+      "must": [
+        [
+          "(?:\\bonly\\b|s[oó]lo\\b|solamente|[uú]nicamente|nobody else|no one else|nadie m[aá]s|nadie (?:que|excepto|sino)|exclusiv)[^.!?\\n;•|]{0,80}(?:\\bmom|mother|\\bdad|father|parent|mam[aá]|pap[aá]|padres)|(?:\\bmom|mother|\\bdad|father|parent|mam[aá]|pap[aá]|padres)[^.!?\\n;•|]{0,80}(?:\\bonly\\b|s[oó]lo\\b|solamente|[uú]nicamente|nobody else|no one else|nadie m[aá]s|nadie (?:que|excepto|sino)|exclusiv)"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "not_cousin_bree",
+      "kind": "pickup",
+      "must": [
+        [
+          "(?:bree|cousin|prima)[^.!?\\n;•|]{0,80}(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|except|salvo|menos)|(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|except|salvo|menos)[^.!?\\n;•|]{0,80}(?:bree|cousin|prima)"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "only_may.cousin_bree",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no))[^.!?\\n;•|]*?(?:(?:bree|cousin|prima)[^.!?\\n;•|]{0,40}(?:can|may|allowed|ok|okay|approved|authori[sz]ed|puede|pueden|autorizad\\w*|permitid\\w*)[^.!?\\n;•|]{0,25}(?:pick|collect|sign(?:s|ed)? (?:\\w+ )?out|releas|leave with|go(?:es)? home with|recog|recoj|retir|busc[ae]r|l[oa] busque|entreg|llev[aáe]r|se l[oa] llev|salir con|irse con|ir con|take|walk)|(?:pick-?ups?|pick(?:ed)? up by|recogida|qui[eé]n (?:lo |la )?recoge|autorizad\\w*|approved|authori[sz]ed|allowed|release to|entregar a|pueden recoger\\w*)[^.!?\\n;•|]{0,60}(?:bree|cousin|prima))",
+      "why": "Only the parents may take her out; cousin Bree may NOT."
+    }
+  ],
+  "tags": [
+    "nonverbal_or_aac",
+    "pickup_restriction"
+  ]
+}

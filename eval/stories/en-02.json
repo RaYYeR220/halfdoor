@@ -1,0 +1,78 @@
+{
+  "id": "en-02",
+  "lang": "en",
+  "text": "Maya (9) – type 1 diabetic\n- wears a Dexcom + pump, phone app alarms if she goes low\n- if she's under 80 she needs 15g fast sugar (juice box in her bag), recheck in 15 min\n- if she's over 300 call me, do NOT give extra insulin, the pump handles it\n- snack at 10:30 is fine, she knows her carbs\n- she does NOT need help with the pump, she's a pro, just don't let her skip snack\n- shy at first, loves slime + drawing",
+  "facts": [
+    {
+      "id": "t1d",
+      "kind": "medical",
+      "must": [
+        [
+          "type 1|type one|t1d|diab[eé]t"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "low_under_80_sugar",
+      "kind": "medical",
+      "must": [
+        [
+          "(?<!\\d)80(?!\\d)"
+        ],
+        [
+          "juice|sugar|glucos|jugo|az[uú]car|15 ?g"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "high_over_300_call",
+      "kind": "medical",
+      "must": [
+        [
+          "(?<!\\d)300(?!\\d)"
+        ],
+        [
+          "call|llam|contact|phone|text|tel[eé]fon"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "no_extra_insulin",
+      "kind": "medication",
+      "must": [
+        [
+          "(?:insulin)[^.!?\\n;•|]{0,60}(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no)|(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no)[^.!?\\n;•|]{0,60}(?:insulin)"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "number.low_threshold",
+      "pattern": "(?:under|below|less than|lower than|<|menos de|debajo de|bajo)\\s*(?!80(?!\\d))\\d{2,3}(?!\\d)",
+      "why": "Low threshold is 80; any other number for treating a low is wrong."
+    },
+    {
+      "id": "number.high_threshold",
+      "pattern": "(?:over|above|more than|higher than|>|m[aá]s de|arriba de|mayor (?:a|de|que))\\s*(?!300(?!\\d))\\d{3}(?!\\d)",
+      "why": "Call-parent threshold is over 300; any other number is wrong."
+    },
+    {
+      "id": "doesnt_need.extra_insulin",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|pump handles|la bomba))[^.!?\\n;•|]*?(?:(?:give|administer|dose|dar|d[eé]le|administrar|poner)[^.!?\\n;•|]{0,20}(?:extra |more |a |m[aá]s )?(?:insulin|bolus|correction))",
+      "why": "Parent said do NOT give extra insulin; the pump handles it."
+    },
+    {
+      "id": "doesnt_need.pump_help",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|independ|\\bpro\\b|herself|sola))[^.!?\\n;•|]*?(?:(?:needs?|requires?|necesita)[^.!?\\n;•|]{0,25}(?:help|assist|ayuda|support)[^.!?\\n;•|]{0,25}(?:pump|bomba))",
+      "why": "She does NOT need help with the pump."
+    }
+  ],
+  "tags": [
+    "medical_plan"
+  ]
+}

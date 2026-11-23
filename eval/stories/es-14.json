@@ -1,0 +1,55 @@
+{
+  "id": "es-14",
+  "lang": "es",
+  "text": "Dani is 5, autista, no habla pero usa su tablet con Proloquo. Please don't take the tablet away, es su voz. Ella se escapa: she bolts toward the parking lot, siempre tómenla de la mano en los pasillos. Pickup: her dad CAN pick her up now, el juez quitó la restricción en septiembre, so the old note in your system is outdated. Le encantan las burbujas.",
+  "facts": [
+    {
+      "id": "elopement_parking",
+      "kind": "wandering",
+      "must": [
+        [
+          "bolt|run(?:s|ning)? (?:off|away|out)|wander|elop|escap|sale corriendo|salir corriendo|se va corriendo|se escapa|huye|fuga|deambul|se sale|se va solo|se va sola|parking|estacionamiento"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "hold_hand_hallways",
+      "kind": "wandering",
+      "must": [
+        [
+          "mano|hand"
+        ],
+        [
+          "pasillo|hall"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "dad_can_pickup",
+      "kind": "pickup",
+      "must": [
+        [
+          "\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b"
+        ],
+        [
+          "\\bcan\\b(?!['’]?t| ?not)|\\bmay\\b(?! not)|allowed|approved|puede|autoriz|no (?:longer )?restrict|sin restricci|lifted|quit[oó]"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "outgrown.dad_restriction",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:quit|lifted|removed|outdated|\\bold\\b|\\bnow\\b|ahora|ya no|no longer|sin restric|ya puede|\\bcan pick))[^.!?\\n;•|]*?(?:(?:\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b)[^.!?\\n;•|]{0,40}(?:not allowed|cannot|can['’]?t|can not|may not|restrict|no puede|prohib)|restric\\w*[^.!?\\n;•|]{0,30}(?:\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b))",
+      "why": "La restricción del papá se quitó en septiembre; ahora SÍ puede recogerla."
+    }
+  ],
+  "tags": [
+    "nonverbal_or_aac",
+    "elopement_risk",
+    "spanish_home"
+  ]
+}

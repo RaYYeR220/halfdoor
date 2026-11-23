@@ -1,0 +1,54 @@
+{
+  "id": "en-04",
+  "lang": "en",
+  "text": "I'm sorry this is long. Ava is 7 and has ADHD, she is a whirlwind and the sweetest kid. Please know her little brother Max is the one with the severe peanut allergy, not Ava — she can eat anything, but they're in the same hallway so if she has peanut butter crackers please have her wash her hands before she goes near the toddler room. She's had a rough year since we moved and sometimes she runs out of the room when she's frustrated, she usually goes to the bathroom or the stairwell. She doesn't take her ADHD meds on Sundays so she's extra wiggly.",
+  "facts": [
+    {
+      "id": "runs_out_of_room",
+      "kind": "wandering",
+      "must": [
+        [
+          "bolt|run(?:s|ning)? (?:off|away|out)|wander|elop|escap|sale corriendo|salir corriendo|se va corriendo|se escapa|huye|fuga|deambul|se sale|se va solo|se va sola|leaves? the room|sale del sal"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "wash_hands_brother_peanut",
+      "kind": "other_safety",
+      "must": [
+        [
+          "wash|lav"
+        ],
+        [
+          "peanut|cacahuat|\\bman[ií](?![\\wáéíóúñ])"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "no_meds_sunday",
+      "kind": "medication",
+      "must": [
+        [
+          "sunday|domingo"
+        ],
+        [
+          "(?:med)[^.!?\\n;•|]{0,40}(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no)|(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no)[^.!?\\n;•|]{0,40}(?:med)"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "sibling.peanut",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|brother|sibling|\\bmax\\b|hermano|toddler))[^.!?\\n;•|]*?(?:(?:peanut|cacahuat|\\bman[ií](?![\\wáéíóúñ]))[^.!?\\n;•|]{0,30}(?:allerg|al[eé]rg|anaphyla|anafil)|(?:allerg|al[eé]rg|anaphyla|anafil)[^.!?\\n;•|]{0,30}(?:peanut|cacahuat|\\bman[ií](?![\\wáéíóúñ])))",
+      "why": "The peanut allergy is her brother Max's, not Ava's."
+    }
+  ],
+  "tags": [
+    "elopement_risk",
+    "needs_breaks"
+  ]
+}

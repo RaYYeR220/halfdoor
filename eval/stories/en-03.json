@@ -1,0 +1,66 @@
+{
+  "id": "en-03",
+  "lang": "en",
+  "text": "hi sry typing fast. jonah is 4, has epilepsy. if he has a seizure time it, if it goes past 5 min call 911 and give the nasal spray (valtoco) its in the red bag. most last under 2 min. he used to take keppra but the neuro stopped it in june, hes on lamotrigine now (we give it at home, u dont need to give any daily meds). no allergies. he sleeps hard after a seizure, let him sleep",
+  "facts": [
+    {
+      "id": "seizure_911_5min",
+      "kind": "medical",
+      "must": [
+        [
+          "seiz|epilep|convuls|crisis"
+        ],
+        [
+          "(?<!\\d)5(?!\\d)|five|cinco"
+        ],
+        [
+          "911|emergenc|ambulanc"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "rescue_nasal_spray",
+      "kind": "medication",
+      "must": [
+        [
+          "valtoco|nasal|diazepam|spray|aerosol"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "daily_meds_at_home",
+      "kind": "medication",
+      "must": [
+        [
+          "home|casa"
+        ],
+        [
+          "lamotrig|daily|med"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "cancelled_med.keppra",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:outgr|used to|no longer|anymore|former|previous|past|resolved|was allergic|grew out|ya no|super[oó]|de beb[eé]|antes|sol[ií]a|cuando era|stopped|discontinu|\\boff\\b|quit|suspend|dej[oó]|retir|cambi|switch))[^.!?\\n;•|]*?(?:keppra|levetiracetam)",
+      "why": "Keppra was stopped in June; listing it as a current med is wrong."
+    },
+    {
+      "id": "number.911_minutes",
+      "pattern": "(?:past|over|after|longer than|more than|beyond|exceed\\w*|m[aá]s de|pasa de|despu[eé]s de)\\s*(?!5(?!\\d))\\d+\\s*(?:min|minute|minuto)",
+      "why": "Call 911 at 5 minutes, not 2 (2 min is the typical length)."
+    },
+    {
+      "id": "doesnt_need.daily_meds",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|home|casa))[^.!?\\n;•|]*?(?:(?:give|administer|dar|administrar)[^.!?\\n;•|]{0,30}(?:lamotrig|daily med))",
+      "why": "Daily meds are given at home; staff must not give them."
+    }
+  ],
+  "tags": [
+    "medical_plan"
+  ]
+}

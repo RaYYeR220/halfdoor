@@ -1,0 +1,72 @@
+{
+  "id": "en-19",
+  "lang": "en",
+  "text": "Aaliyah is 12, spina bifida, uses a manual wheelchair and pushes herself. She IS allergic to latex and it's serious: no latex balloons or gloves anywhere near her. She caths herself every 3 hours (next one around 11:00), she just needs the private accessible bathroom, not help. She has a shunt. If she gets a sudden bad headache, vomiting or is really sleepy, call me AND 911, that can be a shunt failure.",
+  "facts": [
+    {
+      "id": "latex_allergy",
+      "kind": "allergy",
+      "must": [
+        [
+          "latex|l[aá]tex"
+        ],
+        [
+          "allerg|al[eé]rg|anaphyla|anafil"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "no_latex_balloons_gloves",
+      "kind": "other_safety",
+      "must": [
+        [
+          "balloon|glove|globo|guante"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "shunt_symptoms_911",
+      "kind": "medical",
+      "must": [
+        [
+          "shunt|v[aá]lvula|derivaci"
+        ],
+        [
+          "911|emergenc|ambulanc"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "cath_every_3h",
+      "kind": "medical",
+      "must": [
+        [
+          "cath|sond"
+        ],
+        [
+          "(?<!\\d)3 ?(?:h|hours?|horas)|three hours|tres horas|\\b11(?::00)?\\b|every 3"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "number.cath_interval",
+      "pattern": "(?:cath\\w*|sond\\w*)[^.!?\\n;]{0,40}(?:every|cada)\\s*(?!3(?!\\d))\\d+\\s*(?:h|hour|hora)",
+      "why": "Cath interval is every 3 hours."
+    },
+    {
+      "id": "doesnt_need.cath_help",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|private|privad|herself|sola|independ))[^.!?\\n;•|]*?(?:(?:needs?|requires?|necesita)[^.!?\\n;•|]{0,25}(?:help|assist|ayuda)[^.!?\\n;•|]{0,30}(?:cath|bathroom|ba[ñn]o|sond)|(?:help|assist)\\w*[^.!?\\n;•|]{0,10}(?:her|with)[^.!?\\n;•|]{0,10}(?:cath|bathroom))",
+      "why": "She caths herself; she needs privacy, not help."
+    }
+  ],
+  "tags": [
+    "mobility_aid",
+    "medical_plan"
+  ]
+}

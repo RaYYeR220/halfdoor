@@ -1,0 +1,62 @@
+{
+  "id": "es-24",
+  "lang": "es",
+  "text": "Buenas, soy la abuela de Nicolás (7). Él vive con nosotros por orden del juez. Ni su papá ni su mamá pueden recogerlo, ninguno de los dos, aunque se presenten con papeles. Su tío Raúl antes no estaba autorizado, pero desde octubre ya sí puede recogerlo, ya está en la lista. Nico tiene TDAH y se distrae mucho, a veces se va solito al baño sin avisar, por favor estén pendientes.",
+  "facts": [
+    {
+      "id": "parents_no_pickup",
+      "kind": "pickup",
+      "must": [
+        [
+          "(?:\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b|\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b|padres|parents|ninguno)[^.!?\\n;•|]{0,80}(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|\\bni\\b)|(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|\\bni\\b)[^.!?\\n;•|]{0,80}(?:\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b|\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b|padres|parents|ninguno)"
+        ],
+        [
+          "pick|collect|sign(?:s|ed)? (?:\\w+ )?out|releas|leave with|go(?:es)? home with|recog|recoj|retir|busc[ae]r|l[oa] busque|entreg|llev[aáe]r|se l[oa] llev|salir con|irse con|ir con"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "uncle_raul_can",
+      "kind": "pickup",
+      "must": [
+        [
+          "ra[uú]l|t[ií]o\\b|uncle"
+        ],
+        [
+          "ya s[ií]|s[ií] puede|ya puede|\\bcan\\b(?!['’]?t| ?not)|\\bmay\\b(?! not)|\\bnow\\b|ahora|en la lista|on the (?:pickup )?list|approved"
+        ]
+      ],
+      "limiter": true
+    },
+    {
+      "id": "bathroom_alone_watch",
+      "kind": "wandering",
+      "must": [
+        [
+          "ba[ñn]o|bathroom|restroom"
+        ],
+        [
+          "\\bsolo\\b|solito|alone|sin avisar|without (?:telling|asking)|on his own|pendiente|watch"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "negated_pickup.parents",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|\\bni\\b|orden|juez|court))[^.!?\\n;•|]*?(?:(?:\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b|\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b|padres|parents)[^.!?\\n;•|]{0,40}(?:can|may|allowed|ok|okay|approved|authori[sz]ed|puede|pueden|autorizad\\w*|permitid\\w*)[^.!?\\n;•|]{0,25}(?:pick|collect|sign(?:s|ed)? (?:\\w+ )?out|releas|leave with|go(?:es)? home with|recog|recoj|retir|busc[ae]r|l[oa] busque|entreg|llev[aáe]r|se l[oa] llev|salir con|irse con|ir con)|(?:pick-?ups?|pick(?:ed)? up by|recogida|qui[eé]n (?:lo |la )?recoge|autorizad\\w*|approved|authori[sz]ed|allowed|release to|entregar a|pueden recoger\\w*)[^.!?\\n;•|]{0,60}(?:\\bmom\\b|\\bmommy|(?<!grand|step|god|grand-|step-)mother|\\bmam[aá](?![\\wáéíóúñ])|\\bmadre\\b|\\bdad\\b|\\bdaddy|(?<!grand|step|god|grand-|step-)father|\\bpap[aá](?![\\wáéíóúñ])|\\bpadre\\b|padres|parents))",
+      "why": "Ni el papá ni la mamá pueden recogerlo."
+    },
+    {
+      "id": "outgrown.uncle_raul",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:antes|ya s[ií]|ahora|\\bnow\\b|since|desde|former|used to|previous|no longer|ya puede))[^.!?\\n;•|]*?(?:(?:ra[uú]l|t[ií]o\\b|uncle)[^.!?\\n;•|]{0,40}(?:no (?:est[aá]\\w* )?autoriz|no puede|not allowed|cannot|can['’]?t|not on|may not|not authori))",
+      "why": "El tío Raúl ya SÍ puede recogerlo desde octubre."
+    }
+  ],
+  "tags": [
+    "pickup_restriction",
+    "spanish_home"
+  ]
+}

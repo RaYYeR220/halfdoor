@@ -1,0 +1,62 @@
+{
+  "id": "en-10",
+  "lang": "en",
+  "text": "Lily just turned 2. She's allergic to milk (all dairy) and it's anaphylactic, she's been to the ER twice. Her Auvi-Q is the 0.1 mg infant one, NOT the 0.15 her sister Rose has, please don't mix up the bags. She was on a daily Zyrtec until last month but the allergist stopped it. If any milk gets on her skin wash it off right away, it gives her hives. She's a cuddler and loves bubbles.",
+  "facts": [
+    {
+      "id": "milk_allergy",
+      "kind": "allergy",
+      "must": [
+        [
+          "dairy|milk|l[aá]cte|leche|lactos|cheese|queso"
+        ],
+        [
+          "allerg|al[eé]rg|anaphyla|anafil"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "auviq_0_1_mg",
+      "kind": "medication",
+      "must": [
+        [
+          "epi-?pen|epinephrine|adrenalin|auto-?inject|auto-?inyect|auvi"
+        ],
+        [
+          "0?\\.1(?!\\d)\\s*mg|0?\\.1 ?mil|infant|beb[eé]"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "wash_skin",
+      "kind": "other_safety",
+      "must": [
+        [
+          "wash|lav|clean|limpi|rinse"
+        ],
+        [
+          "skin|piel"
+        ]
+      ],
+      "limiter": false
+    }
+  ],
+  "traps": [
+    {
+      "id": "number.epi_dose",
+      "pattern": "(?<!(?:sister|hermana|rose|\\bnot|\\bno|n['’]t)[^\\n]{0,40})(?<!\\d)0?\\.15(?!\\d)",
+      "why": "Lily's dose is 0.1 mg; 0.15 is her sister Rose's pen."
+    },
+    {
+      "id": "cancelled_med.zyrtec",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:outgr|used to|no longer|anymore|former|previous|past|resolved|was allergic|grew out|ya no|super[oó]|de beb[eé]|antes|sol[ií]a|cuando era|stopped|discontinu|\\boff\\b|quit|suspend|dej[oó]|retir|until))[^.!?\\n;•|]*?(?:zyrtec|cetirizin|antihistamin)",
+      "why": "Zyrtec was stopped last month; listing it as current is wrong."
+    }
+  ],
+  "tags": [
+    "food_allergy",
+    "medical_plan"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "es-08",
+  "lang": "es",
+  "text": "isabela 3 años. de bebé era alérgica a la leche pero ya lo superó, ya toma leche normal. AHORA es alérgica a las nueces y almendras (le dio anafilaxia en junio), autoinyector en la pañalera. todavía usa pañal. no la dejen sola con los otros niños comiendo, agarra comida de los platos de todos",
+  "facts": [
+    {
+      "id": "treenut_allergy",
+      "kind": "allergy",
+      "must": [
+        [
+          "tree ?nut|cashew|almond|walnut|pecan|nuez|nueces|anacardo|almendra"
+        ],
+        [
+          "allerg|al[eé]rg|anaphyla|anafil"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "autoinjector",
+      "kind": "medication",
+      "must": [
+        [
+          "epi-?pen|epinephrine|adrenalin|auto-?inject|auto-?inyect|auvi"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "supervise_eating",
+      "kind": "other_safety",
+      "must": [
+        [
+          "com(?:e|er|iendo|ida)|eat|food|snack|plato|plate"
+        ],
+        [
+          "sola|alone|supervis|vigil|watch|agarra|grab|platos|plates|others"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "outgrown.milk",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:outgr|used to|no longer|anymore|former|previous|past|resolved|was allergic|grew out|ya no|super[oó]|de beb[eé]|antes|sol[ií]a|cuando era|n['’]t|\\bnot\\b|\\bno\\b|never|nobody|no one|no longer|cannot|anymore|nunca|jam[aá]s|prohib|forbid|restrain|barred|unauthori|nadie|tampoco|ning[uú]n|ya no|super|toma leche))[^.!?\\n;•|]*?(?:(?:dairy|milk|l[aá]cte|leche|lactos|cheese|queso)[^.!?\\n;•|]{0,30}(?:allerg|al[eé]rg|anaphyla|anafil)|(?:allerg|al[eé]rg|anaphyla|anafil)[^.!?\\n;•|]{0,30}(?:dairy|milk|l[aá]cte|leche|lactos|cheese|queso))",
+      "why": "La alergia a la leche la superó; ya toma leche."
+    }
+  ],
+  "tags": [
+    "food_allergy",
+    "bathroom_help",
+    "spanish_home"
+  ]
+}

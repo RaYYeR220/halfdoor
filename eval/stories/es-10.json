@@ -1,0 +1,55 @@
+{
+  "id": "es-10",
+  "lang": "es",
+  "text": "Renata tiene 7 años y tiene mutismo selectivo y ansiedad. Entiende todo pero no habla fuera de casa. No es que no pueda ir sola al baño, sí puede, solo que no va a pedir permiso: llévenla con el grupo cada hora más o menos. En una emergencia no va a gritar ni a contestar si la llaman, así que cuéntenla con la vista. Solo puede salir del salón con su mamá o su papá.",
+  "facts": [
+    {
+      "id": "headcount_visual",
+      "kind": "other_safety",
+      "must": [
+        [
+          "cuent|count|head ?count|vista|visual|check|revis"
+        ],
+        [
+          "emergenc|contest|answer|respond|grit|call|llam|lost|perd"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "bathroom_with_group",
+      "kind": "other_safety",
+      "must": [
+        [
+          "ba[ñn]o|bathroom|restroom|toilet"
+        ],
+        [
+          "grupo|group|hora|hour|ll[eé]v|take her|pedir|ask"
+        ]
+      ],
+      "limiter": false
+    },
+    {
+      "id": "only_parents",
+      "kind": "pickup",
+      "must": [
+        [
+          "(?:\\bonly\\b|s[oó]lo\\b|solamente|[uú]nicamente|nobody else|no one else|nadie m[aá]s|nadie (?:que|excepto|sino)|exclusiv)[^.!?\\n;•|]{0,80}(?:mam[aá]|pap[aá]|padres|parent|\\bmom\\b|\\bdad\\b|mother|father)|(?:mam[aá]|pap[aá]|padres|parent|\\bmom\\b|\\bdad\\b|mother|father)[^.!?\\n;•|]{0,80}(?:\\bonly\\b|s[oó]lo\\b|solamente|[uú]nicamente|nobody else|no one else|nadie m[aá]s|nadie (?:que|excepto|sino)|exclusiv)"
+        ]
+      ],
+      "limiter": true
+    }
+  ],
+  "traps": [
+    {
+      "id": "double_negation.bathroom",
+      "pattern": "(?<=^|[.!?\\n;•|])(?![^.!?\\n;•|]*(?:no es que|not that|s[ií] puede|can go|grupo|group|pedir|\\bask))[^.!?\\n;•|]*?(?:(?:necesita|needs?|requiere)[^.!?\\n;•|]{0,25}(?:ayuda|help|assist|acompa)[^.!?\\n;•|]{0,25}(?:ba[ñn]o|bathroom|toilet|restroom)|(?:no puede|can['’]?t|cannot|unable to)[^.!?\\n;•|]{0,15}(?:ir (?:sola )?al ba[ñn]o|go to the bathroom|use the bathroom))",
+      "why": "\"No es que no pueda ir sola al baño\": SÍ puede; solo no pide permiso."
+    }
+  ],
+  "tags": [
+    "nonverbal_or_aac",
+    "pickup_restriction",
+    "spanish_home"
+  ]
+}
