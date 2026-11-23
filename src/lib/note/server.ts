@@ -8,11 +8,12 @@ export type LessonStep = { key: string; label: string; segment: Segment | null }
 type LessonRow = Awaited<ReturnType<typeof listLessons>>[number];
 
 /** The stored steps of a lesson, defaulting what an older row lacks (segment from the key, load med, 5 minutes). */
-export function parseSteps(lesson: Pick<LessonRow, 'steps'>): (Omit<Step, 'segment'> & { segment: Segment | null })[] {
+export function parseSteps(lesson: Pick<LessonRow, 'steps'>): Step[] {
   const raw = Array.isArray(lesson.steps) ? (lesson.steps as Record<string, unknown>[]) : [];
   return raw.flatMap((s) => {
     if (typeof s?.key !== 'string') return [];
-    const segment = segmentOfStep({ key: s.key, segment: (SEGMENTS as readonly unknown[]).includes(s.segment) ? (s.segment as Segment) : null });
+    // An unknown segment is kept (label and all) as a transition rather than dropped from the schedule.
+    const segment = segmentOfStep({ key: s.key, segment: (SEGMENTS as readonly unknown[]).includes(s.segment) ? (s.segment as Segment) : null }) ?? 'transition';
     const load = (SENSORY_LOADS as readonly unknown[]).includes(s.sensoryLoad) ? (s.sensoryLoad as SensoryLoad) : 'med';
     return [{
       key: s.key, label: typeof s.label === 'string' ? s.label : s.key, segment, sensoryLoad: load,

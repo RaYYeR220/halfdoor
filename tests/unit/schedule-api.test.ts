@@ -10,6 +10,9 @@ import { createSandbox } from '@/db/sandbox';
 import { LESSON } from '@/db/seed/fernbrook';
 import { insertAssignments } from '@/db/repo/assignments';
 import { listAiCalls } from '@/db/repo/aiCalls';
+import { listAccess } from '@/db/repo/access';
+import { getCardForChild } from '@/db/repo/cards';
+import { updateLesson } from '@/db/repo/lessons';
 import { listLessons } from '@/db/repo/lessons';
 import { listPeople } from '@/db/repo/people';
 import { listServices } from '@/db/repo/services';
@@ -142,6 +145,7 @@ describe('POST /api/lessons', () => {
     expect(out.lesson.steps).toHaveLength(6);
     expect(out.lesson.bigIdeaQuote).toBe(LESSON.bigIdea);
     expect(out.verse.text).toBe('For unto us a child is born');
+    expect([...out.replaced].sort()).toEqual([...ids].sort()); // both already had the fixture lesson
     const services = await listServices(w.churchId);
     expect(services.filter((s) => s.lessonId === out.id).map((s) => s.id).sort()).toEqual([...ids].sort());
     const g = await lessonsRoute.GET(get(`/api/lessons?service=${w.service.id}`));
@@ -157,6 +161,24 @@ describe('POST /api/lessons', () => {
     expect((await res.json()).errors).toEqual(['big_idea_not_in_lesson']);
     expect((await listLessons(w.churchId))).toHaveLength(2);
     expect((await listServices(w.churchId)).find((s) => s.id === w.service.id)!.lessonId).not.toBeNull();
+  });
+  it('422 bad_label when a step label is not plain short words; nothing stored', async () => {
+    const w = await world();
+    const steps = LESSON.steps.map((x, i) => (i === 0 ? { ...x, label: 'visit www.evil.com today please now' } : x));
+    stubVenice(() => veniceReply(JSON.stringify({ ...GOOD, steps })));
+    h.viewer = w.as('Hannah', 'director');
+    const res = await lessonsRoute.POST(post('/api/lessons', { serviceIds: [w.service.id], text }));
+    expect(res.status).toBe(422);
+    expect((await res.json()).errors).toContain('bad_label');
+    expect(await listLessons(w.churchId)).toHaveLength(2);
+  });
+  it('replaced is empty for a service with no lesson yet', async () => {
+    const w = await world();
+    const { setServicesLesson } = await import('@/db/repo/services');
+    await setServicesLesson(w.churchId, [w.service.id], null);
+    stubVenice(() => veniceReply(JSON.stringify(GOOD)));
+    h.viewer = w.as('Hannah', 'director');
+    expect((await (await lessonsRoute.POST(post('/api/lessons', { serviceIds: [w.service.id], text }))).json()).replaced).toEqual([]);
   });
   it('validates the body and keeps it inside the church', async () => {
     const w = await world();
@@ -239,6 +261,34 @@ describe('GET /api/pack', () => {
   });
 });
 
+describe('pack audit and unknown segments', () => {
+  it('a buddy pack read is written to the card access log', async () => {
+    const w = await world();
+    await insertAssignments([{ serviceId: w.service.id, childId: w.p('Leo').id, buddyId: w.p('Priya').id, status: 'approved' }]);
+    await checkIn(w, 'Leo', 'in');
+    const card = (await getCardForChild(w.churchId, w.p('Leo').id))!;
+    const before = (await listAccess(card.id)).length;
+    h.viewer = w.as('Priya', 'buddy');
+    expect((await pack(w, 'Leo')).status).toBe(200);
+    const rows = await listAccess(card.id);
+    expect(rows).toHaveLength(before + 1);
+    expect(rows.at(-1)).toMatchObject({ viewerId: w.p('Priya').id, role: 'buddy', reason: 'checked_in', serviceId: w.service.id, closedAt: null });
+    h.viewer = w.as('Marco', 'buddy'); // denied reads are not logged as openings
+    expect((await pack(w, 'Leo')).status).toBe(403);
+    expect(await listAccess(card.id)).toHaveLength(before + 1);
+  });
+  it('a step with an unknown segment stays in the pack as a transition', async () => {
+    const w = await world();
+    const lesson = (await listLessons(w.churchId)).find((l) => l.id === w.service.lessonId)!;
+    await updateLesson(lesson.id, { steps: [...(lesson.steps as object[]), { key: 'weird', label: 'Parachute game', segment: 'parachute', sensoryLoad: 'high', minutes: 5 }] });
+    h.viewer = w.as('Hannah', 'director');
+    const out = await (await pack(w, 'Leo')).json();
+    const weird = out.steps.find((s: { key: string }) => s.key === 'weird');
+    expect(weird).toMatchObject({ label: 'Parachute game', segment: 'transition', pictogramUrl: `/api/pictogram/${SEGMENT_PICTOGRAM.transition}` });
+    expect(stepsFor(await listLessons(w.churchId), { lessonId: lesson.id }).find((s) => s.key === 'weird')?.segment).toBe('transition');
+  });
+});
+
 describe('GET /api/pictogram/:id', () => {
   const ctx = (id: string) => ({ params: Promise.resolve({ id }) }) as never;
   it('serves only pinned ids, with immutable caching', async () => {
@@ -249,7 +299,10 @@ describe('GET /api/pictogram/:id', () => {
     expect(ok.status).toBe(200);
     expect(ok.headers.get('cache-control')).toBe('public, max-age=31536000, immutable');
     expect(ok.headers.get('content-type')).toBe('image/png');
-    expect(f).toHaveBeenCalledWith(`https://static.arasaac.org/pictograms/${SEGMENT_PICTOGRAM.worship}/${SEGMENT_PICTOGRAM.worship}_300.png`);
+    expect(f).toHaveBeenCalledWith(
+      `https://static.arasaac.org/pictograms/${SEGMENT_PICTOGRAM.worship}/${SEGMENT_PICTOGRAM.worship}_300.png`,
+      expect.objectContaining({ redirect: 'error', signal: expect.any(AbortSignal) }),
+    );
     for (const bad of ['1', '6960.5', '-6960', 'abc', '6960/../x', '0x1b30']) {
       expect((await pictogramRoute.GET(get('/x'), ctx(bad))).status).toBe(404);
     }

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { insertAccess } from '@/db/repo/access';
 import { getCardForChild } from '@/db/repo/cards';
 import { getLessonInChurch } from '@/db/repo/lessons';
 import { getServiceInChurch } from '@/db/repo/services';
@@ -9,7 +10,7 @@ import { parseSteps } from '@/lib/note/server';
 import { adaptationsFor } from '@/lib/schedule/adapt';
 import { CHIP_PICTOGRAM, pictogramUrl } from '@/lib/schedule/arasaac';
 import { BSB_ATTRIBUTION } from '@/lib/schedule/bible';
-import { SEGMENT_PICTOGRAM, type Step } from '@/lib/schedule/segments';
+import { SEGMENT_PICTOGRAM } from '@/lib/schedule/segments';
 import { socialStory } from '@/lib/schedule/socialStory';
 
 /**
@@ -26,11 +27,15 @@ export async function GET(req: Request) {
   const lang = url.searchParams.get('lang') === 'es' ? 'es' : 'en';
 
   let tags: Tag[];
+  let cardId: string | null = null;
+  let reason: 'checked_in' | 'director' | 'parent' | 'room_safety' | null = null;
   if (viewer.role === 'buddy') {
     const ev = await evaluateGate(viewer, childId, serviceId, 'full', new Date());
     if (!ev) return fail('not_found', 404);
     if (!ev.result.allowed) return NextResponse.json({ error: 'forbidden', reason: ev.result.reason }, { status: 403 });
     tags = ev.card.tags as Tag[];
+    cardId = ev.card.id;
+    reason = ev.result.reason;
   } else {
     if (!(await childInChurch(viewer, childId))) return fail('not_found', 404);
     tags = ((await getCardForChild(viewer.churchId, childId))?.tags ?? []) as Tag[];
@@ -42,7 +47,11 @@ export async function GET(req: Request) {
   const lesson = service.lessonId ? await getLessonInChurch(viewer.churchId, service.lessonId) : undefined;
   if (!lesson) return fail('no_lesson', 404);
 
-  const steps = parseSteps(lesson).flatMap((s): Step[] => (s.segment ? [{ ...s, segment: s.segment }] : []));
+  const steps = parseSteps(lesson);
+  // The pack is derived from the card's tags, so a buddy's read is audited like a card read (open until the gate closes).
+  if (viewer.role === 'buddy' && cardId && reason) {
+    await insertAccess({ cardId, childId, serviceId, viewerId: viewer.personId, role: 'buddy', reason, openedAt: new Date(), closedAt: null });
+  }
   const chips = adaptationsFor(tags, steps);
   return NextResponse.json({
     steps: steps.map((s) => ({

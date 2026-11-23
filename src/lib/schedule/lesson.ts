@@ -130,13 +130,25 @@ export type VerifiedLesson = {
   totalMinutes: number;
 };
 
-export type LessonError = 'big_idea_not_in_lesson' | 'duplicate_step_key' | 'total_minutes_over_120';
+export type LessonError = 'big_idea_not_in_lesson' | 'duplicate_step_key' | 'total_minutes_over_120' | 'bad_label';
+
+export const MAX_LABEL_WORDS = 6;
+
+/** Labels reach the child-facing pack, so code (not the prompt) holds them to short plain words. */
+export function labelOk(label: string): boolean {
+  const t = label.trim();
+  if (!t || /[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/u.test(t)) return false;
+  if (/https?:|www\.|@/i.test(t) || /[\w-]+\.(com|org|net|io|co|app|dev|me|ly)(\W|$)/i.test(t)) return false;
+  if (!/\p{L}/u.test(t)) return false; // digits/symbols only
+  return t.split(/\s+/).length <= MAX_LABEL_WORDS;
+}
 
 export function verifyLesson(source: string, d: LessonDraft): { ok: true; lesson: VerifiedLesson } | { ok: false; errors: LessonError[] } {
   const errors: LessonError[] = [];
   const span = locateQuote(source, d.bigIdeaQuote);
   if (!span) errors.push('big_idea_not_in_lesson');
   if (new Set(d.steps.map((s) => s.key)).size !== d.steps.length) errors.push('duplicate_step_key');
+  if (d.steps.some((x) => !labelOk(x.label))) errors.push('bad_label');
   const totalMinutes = d.steps.reduce((n, s) => n + s.minutes, 0);
   if (totalMinutes > MAX_LESSON_MINUTES) errors.push('total_minutes_over_120');
   if (errors.length > 0 || !span) return { ok: false, errors };
@@ -144,7 +156,7 @@ export function verifyLesson(source: string, d: LessonDraft): { ok: true; lesson
     ok: true,
     lesson: {
       title: d.title.trim(),
-      steps: d.steps.map((s) => ({ ...s })),
+      steps: d.steps.map((s) => ({ ...s, label: s.label.trim() })),
       // The church's own words, as they stand in the source (not the model's copy).
       bigIdeaQuote: source.slice(span.start, span.end),
       bigIdeaSpan: span,

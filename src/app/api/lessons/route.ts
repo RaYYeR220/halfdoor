@@ -36,6 +36,7 @@ export async function POST(req: Request) {
   if (!verified.ok) return NextResponse.json({ error: 'lesson_unverified', errors: verified.errors }, { status: 422 });
   const { lesson } = verified;
 
+  const replaced = services.filter((s) => s!.lessonId).map((s) => s!.id);
   const verse = lesson.verseRef ? await getVerse(lesson.verseRef) : null;
   const serviceDate = new Date(Math.min(...services.map((s) => s!.startsAt.getTime())));
   const row = await insertLesson({
@@ -43,7 +44,7 @@ export async function POST(req: Request) {
     verseRef: lesson.verseRef, verseText: verse?.text ?? null, steps: lesson.steps,
   });
   await setServicesLesson(viewer.churchId, ids, row.id);
-  return NextResponse.json({ id: row.id, lesson, verse });
+  return NextResponse.json({ id: row.id, lesson, verse, replaced });
 }
 
 /** The lesson linked to a service (director desk). */

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { adaptationsFor } from '@/lib/schedule/adapt';
 import { CHIP_PICTOGRAM, PINNED_PICTOGRAMS, isPinnedPictogram } from '@/lib/schedule/arasaac';
 import { getVerse, passageIdOf } from '@/lib/schedule/bible';
-import { verifyLesson, type LessonDraft } from '@/lib/schedule/lesson';
+import { labelOk, verifyLesson, type LessonDraft } from '@/lib/schedule/lesson';
 import { SEGMENTS, SEGMENT_PICTOGRAM, type Step } from '@/lib/schedule/segments';
 import { SOCIAL_STORY_TABLE, socialStory } from '@/lib/schedule/socialStory';
 import { LESSON } from '@/db/seed/fernbrook';
@@ -35,6 +35,23 @@ describe('verifyLesson', () => {
     expect(verifyLesson(SOURCE, dup)).toMatchObject({ ok: false, errors: expect.arrayContaining(['duplicate_step_key']) });
     const long = draft({ steps: steps.map((s) => ({ ...s, minutes: 30 })) });
     expect(verifyLesson(SOURCE, long)).toMatchObject({ ok: false, errors: ['total_minutes_over_120'] });
+  });
+});
+
+describe('step labels (the only model prose in the pack)', () => {
+  const withLabel = (label: string) => draft({ steps: steps.map((x, i) => (i === 0 ? { ...x, label } : { ...x })) });
+  it('accepts short plain labels', () => {
+    for (const l of ['Arrive', 'Hear the promise of a king', 'Make a hope reminder', 'Snack time 2']) expect(labelOk(l)).toBe(true);
+    expect(verifyLesson(SOURCE, withLabel('Sing about the promise')).ok).toBe(true);
+  });
+  it('rejects more than 6 words, control chars, links, handles, emails, digits-only', () => {
+    for (const l of [
+      'one two three four five six seven', 'Line one\nline two', 'tab\there', 'zero\u200bwidth', 'see https://x.io now', 'visit www.evil.com',
+      'evil.com/free', 'ping @someone', 'mail a@b.co', '12345', '!!! ???', '   ', 'x\ny',
+    ]) {
+      expect(labelOk(l), l).toBe(false);
+      expect(verifyLesson(SOURCE, withLabel(l.trim() ? l : 'x\ny'))).toMatchObject({ ok: false, errors: expect.arrayContaining(['bad_label']) });
+    }
   });
 });
 
