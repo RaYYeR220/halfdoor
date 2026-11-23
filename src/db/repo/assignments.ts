@@ -22,3 +22,7 @@ export async function getAssignmentFor(serviceId: string, childId: string): Prom
   const [row] = await getDb().select().from(assignments).where(and(eq(assignments.serviceId, serviceId), eq(assignments.childId, childId)));
   return row;
 }
+
+export async function listAssignmentsForChild(childId: string): Promise<Assignment[]> {
+  return getDb().select().from(assignments).where(eq(assignments.childId, childId));
+}
