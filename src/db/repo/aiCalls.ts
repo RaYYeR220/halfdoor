@@ -1,4 +1,4 @@
-import { and, eq, gte } from 'drizzle-orm';
+import { and, eq, gte, sql } from 'drizzle-orm';
 import { getDb } from '../client';
 import { aiCalls } from '../schema';
 
@@ -13,4 +13,21 @@ export async function listAiCalls(churchId: string, since?: Date): Promise<AiCal
 export async function insertAiCall(values: NewAiCall): Promise<AiCall> {
   const [row] = await getDb().insert(aiCalls).values(values).returning();
   return row;
+}
+
+/** Sum of cost_usd over every church since `since` (the global daily cap). */
+export async function sumCostSince(since: Date): Promise<number> {
+  const [row] = await getDb()
+    .select({ total: sql<string>`coalesce(sum(${aiCalls.costUsd}), 0)` })
+    .from(aiCalls)
+    .where(gte(aiCalls.at, since));
+  return Number(row?.total ?? 0);
+}
+
+export async function countAiCalls(churchId: string): Promise<number> {
+  const [row] = await getDb()
+    .select({ n: sql<number>`count(*)::int` })
+    .from(aiCalls)
+    .where(eq(aiCalls.churchId, churchId));
+  return row?.n ?? 0;
 }

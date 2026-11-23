@@ -1,5 +1,6 @@
 // Live check: attestation + one encrypted call. Run: pnpm tsx --env-file=.env.local scripts/e2ee-smoke.ts
 import { checkAttestation } from '../src/lib/crypto/attestation';
+import { draftCard } from '../src/lib/card/pipeline';
 import { decryptFromEnclave, encryptForEnclave, looksEncrypted, newClientKeys } from '../src/lib/crypto/e2ee';
 
 const KEY = process.env.VENICE_API_KEY;
@@ -12,7 +13,16 @@ const sys = `Extract a support card. Return ONLY JSON of the exact shape {"items
 
 function bytesHex(b: Uint8Array) { return Array.from(b, (x) => x.toString(16).padStart(2, '0')).join(''); }
 
+async function pipeline() {
+  const { card, attestation } = await draftCard(story, 'Leo', { model: MODEL, node: { apiKey: KEY!, baseUrl: BASE } });
+  console.log('attestation:', { verified: attestation.verified, provider: attestation.provider });
+  console.log('lang:', card.lang, 'dropped:', card.dropped.length, 'tags:', card.tags.join(','), 'safetyPrompts:', card.safetyPrompts.length);
+  for (const it of card.items) console.log(`[${it.section}/${it.kind}] ${it.text}`);
+  for (const d of card.dropped) console.log('DROPPED', d.reason, d.text);
+}
+
 async function main() {
+  if (process.argv.includes('--pipeline')) return pipeline();
   const nonce = bytesHex(crypto.getRandomValues(new Uint8Array(32)));
 
   const att = await (await fetch(`${BASE}/tee/attestation?model=${MODEL}&nonce=${nonce}`, { headers: { Authorization: `Bearer ${KEY}` } })).json();

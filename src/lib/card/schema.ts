@@ -33,7 +33,7 @@ export type CardItem = {
   text: string;
   kind: 'paraphrase' | 'verbatim';
   quotes: { text: string; span: Span }[];
-  translation: { lang: 'en'; text: string; withheld: boolean } | null;
+  translation: { lang: 'en' | 'es'; text: string; withheld: boolean } | null;
 };
 
 export type DroppedItem = { section: Section; text: string; reason: 'quote_not_found' | 'unsaid_label' };
