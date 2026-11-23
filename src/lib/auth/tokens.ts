@@ -49,3 +49,21 @@ export function verifyLink(token: string, now: number = Date.now()): LinkClaims 
   if (exp * 1000 <= now) return null;
   return { c, p, r: r as Role, exp };
 }
+
+/** Sign an opaque string (e.g. a sandbox church id): `value.base64url(HMAC)`. Distinct domain from link tokens. */
+export function signValue(value: string): string {
+  const sig = createHmac('sha256', secret()).update(`v1:${value}`).digest();
+  return `${value}.${sig.toString('base64url')}`;
+}
+
+/** Returns the original value, or null if the signature is missing or wrong. */
+export function verifyValue(signed: string): string | null {
+  if (typeof signed !== 'string') return null;
+  const i = signed.lastIndexOf('.');
+  if (i <= 0) return null;
+  const value = signed.slice(0, i);
+  const given = Buffer.from(signed.slice(i + 1), 'base64url');
+  const expected = createHmac('sha256', secret()).update(`v1:${value}`).digest();
+  if (given.length !== expected.length || !timingSafeEqual(given, expected)) return null;
+  return value;
+}
