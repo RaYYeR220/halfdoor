@@ -49,8 +49,11 @@ export async function openCard(
   const { card, result } = ev;
   if (!result.allowed) {
     if (result.reason === 'role') return { kind: 'forbidden' };
-    const stale = (await listOpenAccess(viewer.personId)).filter((e) => e.childId === childId).map((e) => e.id);
-    await closeAccess(stale, now);
+    // Close exactly this viewer's openings of this child at this service (none when no service was named).
+    if (serviceId) {
+      const stale = (await listOpenAccess(viewer.personId)).filter((e) => e.childId === childId && e.serviceId === serviceId).map((e) => e.id);
+      await closeAccess(stale, now);
+    }
     return { kind: 'locked', reason: result.reason };
   }
   const church = await getChurch(viewer.churchId);
@@ -59,24 +62,26 @@ export async function openCard(
   // Parent and director reads are instantaneous; buddy/leader entries stay open until the gate closes.
   const session = result.reason === 'checked_in' || result.reason === 'room_safety';
   await insertAccess({
-    cardId: card.id, childId, viewerId: viewer.personId, role: viewer.role, reason: result.reason,
+    cardId: card.id, childId, serviceId: session ? serviceId : null, viewerId: viewer.personId, role: viewer.role, reason: result.reason,
     openedAt: now, closedAt: session ? null : now,
   });
   return { kind: 'open', card: view };
 }
 
-/** Heartbeat side: close every open entry of this viewer whose gate now denies. */
-export async function closeStaleAccess(viewer: Viewer, serviceId: string, now: Date): Promise<void> {
+
+/** Heartbeat side: close every open entry of this viewer whose gate now denies, judged at the entry's own service. */
+export async function closeStaleAccess(viewer: Viewer, now: Date): Promise<void> {
   if (viewer.role !== 'buddy' && viewer.role !== 'leader') return;
-  const open = await listOpenAccess(viewer.personId);
   const stale: string[] = [];
   const verdicts = new Map<string, boolean>();
-  for (const e of open) {
-    if (!verdicts.has(e.childId)) {
-      const ev = await evaluateGate(viewer, e.childId, serviceId, viewer.role === 'leader' ? 'safety' : 'full', now);
-      verdicts.set(e.childId, !!ev?.result.allowed);
+  for (const e of await listOpenAccess(viewer.personId)) {
+    if (!e.childId) { stale.push(e.id); continue; }
+    const key = `${e.childId}|${e.serviceId}`;
+    if (!verdicts.has(key)) {
+      const ev = await evaluateGate(viewer, e.childId, e.serviceId, viewer.role === 'leader' ? 'safety' : 'full', now);
+      verdicts.set(key, !!ev?.result.allowed);
     }
-    if (!verdicts.get(e.childId)) stale.push(e.id);
+    if (!verdicts.get(key)) stale.push(e.id);
   }
   await closeAccess(stale, now);
 }

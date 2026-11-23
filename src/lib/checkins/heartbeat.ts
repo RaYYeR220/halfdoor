@@ -1,3 +1,4 @@
+import { listAssignments } from '@/db/repo/assignments';
 import { listCheckins } from '@/db/repo/checkins';
 import { getChurch } from '@/db/repo/churches';
 import { listHouseholdLinks } from '@/db/repo/people';
@@ -27,12 +28,17 @@ export async function heartbeat(viewer: Viewer, serviceId: string, now: Date): P
       await refreshFromPco(service.id);
     }
   }
-  await closeStaleAccess(viewer, service.id, now);
+  await closeStaleAccess(viewer, now);
 
   let rows = await listCheckins(service.id);
   if (viewer.role === 'parent') {
     // A parent never sees other families' children or their pickup codes.
     const mine = new Set((await listHouseholdLinks(rows.map((r) => r.childId))).filter((l) => l.parentId === viewer.personId).map((l) => l.childId));
+    rows = rows.filter((r) => mine.has(r.childId));
+  }
+  if (viewer.role === 'buddy') {
+    // A buddy gets pickup codes only for the children assigned to them at this service.
+    const mine = new Set((await listAssignments(service.id)).filter((a) => a.buddyId === viewer.personId).map((a) => a.childId));
     rows = rows.filter((r) => mine.has(r.childId));
   }
   // Newest row per child wins: a child may check out and back in.

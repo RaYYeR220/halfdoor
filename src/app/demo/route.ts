@@ -22,7 +22,7 @@ export async function GET(req: Request) {
   }
 
   await purgeExpiredSandboxes();
-  await purgeExpiredCards().catch(() => 0); // retention: best effort, never blocks the demo
+  await purgeExpiredCards().catch((err) => console.error('card purge failed:', err instanceof Error ? err.name : 'unknown')); // best effort, code only
   const made = await createSandboxReserved(hashClient(clientIp(req)));
   if (!made) return new NextResponse('Too many demo churches from this connection. Try again in an hour.', { status: 429 });
   const { churchId, slug } = made;

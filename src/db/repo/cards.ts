@@ -1,4 +1,4 @@
-import { and, eq, lt } from 'drizzle-orm';
+import { and, eq, isNull, lt } from 'drizzle-orm';
 import { getDb } from '../client';
 import { cardAccessLog, cards, moments, parentNotes } from '../schema';
 
@@ -40,16 +40,20 @@ export async function listExpiredCards(now: Date): Promise<CardRow[]> {
 }
 
 /**
- * Hard-deletes the card, the child's moment notes and note drafts. Access-log rows stay (card_id goes null)
- * and a 'deleted' tombstone row records who removed it. One transaction: all or nothing.
+ * Hard-deletes the card, the child's moment notes and note drafts. Open access entries are closed, log rows
+ * stay (card_id goes null) and ONE 'deleted' tombstone records who removed it. The tombstone is written only
+ * when this call removed the row, so a purge racing a DELETE cannot double it. Returns whether it deleted.
  */
-export async function deleteCardData(card: CardRow, by: { personId: string | null; role: string }, at: Date): Promise<void> {
-  await getDb().transaction(async (tx) => {
+export async function deleteCardData(card: CardRow, by: { personId: string | null; role: string }, at: Date): Promise<boolean> {
+  return getDb().transaction(async (tx) => {
+    const gone = await tx.delete(cards).where(eq(cards.id, card.id)).returning({ id: cards.id });
+    if (gone.length === 0) return false;
+    await tx.update(cardAccessLog).set({ closedAt: at }).where(and(eq(cardAccessLog.childId, card.childId), isNull(cardAccessLog.closedAt)));
     await tx.update(moments).set({ noteEnc: null }).where(eq(moments.childId, card.childId));
     await tx.delete(parentNotes).where(eq(parentNotes.childId, card.childId));
     await tx.insert(cardAccessLog).values({
       cardId: null, childId: card.childId, viewerId: by.personId, role: by.role, reason: 'deleted', openedAt: at, closedAt: at,
     });
-    await tx.delete(cards).where(eq(cards.id, card.id));
+    return true;
   });
 }

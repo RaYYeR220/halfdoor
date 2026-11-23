@@ -47,11 +47,12 @@ export function canReadCard(i: GateInput): GateResult {
     case 'director':
       return { allowed: true, reason: 'director', scope };
     case 'buddy': {
-      if (card.status !== 'acknowledged') return { allowed: false, reason: 'not_acknowledged' };
       const a = i.assignment;
       if (!i.service || !a || a.buddyId !== viewer.personId || a.serviceId !== i.service.id || a.status === 'proposed') {
         return { allowed: false, reason: 'not_assigned' };
       }
+      // Only after assignment: an unassigned buddy must not learn whether a card is acknowledged.
+      if (card.status !== 'acknowledged') return { allowed: false, reason: 'not_acknowledged' };
       const problem = checkinProblem(i);
       return problem ? { allowed: false, reason: problem } : { allowed: true, reason: 'checked_in', scope };
     }

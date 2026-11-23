@@ -1,6 +1,6 @@
 import { and, eq, inArray, isNull } from 'drizzle-orm';
 import { getDb } from '../client';
-import { cardAccessLog, cards } from '../schema';
+import { cardAccessLog } from '../schema';
 
 export type AccessEntry = typeof cardAccessLog.$inferSelect;
 export type NewAccessEntry = typeof cardAccessLog.$inferInsert;
@@ -18,14 +18,13 @@ export async function updateAccess(id: string, patch: Partial<NewAccessEntry>): 
   await getDb().update(cardAccessLog).set(patch).where(eq(cardAccessLog.id, id));
 }
 
-export type OpenAccess = { id: string; childId: string };
+export type OpenAccess = { id: string; childId: string | null; serviceId: string | null };
 
-/** The viewer's still-open entries on live cards. */
+/** The viewer's still-open entries (no join: a deleted card must not hide them). */
 export async function listOpenAccess(viewerId: string): Promise<OpenAccess[]> {
-  const rows = await getDb().select({ id: cardAccessLog.id, childId: cards.childId }).from(cardAccessLog)
-    .innerJoin(cards, eq(cards.id, cardAccessLog.cardId))
+  return getDb().select({ id: cardAccessLog.id, childId: cardAccessLog.childId, serviceId: cardAccessLog.serviceId })
+    .from(cardAccessLog)
     .where(and(eq(cardAccessLog.viewerId, viewerId), isNull(cardAccessLog.closedAt)));
-  return rows;
 }
 
 export async function closeAccess(ids: string[], at: Date): Promise<void> {

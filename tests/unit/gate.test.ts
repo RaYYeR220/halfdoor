@@ -46,6 +46,9 @@ describe('canReadCard: buddy', () => {
       expect(canReadCard(base({ card: { childId: 'kid', status } }))).toEqual({ allowed: false, reason: 'not_acknowledged' });
     }
   });
+  it('an unassigned buddy gets not_assigned even for an unacknowledged card (no ack leak)', () => {
+    expect(canReadCard(base({ assignment: null, card: { childId: 'kid', status: 'draft' } }))).toEqual({ allowed: false, reason: 'not_assigned' });
+  });
   it('no checked-in child denies', () => {
     expect(canReadCard(base({ checkin: null }))).toEqual({ allowed: false, reason: 'not_checked_in' });
   });

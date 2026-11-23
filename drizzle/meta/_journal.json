@@ -22,6 +22,20 @@
       "when": 1795471433903,
       "tag": "0002_minor_scorpion",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1795472051728,
+      "tag": "0003_sturdy_maggott",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1795472053994,
+      "tag": "0004_medical_black_crow",
+      "breakpoints": true
     }
   ]
 }

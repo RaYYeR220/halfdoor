@@ -267,7 +267,9 @@ describe('parent save / approve, director ack / return', () => {
     expect((await returnRoute.POST(req('POST', 'x', { question: '   ' }), params(leo))).status).toBe(400);
     expect((await returnRoute.POST(req('POST', 'x', { question: 'Which peanut brand?' }), params(leo))).status).toBe(200);
     const row = (await getCardForChild(w.churchId, leo))!;
-    expect(row).toMatchObject({ status: 'returned', returnedQuestion: 'Which peanut brand?', directorAckAt: null });
+    expect(row).toMatchObject({ status: 'returned', directorAckAt: null });
+    expect(row.returnedQuestionEnc).not.toBeNull();
+    expect(row.returnedQuestionEnc).not.toContain('peanut');
     expect((await ackRoute.POST(req('POST', 'x'), params(leo))).status).toBe(409); // returned
     // parent sees the question, then re-approves, then director acks
     h.viewer = w.as('Maria', 'parent');
@@ -276,7 +278,7 @@ describe('parent save / approve, director ack / return', () => {
     expect((await put(w, body(view.items, { approve: true }))).status).toBe(200);
     h.viewer = w.as('Hannah', 'director');
     expect((await ackRoute.POST(req('POST', 'x'), params(leo))).status).toBe(200);
-    expect((await getCardForChild(w.churchId, leo))!).toMatchObject({ status: 'acknowledged', returnedQuestion: null });
+    expect((await getCardForChild(w.churchId, leo))!).toMatchObject({ status: 'acknowledged', returnedQuestionEnc: null });
   });
 });
 

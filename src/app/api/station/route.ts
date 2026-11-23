@@ -12,7 +12,7 @@ export async function POST(req: Request) {
   if (typeof serviceId !== 'string' || typeof childId !== 'string' || (action !== 'in' && action !== 'out')) return fail('bad_request', 400);
   if (!UUID.test(serviceId) || !(await getServiceInChurch(viewer.churchId, serviceId))) return fail('not_found', 404);
   if (!(await childInChurch(viewer, childId))) return fail('not_found', 404);
-  const r = await stationAction(serviceId, childId, action, new Date());
+  const r = await stationAction(viewer.churchId, serviceId, childId, action, new Date());
   if (!r.ok) return fail(r.error, 409);
   return NextResponse.json({ ok: true, securityCode: r.securityCode, in: r.in });
 }

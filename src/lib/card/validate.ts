@@ -2,14 +2,17 @@
 import { z } from 'zod';
 import { MAX_DRAFT_ITEMS, SECTIONS, TAGS, type CardItem, type Tag } from './schema';
 
-const Span = z.object({ start: z.number().int().min(0), end: z.number().int().min(0) }).refine((s) => s.end > s.start);
+/** Parent stories are capped at 6000 chars, so no quote or span can exceed that. */
+const MAX_SOURCE = 6000;
+
+const Span = z.object({ start: z.number().int().min(0).max(MAX_SOURCE), end: z.number().int().min(0).max(MAX_SOURCE) }).refine((s) => s.end > s.start);
 
 const Item = z.object({
   id: z.string().min(1).max(40),
   section: z.enum(SECTIONS),
   text: z.string().min(1).max(400),
   kind: z.enum(['paraphrase', 'verbatim']),
-  quotes: z.array(z.object({ text: z.string().min(1), span: Span })).min(1).max(4),
+  quotes: z.array(z.object({ text: z.string().min(1).max(MAX_SOURCE), span: Span })).min(1).max(4),
   translation: z.object({ lang: z.enum(['en', 'es']), text: z.string().max(400), withheld: z.boolean() }).nullable(),
 }).refine((i) => i.section !== 'safety' || i.kind === 'verbatim');
 

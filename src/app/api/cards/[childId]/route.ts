@@ -5,9 +5,8 @@ import { UUID, childInChurch, fail, isParentOf, readJson, requireViewer } from '
 import { openCard } from '@/lib/access/read';
 import { parseCardBody } from '@/lib/card/validate';
 import { sealJson } from '@/lib/crypto/atrest';
+import { RETENTION_MS } from '@/lib/access/retention';
 import { onCardApproved } from '@/lib/pco/hooks';
-
-const RETENTION_MS = 365 * 24 * 3600_000;
 
 export async function GET(req: Request, ctx: RouteContext<'/api/cards/[childId]'>) {
   const viewer = await requireViewer();
@@ -44,8 +43,8 @@ export async function PUT(req: Request, ctx: RouteContext<'/api/cards/[childId]'
   const base = { lang: body.lang, supportLevel: body.supportLevel, itemsEnc: sealJson(church.wrappedDek, body.items), tags: body.tags };
   // Any edit voids the director's acknowledgement: the content changed after they read it.
   const approval = body.approve
-    ? { status: 'parent_approved' as const, parentApprovedAt: now, directorAckAt: null, returnedQuestion: null, retainUntil: new Date(now.getTime() + RETENTION_MS) }
-    : { status: 'draft' as const, directorAckAt: null };
+    ? { status: 'parent_approved' as const, parentApprovedAt: now, directorAckAt: null, returnedQuestionEnc: null, retainUntil: new Date(now.getTime() + RETENTION_MS) }
+    : { status: 'draft' as const, directorAckAt: null, retainUntil: new Date(now.getTime() + RETENTION_MS) };
   let version: number;
   if (existing) {
     version = body.approve ? existing.version + 1 : existing.version;

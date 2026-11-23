@@ -31,19 +31,19 @@ describe('station', () => {
     const [service] = await listServices(churchId);
     const leo = (await listPeople(churchId)).find((p) => p.firstName === 'Leo')!;
     const now = new Date();
-    const first = await stationAction(service.id, leo.id, 'in', now);
+    const first = await stationAction(churchId, service.id, leo.id, 'in', now);
     expect(first).toMatchObject({ ok: true, in: true });
     expect(first.ok && first.securityCode).toMatch(/^[A-HJ-NP-Z2-9]{4}$/);
-    expect(await stationAction(service.id, leo.id, 'in', now)).toEqual({ ok: false, error: 'already_in' });
-    expect(await stationAction(service.id, leo.id, 'out', now)).toMatchObject({ ok: true, in: false });
-    expect(await stationAction(service.id, leo.id, 'out', now)).toEqual({ ok: false, error: 'not_in' });
-    expect(await stationAction(service.id, leo.id, 'in', now)).toMatchObject({ ok: true, in: true });
+    expect(await stationAction(churchId, service.id, leo.id, 'in', now)).toEqual({ ok: false, error: 'already_in' });
+    expect(await stationAction(churchId, service.id, leo.id, 'out', now)).toMatchObject({ ok: true, in: false });
+    expect(await stationAction(churchId, service.id, leo.id, 'out', now)).toEqual({ ok: false, error: 'not_in' });
+    expect(await stationAction(churchId, service.id, leo.id, 'in', now)).toMatchObject({ ok: true, in: true });
   });
 
   it('out without in is 409', async () => {
     const { churchId } = await createSandbox();
     const [service] = await listServices(churchId);
     const ana = (await listPeople(churchId)).find((p) => p.firstName === 'Ana')!;
-    expect(await stationAction(service.id, ana.id, 'out', new Date())).toEqual({ ok: false, error: 'not_in' });
+    expect(await stationAction(churchId, service.id, ana.id, 'out', new Date())).toEqual({ ok: false, error: 'not_in' });
   });
 });

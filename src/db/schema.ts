@@ -52,7 +52,8 @@ export const cards = pgTable('cards', {
   supportLevel: text('support_level', { enum: ['all_morning', 'parts', 'none'] }),
   itemsEnc: text('items_enc').notNull(),
   teamNotesEnc: text('team_notes_enc'),
-  returnedQuestion: text('returned_question'),
+  /** Sealed: the question often quotes card content. */
+  returnedQuestionEnc: text('returned_question_enc'),
   tags: textArray('tags'),
   version: integer('version').notNull().default(1),
   parentApprovedAt: ts('parent_approved_at'),
@@ -134,6 +135,8 @@ export const cardAccessLog = pgTable('card_access_log', {
   /** SET NULL: deleting a card keeps its log rows (plus a 'deleted' tombstone) for the parent. */
   cardId: uuid('card_id').references(() => cards.id, { onDelete: 'set null' }),
   childId: uuid('child_id').references(() => people.id, { onDelete: 'cascade' }),
+  /** Buddy/leader rows only: the service whose window governs this opening. */
+  serviceId: uuid('service_id').references(() => services.id, { onDelete: 'set null' }),
   viewerId: uuid('viewer_id').references(() => people.id, { onDelete: 'set null' }),
   role: text('role').notNull(),
   reason: text('reason', { enum: ['checked_in', 'director', 'parent', 'room_safety', 'deleted'] }).notNull(),

@@ -36,6 +36,8 @@ export function buildCardView(
     directorAckAt: card.directorAckAt?.toISOString() ?? null,
   };
   if (scope === 'full' && role !== 'leader' && card.teamNotesEnc) view.teamNotes = openJson<string>(wrappedDek, card.teamNotesEnc);
-  if ((role === 'parent' || role === 'director') && card.returnedQuestion) view.returnedQuestion = card.returnedQuestion;
+  if ((role === 'parent' || role === 'director') && card.returnedQuestionEnc) {
+    view.returnedQuestion = openJson<string>(wrappedDek, card.returnedQuestionEnc);
+  }
   return view;
 }
