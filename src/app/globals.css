@@ -1,26 +1,191 @@
 @import "tailwindcss";
 
+/*
+ * Halfdoor tokens. Values are copied from the approved landing (final-1B-3Bcolors); contrast notes are on ground
+ * #f6f4ef unless said otherwise. Every colour in the app comes from here: Tailwind's default palette, radii and
+ * shadows are switched off below so nothing off-system can slip in.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  --ground: #f6f4ef;            /* warm paper page */
+  --ground-edge: #efece6;       /* one step down: hover on ground, sunk rows */
+  --surface: #ffffff;           /* cards, panels, inputs */
+  --surface-2: #faf9f6;         /* sunk: chips inside a white card */
+
+  --ink: #1a1816;               /* 16.1:1 */
+  --ink-2: #3b3733;             /* body on panels, 10.7:1 */
+  --ink-muted: #6a655e;         /* meta, labels: 5.3:1 ground, 5.8:1 white */
+  --ink-muted-2: #736e67;       /* small sub-labels: 4.6:1 ground, 5.1:1 white */
+
+  --hairline: rgba(26, 24, 22, 0.1);
+  --hairline-strong: rgba(26, 24, 22, 0.15);
+  --hairline-emphasis: rgba(26, 24, 22, 0.35);
+
+  --accent: #c2457a;            /* fills only: CTA background, dots, the unlock moment. 4.3:1, never text on ground */
+  --accent-hover: #a3335f;
+  --rose: #a3335f;              /* rose that carries text: 6.0:1 ground, 6.6:1 white */
+  --accent-ink: #7d2048;        /* text on the rose tint, 7.9:1 */
+  --accent-tint: #f6e3eb;
+  --accent-line: rgba(194, 69, 122, 0.35);
+  --on-accent: #ffffff;         /* white on rose 4.7:1 (6.6:1 on hover) */
+
+  --danger-ink: #8a1f1f;        /* safety banner text on --danger-bg, AA */
+  --danger-bg: #fbeeee;
+  --danger-line: rgba(138, 31, 31, 0.22);
+  --ok-ink: #1f5f3f;            /* verified / unlocked; the text always carries the state */
+  --ok-bg: #eaf4ee;
+  --ok-line: rgba(31, 95, 63, 0.22);
+
+  --focus: #a3335f;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1); /* 160-240ms ease-out, no bounce */
+
+  --shell-h: 60px;              /* top bar height on wide screens */
+  --guide-w: 368px;             /* demo guide panel */
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-*: initial;
+  --color-ground: var(--ground);
+  --color-ground-edge: var(--ground-edge);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-muted-2: var(--ink-muted-2);
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-hairline-emphasis: var(--hairline-emphasis);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-rose: var(--rose);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-tint: var(--accent-tint);
+  --color-accent-line: var(--accent-line);
+  --color-on-accent: var(--on-accent);
+  --color-danger-ink: var(--danger-ink);
+  --color-danger-bg: var(--danger-bg);
+  --color-danger-line: var(--danger-line);
+  --color-ok-ink: var(--ok-ink);
+  --color-ok-bg: var(--ok-bg);
+  --color-ok-line: var(--ok-line);
+  --color-focus: var(--focus);
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --font-sans: var(--font-general-sans), system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+
+  /* Type scale 13 / 15 / 17 (body minimum) / 20 / 24 / 32 / 44 */
+  --text-*: initial;
+  --text-13: 13px;
+  --text-13--line-height: 18px;
+  --text-15: 15px;
+  --text-15--line-height: 22px;
+  --text-17: 17px;
+  --text-17--line-height: 26px;
+  --text-20: 20px;
+  --text-20--line-height: 28px;
+  --text-24: 24px;
+  --text-24--line-height: 30px;
+  --text-24--letter-spacing: -0.025em;
+  --text-32: 32px;
+  --text-32--line-height: 36px;
+  --text-32--letter-spacing: -0.035em;
+  --text-44: 44px;
+  --text-44--line-height: 46px;
+  --text-44--letter-spacing: -0.04em;
+
+  /* Sharp identity: 2px for cards and inputs, pills for chips, pills and buttons. */
+  --radius-*: initial;
+  --radius-sharp: 2px;
+  --radius-pill: 999px;
+
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+
+  --ease-out: var(--ease);
+  --animate-spin: spin 0.9s linear infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--font-general-sans), system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--accent-tint);
+    color: var(--accent-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+  button,
+  [role="button"],
+  summary {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+  summary {
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Unlock: blur(6px) -> 0 and .4 -> 1 over 420ms; lock is the reverse in 280ms. No bounce. */
+@keyframes hd-unlock {
+  from { filter: blur(6px); opacity: 0.4; }
+  to { filter: blur(0); opacity: 1; }
+}
+@keyframes hd-lock {
+  from { filter: blur(0); opacity: 1; }
+  to { filter: blur(6px); opacity: 0.4; }
+}
+@keyframes hd-rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+@utility animate-unlock {
+  animation: hd-unlock 420ms var(--ease) both;
+}
+@utility animate-lock {
+  animation: hd-lock 280ms var(--ease) both;
+}
+@utility animate-rise {
+  animation: hd-rise 200ms var(--ease) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -45,3 +45,6 @@ next-env.d.ts
 eval/.cache/
 /test-results/
 /playwright-report/
+
+# General Sans is self-hosted but not redistributed (ITF FFL): fetched by scripts/fetch-fonts.mjs
+/src/app/fonts/*.woff2
