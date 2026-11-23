@@ -47,6 +47,8 @@ describe('verifyCard', () => {
     const src = 'Solo yo o su abuela pueden recogerla. Su papá no.';
     const v = verifyCard(src, { items: [], tags: [] });
     expect(v.safetyPrompts.length).toBeGreaterThan(0);
+    const r = acceptSafetyPrompt(v, src, v.safetyPrompts[0].id);
+    expect(r.items[0]).toMatchObject({ section: 'safety', kind: 'verbatim', text: 'Solo yo o su abuela pueden recogerla.' });
   });
   test('tag dropped with its item', () => {
     const v = verifyCard(LEO, { items: [{ section: 'loves', text: 'x', quotes: ['not in text'] }], tags: [{ tag: 'noise_sensitive', item: 0 }] });
@@ -106,5 +108,35 @@ describe('verifyCard', () => {
     expect(renderCardText(v)).toBe(
       'LOVES:\n- Loves trains\n\nSAFETY:\n- He IS allergic to peanuts - he has an EpiPen in his backpack.',
     );
+  });
+  test('safety quotes in sentences 1 and 4 do not hide an uncovered allergy sentence 2', () => {
+    const src = 'He has an EpiPen. He is allergic to bees. He likes cars. Dad is NOT allowed to pick him up.';
+    const v = verifyCard(src, {
+      items: [{ section: 'safety', text: 'x', quotes: ['has an EpiPen', 'NOT allowed to pick him up'] }],
+      tags: [],
+    });
+    expect(v.safetyPrompts.map((p) => p.sentence)).toEqual(['He is allergic to bees.']);
+  });
+  test('tag on a polarity-fallback item is dropped; safety and passing items keep theirs', () => {
+    const flipped = verifyCard(LEO, { items: [{ section: 'helps', text: 'Allergic to eggs', quotes: ['used to be allergic to eggs'] }], tags: [{ tag: 'food_allergy', item: 0 }] });
+    expect(flipped.items[0].kind).toBe('verbatim');
+    expect(flipped.tags).toEqual([]);
+    const safe = verifyCard(LEO, { items: [{ section: 'safety', text: 'x', quotes: ['has an EpiPen'] }], tags: [{ tag: 'medical_plan', item: 0 }] });
+    expect(safe.tags).toEqual(['medical_plan']);
+    const pt = verifyCard('Ele adora trens.', { items: [{ section: 'loves', text: 'Adora', quotes: ['adora trens'] }], tags: [{ tag: 'spanish_home', item: 0 }] });
+    expect(pt.tags).toEqual(['spanish_home']);
+  });
+  test('lexicon: Spanish accented alergico and English pick-him-up variants', () => {
+    const es = verifyCard('Le gusta jugar. Es alérgico a los cacahuetes.', { items: [], tags: [] });
+    expect(es.safetyPrompts.map((p) => p.sentence)).toEqual(['Es alérgico a los cacahuetes.']);
+    const en = verifyCard('He likes cars. Only grandma can pick him up.', { items: [], tags: [] });
+    expect(en.safetyPrompts.map((p) => p.sentence)).toEqual(['Only grandma can pick him up.']);
+    for (const t of ['Mom signs her out at the desk.', 'Dad is collecting him today.', 'Pick-up is at noon.', 'Ella tiene epinefrina.', 'Puede pasar a buscarlo su tía.']) {
+      expect(verifyCard(t, { items: [], tags: [] }).safetyPrompts, t).toHaveLength(1);
+    }
+  });
+  test('ungrounded paraphrase falls back to the quote sentence verbatim', () => {
+    const v = verifyCard(LEO, { items: [{ section: 'hard', text: 'Allergic to shellfish', quotes: ['He loves trains'] }], tags: [] });
+    expect(v.items[0]).toMatchObject({ kind: 'verbatim', text: 'He loves trains and the color yellow.' });
   });
 });

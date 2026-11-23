@@ -2,6 +2,7 @@ import { detectLang, type Lang } from '@/lib/text/lang';
 import { unsaidLabels } from '@/lib/text/labels';
 import { locateQuote, type Span } from '@/lib/text/locate';
 import { polarityConsistent } from '@/lib/text/polarity';
+import { normalizeForMatch } from '@/lib/text/normalize';
 import { sentenceContaining } from '@/lib/text/sentences';
 import { findSafetyPrompts } from './safetyNet';
 import type { CardItem, DraftCard, DroppedItem, Tag, VerifiedCard } from './schema';
@@ -21,9 +22,26 @@ function sentenceText(source: string, spans: Span[]): string {
     .join(' ');
 }
 
-function sentenceSpan(source: string, item: CardItem): Span {
-  const spans = item.quotes.map((q) => sentenceContaining(source, q.span));
-  return { start: Math.min(...spans.map((s) => s.start)), end: Math.max(...spans.map((s) => s.end)) };
+/** One span per quote sentence (never a hull: sentences between two quotes stay uncovered). */
+function quoteSentenceSpans(source: string, item: CardItem): Span[] {
+  return item.quotes.map((q) => sentenceContaining(source, q.span));
+}
+
+const STOP = new Set(
+  ('that this with from have been were they them their there what when your about into than then also very much more some only will would could should '
+    + 'para como pero esta este esos esas tiene tienen todo toda cuando donde porque sobre entre desde hasta muy mas les sus una uno unos unas del los las').split(' '),
+);
+
+function contentPrefixes(text: string): Set<string> {
+  const words = normalizeForMatch(text).norm.match(/[\p{L}\p{N}]+/gu) ?? [];
+  return new Set(words.filter((w) => w.length >= 4 && !STOP.has(w)).map((w) => w.slice(0, 5)));
+}
+
+/** A paraphrase must share a content word (5-char prefix) with its quotes. */
+function sharesContent(paraphrase: string, quoteTexts: string[]): boolean {
+  const q = contentPrefixes(quoteTexts.join(' '));
+  for (const p of contentPrefixes(paraphrase)) if (q.has(p)) return true;
+  return false;
 }
 
 export function verifyCard(source: string, draft: DraftCard): VerifiedCard {
@@ -45,6 +63,7 @@ export function verifyCard(source: string, draft: DraftCard): VerifiedCard {
     const verbatimText = sentenceText(source, quotes.map((q) => q.span));
     let text = verbatimText;
     let kind: CardItem['kind'] = 'verbatim';
+    let tagsTrusted = true;
 
     if (d.section !== 'safety' && lang !== 'other') {
       if (unsaidLabels(d.text, source).length > 0) {
@@ -52,15 +71,17 @@ export function verifyCard(source: string, draft: DraftCard): VerifiedCard {
         return;
       }
       // Polarity is judged against the quoted sentences, not the whole story.
-      if (polarityConsistent(verbatimText, d.text, lang)) {
+      if (polarityConsistent(verbatimText, d.text, lang) && sharesContent(d.text, quotes.map((q) => q.text))) {
         text = d.text;
         kind = 'paraphrase';
       } else {
+        // Flipped or ungrounded reading: fall back to the quote and distrust the model's tags for it.
         text = sentenceText(source, [quotes[0].span]);
+        tagsTrusted = false;
       }
     }
 
-    survived.add(idx);
+    if (tagsTrusted) survived.add(idx);
     items.push({ id: `i${items.length}`, section: d.section, text, kind, quotes, translation: null });
   });
 
@@ -69,7 +90,7 @@ export function verifyCard(source: string, draft: DraftCard): VerifiedCard {
     if (survived.has(t.item) && !tags.includes(t.tag)) tags.push(t.tag);
   }
 
-  const covered = items.filter((i) => i.section === 'safety').map((i) => sentenceSpan(source, i));
+  const covered = items.filter((i) => i.section === 'safety').flatMap((i) => quoteSentenceSpans(source, i));
   return { lang, items, dropped, safetyPrompts: findSafetyPrompts(source, lang, covered), tags };
 }
 

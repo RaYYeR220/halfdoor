@@ -11,13 +11,14 @@ const w = (body: string) => new RegExp(`(?<![\\p{L}\\p{N}])(?:${body})`, 'iu');
  */
 export const SAFETY_LEXICON: Record<'en' | 'es', RegExp[]> = {
   en: [
-    w('epi-?pen'), w('epinephrine'), w('anaphyla\\w*'), w('allerg\\w*'), w('seizure\\w*'), w('medic\\w*'),
-    w('insulin'), w('inhaler'), w('asthma'), w('diabet\\w*'), w('pick(?:s|ed)?\\s?up'), w('custody'),
+    w('epi-?pen'), w('epinephrine|adrenaline'), w('anaphyla\\w*'), w('allerg\\w*'), w('seizure\\w*'), w('medic\\w*'),
+    w('insulin'), w('inhaler'), w('asthma'), w('diabet\\w*'), w('pick(?:s|ed|ing)?(?:\\s+(?:him|her|them))?[\\s-]?up'),
+    w('collect(?:s|ed|ing)?\\s+(?:him|her|them)'), w('sign(?:s|ed|ing)?\\s+(?:him|her|them)\\s+out'), w('custody'),
     w('court order'), w('not allowed'), w('choking'), w('wanders?|runs? off|bolts?'),
   ],
   es: [
-    w('epipen'), w('convulsi\\w*'), w('alerg\\w*'), w('medic\\w*'), w('insulina'), w('inhalador'), w('asma'),
-    w('diabet\\w*'), w('recog\\w*'), w('custodia'), w('orden judicial'), w('no (?:se )?permit\\w*'),
+    w('epipen'), w('epinefrina|adrenalina'), w('convulsi[oó]n\\w*|convulsi\\w*'), w('al[eé]rg\\w*'), w('medic\\w*'), w('insulina'), w('inhalador'), w('asma'),
+    w('diabet\\w*'), w('recog\\w*'), w('(?:pasar a )?buscarl[oa]'), w('custodia'), w('orden judicial'), w('no (?:se )?permit\\w*'),
     w('ahog\\w*'), w('se escapa'),
   ],
 };
@@ -31,8 +32,9 @@ export function findSafetyPrompts(source: string, lang: Lang, covered: Span[]): 
   for (const span of sentences(source)) {
     if (covered.some((c) => overlaps(c, span))) continue;
     const sentence = source.slice(span.start, span.end);
+    const folded = sentence.normalize('NFC');
     for (const re of lexicon) {
-      const m = re.exec(sentence);
+      const m = re.exec(folded);
       if (m) {
         out.push({ id: `s${span.start}`, sentence, span, matched: m[0] });
         break;
