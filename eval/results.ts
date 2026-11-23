@@ -63,7 +63,10 @@ export function adjudicate(f: ResultsFile, adj: Adjudication): Map<string, Adjud
 export const pct = (a: number, b: number) => (b === 0 ? 'n/a' : `${((100 * a) / b).toFixed(1)}%`);
 export const frac = (a: number, b: number) => `${pct(a, b)} (${a}/${b})`;
 export const sec = (ms: number) => `${(ms / 1000).toFixed(1)} s`;
-export const usd = (x: number) => `$${x < 0.1 ? x.toFixed(4) : x.toFixed(2)}`;
+/** Dollars: 4 decimals below $1 (per-story costs are fractions of a cent), 2 above. */
+export const usd = (x: number) => `$${Math.abs(x) < 1 ? x.toFixed(4) : x.toFixed(2)}`;
+export const num = (x: number, d = 1) => x.toFixed(d);
+export const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
 export const SYSTEM_LABEL: Record<string, string> = {
   halfdoor: 'Halfdoor card',
@@ -78,14 +81,42 @@ export function table(head: string[], rows: (string | number)[][]): string {
 
 export function headlineTable(f: ResultsFile): string {
   return table(
-    ['System', 'Model', 'Safety facts kept', 'Limiter facts kept', 'Trap hits', 'Stories with a trap hit'],
+    ['System', 'Model', 'Safety facts kept', 'Limiter facts kept', 'Trap hits (flips / numbers / sibling)', 'Stories with a trap hit'],
     f.aggregates.map(({ system, model, agg }) => [
       SYSTEM_LABEL[system] ?? system,
       `\`${model}\``,
       frac(agg.present, agg.total),
       frac(agg.limiterPresent, agg.limiterTotal),
-      agg.trapHits,
+      `${agg.trapHits} (${agg.trapClasses.flips} / ${agg.trapClasses.number} / ${agg.trapClasses.sibling})`,
       `${agg.storiesWithTrap}/${agg.stories}`,
     ]),
+  );
+}
+
+export function provenanceTable(f: ResultsFile): string {
+  return table(
+    [
+      'System',
+      'Sentences not grounded in the story, per output',
+      'Outputs with any',
+      'Unsaid diagnosis labels: exact word / label family',
+      'Words, mean / median',
+      'Reading time at 200 wpm, mean / median',
+    ],
+    f.aggregates.flatMap(({ system, agg }) => {
+      const p = agg.provenance;
+      if (!p) return [];
+      const other = agg.stories - p.supportScored;
+      return [
+        [
+          SYSTEM_LABEL[system] ?? system,
+          `${num(p.unsupportedMean, 2)} (of ${num(p.sentencesMean)} sentences)`,
+          `${p.storiesWithUnsupported}/${p.supportScored}${other > 0 ? ` (${other} not scored: other language)` : ''}`,
+          `${p.outputsWithUnsaidLabel} / ${p.outputsWithUnsaidFamily} outputs`,
+          `${Math.round(p.wordsMean)} / ${p.wordsP50}`,
+          `${sec(p.readSecMean * 1000)} / ${sec(p.readSecP50 * 1000)}`,
+        ],
+      ];
+    }),
   );
 }

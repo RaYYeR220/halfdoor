@@ -1,0 +1,819 @@
+{
+ "about": "Hand validation of the support rule (eval/metrics.ts). grounded = the story states, or translates to, everything the sentence claims. Round 1 used the rule as specified; precision was under 80%, so the rule was revised once and re-validated on a fresh sample (round 2).",
+ "rounds": [
+  {
+   "rule": "supported if >= 50% of content words (4+ letters, not stopwords, 5-char prefix) occur in the story",
+   "seed": 2026,
+   "round": 1,
+   "samples": [
+    {
+     "system": "baseline_same",
+     "storyId": "es-15",
+     "sentence": "Sitting apart makes him feel bad/left out.",
+     "flagged": "unsupported",
+     "keys": 5,
+     "inStory": 1,
+     "grounded": true,
+     "note": "Translation of \"NO necesita sentarse en mesa aparte, eso lo hace sentir mal\" (English answer to a Spanish story)."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "es-20",
+     "sentence": "Make sure walkways and the classroom have clear space for her wheelchair to move around.",
+     "flagged": "unsupported",
+     "keys": 7,
+     "inStory": 1,
+     "grounded": false,
+     "note": "Added advice; the story says nothing about walkways or room layout."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-27",
+     "sentence": "No other action needed.",
+     "flagged": "unsupported",
+     "keys": 2,
+     "inStory": 0,
+     "grounded": true,
+     "note": "Restates \"Above 250 just text me\" (the \"just\")."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "es-16",
+     "sentence": "Confidential – Please Read Before Sunday",
+     "flagged": "unsupported",
+     "keys": 3,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Boilerplate header, not from the story."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-08",
+     "sentence": "She will likely hang on to her parent at the door for a few minutes.",
+     "flagged": "unsupported",
+     "keys": 5,
+     "inStory": 2,
+     "grounded": true,
+     "note": "Paraphrase of \"will probably hang on to me at the door for a bit\"."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "es-10",
+     "sentence": "Don't single her out in front of the group.",
+     "flagged": "unsupported",
+     "keys": 3,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Added advice; the story does not mention singling her out."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-33",
+     "sentence": "Medical/Allergy Info: None.",
+     "flagged": "unsupported",
+     "keys": 4,
+     "inStory": 1,
+     "grounded": true,
+     "note": "Restates \"No medical stuff.\""
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "es-24",
+     "sentence": "Información proporcionada por su abuela y tutora.",
+     "flagged": "unsupported",
+     "keys": 4,
+     "inStory": 1,
+     "grounded": true,
+     "note": "Meta line, but true: the grandmother wrote the story and has custody."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-08",
+     "sentence": "A calm, warm greeting",
+     "flagged": "unsupported",
+     "keys": 3,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Added advice."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "es-12",
+     "sentence": "Keep the classroom door closed at all times.",
+     "flagged": "unsupported",
+     "keys": 5,
+     "inStory": 0,
+     "grounded": true,
+     "note": "Translation of \"la puerta del salón cerrada\"."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "es-16",
+     "sentence": "CUSTODY: Only her foster parents, Pablo and Ana, or her social worker, Mrs.",
+     "flagged": "unsupported",
+     "keys": 6,
+     "inStory": 2,
+     "grounded": true,
+     "note": "Translation of \"Solo nosotros (Pablo y Ana) o la trabajadora social, la señora Gómez\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "es-21",
+     "sentence": "Evite también actividades o manualidades con alimentos (por ejemplo, galletas, cereal, masa o recipientes que hayan tenido leche o huevo).",
+     "flagged": "unsupported",
+     "keys": 13,
+     "inStory": 2,
+     "grounded": false,
+     "note": "Added advice (crafts with food); not in the story."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "es-10",
+     "sentence": "Su silencio no significa que esté bien ni que no la haya oído.",
+     "flagged": "unsupported",
+     "keys": 6,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Added interpretation of her silence."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-22",
+     "sentence": "he picks up on tension.",
+     "flagged": "unsupported",
+     "keys": 2,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Not in the story."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-14",
+     "sentence": "Greet Zoe warmly and let her choose a puzzle to start.",
+     "flagged": "unsupported",
+     "keys": 5,
+     "inStory": 1,
+     "grounded": false,
+     "note": "Greeting advice added (only \"loves puzzles\" is from the story)."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "es-01",
+     "sentence": "Avise antes, si puede, de música fuerte, aplausos o juegos ruidosos.",
+     "flagged": "unsupported",
+     "keys": 6,
+     "inStory": 2,
+     "grounded": false,
+     "note": "\"Warn beforehand\" is added; the story only says loud noises scare him."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-22",
+     "sentence": "What to Do: If he seems overwhelmed or panicky, calmly and quietly invite him to step into the hallway with a leader.",
+     "flagged": "unsupported",
+     "keys": 9,
+     "inStory": 4,
+     "grounded": true,
+     "note": "Paraphrase of \"If he gets panicky let him step into the hallway with a leader\"."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "es-09",
+     "sentence": "Health Information — Please Read",
+     "flagged": "unsupported",
+     "keys": 3,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Boilerplate header."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-03",
+     "sentence": "Jonah: Volunteer Information Sheet",
+     "flagged": "unsupported",
+     "keys": 4,
+     "inStory": 1,
+     "grounded": false,
+     "note": "Boilerplate header."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "es-13",
+     "sentence": "A great way to connect with her and help her feel comfortable.",
+     "flagged": "unsupported",
+     "keys": 5,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Added."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "es-17",
+     "sentence": "Durante la alabanza fuerte o cualquier momento ruidoso, mantenerlo cerca de un adulto.",
+     "flagged": "supported",
+     "keys": 8,
+     "inStory": 5,
+     "grounded": true,
+     "note": "From \"cuando hay alabanza fuerte mejor que esté cerca de un adulto\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-25",
+     "sentence": "The tube must be replaced within one hour, or the opening can start to close.",
+     "flagged": "supported",
+     "keys": 7,
+     "inStory": 4,
+     "grounded": true,
+     "note": "From \"it has to go back in within an hour or the hole starts closing\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-17",
+     "sentence": "Penny cannot have the communion bread.",
+     "flagged": "supported",
+     "keys": 4,
+     "inStory": 3,
+     "grounded": true,
+     "note": "From \"she can't have the bread\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-11",
+     "sentence": "If a door is open, Isaiah may run toward the parking lot.",
+     "flagged": "supported",
+     "keys": 5,
+     "inStory": 5,
+     "grounded": true,
+     "note": "From \"He runs toward the parking lot if a door is open\"."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-08",
+     "sentence": "She calls her blanket \"Mimi\" and will bring it with her.",
+     "flagged": "supported",
+     "keys": 4,
+     "inStory": 4,
+     "grounded": true,
+     "note": "From \"She calls her blanket Mimi and will bring it\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "es-18",
+     "sentence": "Paula es una niña muy tímida, pero con mucho corazón.",
+     "flagged": "supported",
+     "keys": 4,
+     "inStory": 2,
+     "grounded": false,
+     "note": "\"muy tímida\" is from the story; \"con mucho corazón\" is invented."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-05",
+     "sentence": "Please give him only his own thickened drinks.",
+     "flagged": "supported",
+     "keys": 3,
+     "inStory": 2,
+     "grounded": true,
+     "note": "From \"only thickened drinks, we send them\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-17",
+     "sentence": "Penny is 8 years old and has celiac disease.",
+     "flagged": "supported",
+     "keys": 4,
+     "inStory": 3,
+     "grounded": true,
+     "note": "From the first sentence."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "es-12",
+     "sentence": "La puerta del salón siempre cerrada mientras Gael esté dentro.",
+     "flagged": "supported",
+     "keys": 6,
+     "inStory": 4,
+     "grounded": true,
+     "note": "From \"la puerta del salón cerrada\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-32",
+     "sentence": "An adult must be within arm's reach of Emma at all times during any water activity.",
+     "flagged": "supported",
+     "keys": 8,
+     "inStory": 6,
+     "grounded": true,
+     "note": "From \"an adult has to be within arm's reach of her\" (water games)."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-10",
+     "sentence": "Do NOT use the 0.15 mg Auvi-Q — that one belongs to her sister, Rose.",
+     "flagged": "supported",
+     "keys": 4,
+     "inStory": 3,
+     "grounded": true,
+     "note": "From \"NOT the 0.15 her sister Rose has\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-17",
+     "sentence": "Celiac disease is an autoimmune condition, not an anaphylactic allergy.",
+     "flagged": "supported",
+     "keys": 6,
+     "inStory": 3,
+     "grounded": false,
+     "note": "\"autoimmune condition\" is added medical information."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-15",
+     "sentence": "Allergy — bees (EpiPen): Wyatt is allergic to bees.",
+     "flagged": "supported",
+     "keys": 6,
+     "inStory": 6,
+     "grounded": true,
+     "note": "From \"allergic to bees (epipen...)\"."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-32",
+     "sentence": "Water games: Adult within arm's reach.",
+     "flagged": "supported",
+     "keys": 6,
+     "inStory": 6,
+     "grounded": true,
+     "note": "From the water-games sentence."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-09",
+     "sentence": "He lip-reads — just make sure you're facing him when you talk to him.",
+     "flagged": "supported",
+     "keys": 3,
+     "inStory": 2,
+     "grounded": true,
+     "note": "From \"he lip-reads, just face him when you talk\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "es-22",
+     "sentence": "Tiene un estimulador del nervio vago (VNS), un dispositivo implantado que ayuda a controlar las crisis.",
+     "flagged": "supported",
+     "keys": 8,
+     "inStory": 4,
+     "grounded": false,
+     "note": "\"un dispositivo implantado que ayuda a controlar las crisis\" is added explanation."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-25",
+     "sentence": "No food, no snacks, and no water, not even a sip.",
+     "flagged": "supported",
+     "keys": 4,
+     "inStory": 3,
+     "grounded": true,
+     "note": "From \"gets NOTHING by mouth, not even water\"."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "es-04",
+     "sentence": "About Camila: Camila is 4 years old and is a joy to be around.",
+     "flagged": "supported",
+     "keys": 4,
+     "inStory": 2,
+     "grounded": true,
+     "note": "Translation of \"es nuestra alegría\"."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-09",
+     "sentence": "His uncle Ray is on the pickup list and is allowed to collect him — he simply never does.",
+     "flagged": "supported",
+     "keys": 7,
+     "inStory": 4,
+     "grounded": true,
+     "note": "From \"he can, he's on the list, he just never does\"."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-32",
+     "sentence": "She falls and gets hurt, or",
+     "flagged": "supported",
+     "keys": 3,
+     "inStory": 3,
+     "grounded": true,
+     "note": "Fragment of \"only if she falls and gets hurt\"."
+    }
+   ]
+  },
+  {
+   "rule": "supported if >= 33% of content words (4+ letters, not stopwords, 5-char prefix) occur in the story; sentences of <= 4 words ignored; outputs in another language than the story not scored",
+   "seed": 2027,
+   "round": 2,
+   "samples": [
+    {
+     "system": "baseline_same",
+     "storyId": "en-33",
+     "sentence": "Here is a quick guide to help you have a great time together.",
+     "flagged": "unsupported",
+     "keys": 6,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Boilerplate."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-03",
+     "sentence": "Sunday Care Summary — Jonah (age 4)",
+     "flagged": "unsupported",
+     "keys": 4,
+     "inStory": 1,
+     "grounded": false,
+     "note": "Title; name and age are from the story, the title text is not."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-35",
+     "sentence": "If anyone other than Marcus arrives to pick her up, please check with the ministry director before releasing her.",
+     "flagged": "unsupported",
+     "keys": 8,
+     "inStory": 2,
+     "grounded": false,
+     "note": "Added policy: the story says Marcus can pick up and Kevin cannot, not \"only Marcus\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-23",
+     "sentence": "Swelling (face, lips, tongue, or throat)",
+     "flagged": "unsupported",
+     "keys": 5,
+     "inStory": 1,
+     "grounded": false,
+     "note": "\"face, lips, tongue, or throat\" is added detail; the story says \"swelling\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-18",
+     "sentence": "It's a good tool for connecting, calming him, or redirecting his attention.",
+     "flagged": "unsupported",
+     "keys": 6,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Added."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-22",
+     "sentence": "This is normal for him.",
+     "flagged": "unsupported",
+     "keys": 1,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Added gloss on \"he'll come back on his own in 5 minutes or so\"."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-21",
+     "sentence": "Use these to connect with her.",
+     "flagged": "unsupported",
+     "keys": 1,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Added."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-03",
+     "sentence": "Before Sunday: Please Confirm with His Parents",
+     "flagged": "unsupported",
+     "keys": 3,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Added."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-31",
+     "sentence": "Give him plenty of time to respond, and let him use his talker without rushing or finishing sentences for him.",
+     "flagged": "unsupported",
+     "keys": 9,
+     "inStory": 1,
+     "grounded": false,
+     "note": "Added advice; the story only says he uses a talker."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-01",
+     "sentence": "Move him somewhere quieter and give him space and calm.",
+     "flagged": "unsupported",
+     "keys": 6,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Added advice."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-11",
+     "sentence": "Safety Second: Wandering & Parking Lot",
+     "flagged": "unsupported",
+     "keys": 4,
+     "inStory": 1,
+     "grounded": false,
+     "note": "Header; \"parking lot\" is from the story, the header text is not."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-10",
+     "sentence": "Rose's Auvi-Q is a different dose (0.15 mg).",
+     "flagged": "unsupported",
+     "keys": 4,
+     "inStory": 1,
+     "grounded": true,
+     "note": "From \"NOT the 0.15 her sister Rose has\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-01",
+     "sentence": "he'll recover best with quiet and space",
+     "flagged": "unsupported",
+     "keys": 5,
+     "inStory": 1,
+     "grounded": false,
+     "note": "Added."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-12",
+     "sentence": "Quiet, low-pressure activities work well.",
+     "flagged": "unsupported",
+     "keys": 5,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Added (the story says drawing cards help)."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "es-18",
+     "sentence": "No la presiones ni la obligues.",
+     "flagged": "unsupported",
+     "keys": 2,
+     "inStory": 0,
+     "grounded": true,
+     "note": "Gist of \"si la dejan observar un rato se anima sola\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-19",
+     "sentence": "Keep pathways clear and make sure activities, tables, and seating spaces have room for her chair so she can participate alongside the other kids.",
+     "flagged": "unsupported",
+     "keys": 12,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Added advice."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "es-04",
+     "sentence": "déjela descansar tranquila y cerca de usted.",
+     "flagged": "unsupported",
+     "keys": 4,
+     "inStory": 0,
+     "grounded": false,
+     "note": "\"déjela descansar ... cerca de usted\" is added; the story says lay her on her side."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-25",
+     "sentence": "Let me know if you'd like it shorter, reformatted for a specific template, or adjusted in tone.",
+     "flagged": "unsupported",
+     "keys": 8,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Boilerplate."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-30",
+     "sentence": "If you see her attempting a somersault or any tumbling move during play, gently redirect her to a different activity",
+     "flagged": "unsupported",
+     "keys": 9,
+     "inStory": 2,
+     "grounded": true,
+     "note": "Restates \"no somersaults, no headstands, no rough tumbling\" as an instruction."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-18",
+     "sentence": "A quick check toward the front of the room now and then is a good idea.",
+     "flagged": "unsupported",
+     "keys": 7,
+     "inStory": 0,
+     "grounded": false,
+     "note": "Added advice."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-14",
+     "sentence": "Guardian: Nana Pat (grandmother) has legal custody.",
+     "flagged": "supported",
+     "keys": 5,
+     "inStory": 3,
+     "grounded": true,
+     "note": "From \"I have custody of Zoe\" (Nana Pat)."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-21",
+     "sentence": "If her mom arrives with Travis, do not release Ruby, call 911, and get a ministry leader.",
+     "flagged": "supported",
+     "keys": 7,
+     "inStory": 3,
+     "grounded": false,
+     "note": "Mostly from the story, but \"get a ministry leader\" is added."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-32",
+     "sentence": "Thank you for caring for Emma!",
+     "flagged": "supported",
+     "keys": 3,
+     "inStory": 1,
+     "grounded": false,
+     "note": "Boilerplate (supported only because it names Emma)."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-23",
+     "sentence": "Child Summary: Nora, age 7",
+     "flagged": "supported",
+     "keys": 3,
+     "inStory": 1,
+     "grounded": false,
+     "note": "Title (supported because it names Nora and her age)."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-21",
+     "sentence": "She eats peanut butter now, so peanut butter snacks are fine for her.",
+     "flagged": "supported",
+     "keys": 7,
+     "inStory": 5,
+     "grounded": true,
+     "note": "From \"she eats peanut butter now\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-14",
+     "sentence": "Zoe's father (Derek) is NOT on the pick-up list and may not take Zoe anywhere.",
+     "flagged": "supported",
+     "keys": 7,
+     "inStory": 7,
+     "grounded": true,
+     "note": "From \"he is NOT on the pick up list and he is not allowed to take her anywhere\"."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-05",
+     "sentence": "Bathroom: Two-person transfer — get Dana (on site from 9:45)",
+     "flagged": "supported",
+     "keys": 5,
+     "inStory": 4,
+     "grounded": true,
+     "note": "From the bathroom sentence."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-08",
+     "sentence": "She calls her blanket \"Mimi\" and will bring it with her.",
+     "flagged": "supported",
+     "keys": 4,
+     "inStory": 4,
+     "grounded": true,
+     "note": "From the blanket sentence."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-21",
+     "sentence": "Auditory Sensitivity: She hates hand dryers and will cover her ears.",
+     "flagged": "supported",
+     "keys": 7,
+     "inStory": 5,
+     "grounded": true,
+     "note": "From \"hates hand dryers (covers her ears)\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-19",
+     "sentence": "She uses a manual wheelchair and pushes herself.",
+     "flagged": "supported",
+     "keys": 4,
+     "inStory": 4,
+     "grounded": true,
+     "note": "From the first sentence."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-26",
+     "sentence": "Do not take any pictures or video of Mason, and do not include him in anything posted online or shared digitally.",
+     "flagged": "supported",
+     "keys": 10,
+     "inStory": 4,
+     "grounded": true,
+     "note": "From item 1."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "es-06",
+     "sentence": "Comer: Dejarla sola, no ayudar",
+     "flagged": "supported",
+     "keys": 4,
+     "inStory": 3,
+     "grounded": true,
+     "note": "From \"No necesita ayuda para comer\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-34",
+     "sentence": "No one else may pick Elias up or visit him at church.",
+     "flagged": "supported",
+     "keys": 5,
+     "inStory": 4,
+     "grounded": true,
+     "note": "From \"Neither of his parents may ... visit him at church\" and \"Only ... may sign him out\"."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-25",
+     "sentence": "Give her time to use her communication board;",
+     "flagged": "supported",
+     "keys": 4,
+     "inStory": 2,
+     "grounded": false,
+     "note": "\"Give her time\" is added; the story only says she uses a board."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-20",
+     "sentence": "Call 911 at 5 minutes if the seizure is still going.",
+     "flagged": "supported",
+     "keys": 5,
+     "inStory": 3,
+     "grounded": true,
+     "note": "From \"call 911 at 5 min\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-06",
+     "sentence": "About Sofia: Sofia is a cheerful 8-year-old who has Down syndrome.",
+     "flagged": "supported",
+     "keys": 5,
+     "inStory": 3,
+     "grounded": false,
+     "note": "\"cheerful\" is added."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-15",
+     "sentence": "Elopement risk (runs away): Wyatt will leave the room if a door is open, and he has made it to the street before.",
+     "flagged": "supported",
+     "keys": 10,
+     "inStory": 6,
+     "grounded": true,
+     "note": "From \"he WILL leave the room if the door's open, he's gotten to the street before\"."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "es-12",
+     "sentence": "Usa audífonos en los dos oídos.",
+     "flagged": "supported",
+     "keys": 2,
+     "inStory": 2,
+     "grounded": true,
+     "note": "From \"usa audífonos en los dos oídos\"."
+    },
+    {
+     "system": "baseline_same",
+     "storyId": "en-19",
+     "sentence": "Shunt — Know the Warning Signs",
+     "flagged": "supported",
+     "keys": 3,
+     "inStory": 1,
+     "grounded": false,
+     "note": "Header text added (the shunt warning signs themselves are in the story)."
+    },
+    {
+     "system": "baseline_claude",
+     "storyId": "en-05",
+     "sentence": "Never lift Ethan out of his chair by yourself.",
+     "flagged": "supported",
+     "keys": 4,
+     "inStory": 3,
+     "grounded": true,
+     "note": "From \"Please don't lift him out of the chair by yourself\"."
+    }
+   ]
+  }
+ ]
+}

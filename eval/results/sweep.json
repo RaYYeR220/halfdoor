@@ -1,6 +1,6 @@
 {
  "meta": {
-  "createdAt": "2026-11-23T17:03:13.800Z",
+  "createdAt": "2026-11-23T17:48:15.056Z",
   "stories": 60,
   "systems": [
    "halfdoor",
@@ -15,8 +15,8 @@
   "claudeModel": "claude-sonnet-5-5",
   "maxTokens": 1500,
   "concurrency": 4,
-  "balanceBeforeUsd": 94.33411001,
-  "balanceAfterUsd": 94.33411001,
+  "balanceBeforeUsd": 93.88412816,
+  "balanceAfterUsd": 93.88412816,
   "liveSpendUsd": 0
  },
  "aggregates": [
@@ -25,9 +25,9 @@
    "model": "e2ee-deepseek-v4-flash",
    "agg": {
     "stories": 60,
-    "present": 153,
+    "present": 156,
     "total": 157,
-    "limiterPresent": 58,
+    "limiterPresent": 60,
     "limiterTotal": 60,
     "trapHits": 0,
     "trapClasses": {
@@ -42,10 +42,22 @@
      "safetyPrompts": 1,
      "storiesWithAny": 4
     },
-    "p50Ms": 7170,
+    "p50Ms": 7054,
     "p95Ms": 20517,
-    "costUsd": 0.011578125,
-    "errors": 1
+    "costUsd": 0.011394261000000001,
+    "errors": 0,
+    "provenance": {
+     "supportScored": 58,
+     "unsupportedMean": 0.05172413793103448,
+     "storiesWithUnsupported": 3,
+     "sentencesMean": 5.844827586206897,
+     "outputsWithUnsaidLabel": 0,
+     "outputsWithUnsaidFamily": 0,
+     "wordsMean": 92.35,
+     "wordsP50": 74,
+     "readSecMean": 27.75,
+     "readSecP50": 22
+    }
    }
   },
   {
@@ -53,9 +65,9 @@
    "model": "e2ee-deepseek-v4-flash",
    "agg": {
     "stories": 60,
-    "present": 154,
+    "present": 157,
     "total": 157,
-    "limiterPresent": 58,
+    "limiterPresent": 60,
     "limiterTotal": 60,
     "trapHits": 0,
     "trapClasses": {
@@ -70,10 +82,22 @@
      "safetyPrompts": 1,
      "storiesWithAny": 4
     },
-    "p50Ms": 7170,
+    "p50Ms": 7054,
     "p95Ms": 20517,
-    "costUsd": 0.011578125,
-    "errors": 1
+    "costUsd": 0.011394261000000001,
+    "errors": 0,
+    "provenance": {
+     "supportScored": 58,
+     "unsupportedMean": 0.05172413793103448,
+     "storiesWithUnsupported": 3,
+     "sentencesMean": 5.896551724137931,
+     "outputsWithUnsaidLabel": 0,
+     "outputsWithUnsaidFamily": 0,
+     "wordsMean": 92.98333333333333,
+     "wordsP50": 76,
+     "readSecMean": 27.95,
+     "readSecP50": 23
+    }
    }
   },
   {
@@ -81,9 +105,9 @@
    "model": "e2ee-qwen3-6-35b-a3b",
    "agg": {
     "stories": 60,
-    "present": 144,
+    "present": 149,
     "total": 157,
-    "limiterPresent": 57,
+    "limiterPresent": 58,
     "limiterTotal": 60,
     "trapHits": 0,
     "trapClasses": {
@@ -98,10 +122,22 @@
      "safetyPrompts": 1,
      "storiesWithAny": 3
     },
-    "p50Ms": 2549,
-    "p95Ms": 5621,
-    "costUsd": 0.03385382,
-    "errors": 3
+    "p50Ms": 2458,
+    "p95Ms": 3898,
+    "costUsd": 0.028965232000000004,
+    "errors": 0,
+    "provenance": {
+     "supportScored": 59,
+     "unsupportedMean": 0,
+     "storiesWithUnsupported": 0,
+     "sentencesMean": 4.559322033898305,
+     "outputsWithUnsaidLabel": 0,
+     "outputsWithUnsaidFamily": 0,
+     "wordsMean": 73.83333333333333,
+     "wordsP50": 62,
+     "readSecMean": 22.25,
+     "readSecP50": 19
+    }
    }
   },
   {
@@ -109,7 +145,7 @@
    "model": "e2ee-qwen3-6-35b-a3b",
    "agg": {
     "stories": 60,
-    "present": 147,
+    "present": 154,
     "total": 157,
     "limiterPresent": 59,
     "limiterTotal": 60,
@@ -126,10 +162,22 @@
      "safetyPrompts": 1,
      "storiesWithAny": 3
     },
-    "p50Ms": 2549,
-    "p95Ms": 5621,
-    "costUsd": 0.03385382,
-    "errors": 3
+    "p50Ms": 2458,
+    "p95Ms": 3898,
+    "costUsd": 0.028965232000000004,
+    "errors": 0,
+    "provenance": {
+     "supportScored": 59,
+     "unsupportedMean": 0,
+     "storiesWithUnsupported": 0,
+     "sentencesMean": 4.796610169491525,
+     "outputsWithUnsaidLabel": 0,
+     "outputsWithUnsaidFamily": 0,
+     "wordsMean": 77.66666666666667,
+     "wordsP50": 65,
+     "readSecMean": 23.433333333333334,
+     "readSecP50": 20
+    }
    }
   },
   {
@@ -157,7 +205,19 @@
     "p50Ms": 9939,
     "p95Ms": 16436,
     "costUsd": 0.04859114,
-    "errors": 0
+    "errors": 0,
+    "provenance": {
+     "supportScored": 58,
+     "unsupportedMean": 0.034482758620689655,
+     "storiesWithUnsupported": 2,
+     "sentencesMean": 4.241379310344827,
+     "outputsWithUnsaidLabel": 0,
+     "outputsWithUnsaidFamily": 0,
+     "wordsMean": 63.3,
+     "wordsP50": 59,
+     "readSecMean": 19.05,
+     "readSecP50": 18
+    }
    }
   },
   {
@@ -185,7 +245,19 @@
     "p50Ms": 9939,
     "p95Ms": 16436,
     "costUsd": 0.04859114,
-    "errors": 0
+    "errors": 0,
+    "provenance": {
+     "supportScored": 59,
+     "unsupportedMean": 0.03389830508474576,
+     "storiesWithUnsupported": 2,
+     "sentencesMean": 4.627118644067797,
+     "outputsWithUnsaidLabel": 0,
+     "outputsWithUnsaidFamily": 0,
+     "wordsMean": 68.75,
+     "wordsP50": 64,
+     "readSecMean": 20.7,
+     "readSecP50": 19
+    }
    }
   },
   {
@@ -212,8 +284,20 @@
     },
     "p50Ms": 31629,
     "p95Ms": 124693,
-    "costUsd": 0.08971095999999999,
-    "errors": 0
+    "costUsd": 0.08847761999999999,
+    "errors": 0,
+    "provenance": {
+     "supportScored": 58,
+     "unsupportedMean": 0.06896551724137931,
+     "storiesWithUnsupported": 4,
+     "sentencesMean": 5.310344827586207,
+     "outputsWithUnsaidLabel": 0,
+     "outputsWithUnsaidFamily": 0,
+     "wordsMean": 81.41666666666667,
+     "wordsP50": 74,
+     "readSecMean": 24.45,
+     "readSecP50": 22
+    }
    }
   },
   {
@@ -240,8 +324,20 @@
     },
     "p50Ms": 31629,
     "p95Ms": 124693,
-    "costUsd": 0.08971095999999999,
-    "errors": 0
+    "costUsd": 0.08847761999999999,
+    "errors": 0,
+    "provenance": {
+     "supportScored": 58,
+     "unsupportedMean": 0.06896551724137931,
+     "storiesWithUnsupported": 4,
+     "sentencesMean": 5.344827586206897,
+     "outputsWithUnsaidLabel": 0,
+     "outputsWithUnsaidFamily": 0,
+     "wordsMean": 81.86666666666666,
+     "wordsP50": 74,
+     "readSecMean": 24.6,
+     "readSecP50": 22
+    }
    }
   }
  ],
@@ -254,15 +350,15 @@
     "model": "e2ee-deepseek-v4-flash",
     "flips": 0,
     "trapHits": 0,
-    "presentRate": 0.9745222929936306,
-    "p50Ms": 7170
+    "presentRate": 0.9936305732484076,
+    "p50Ms": 7054
    },
    {
     "model": "e2ee-qwen3-6-35b-a3b",
     "flips": 0,
     "trapHits": 0,
-    "presentRate": 0.9171974522292994,
-    "p50Ms": 2549
+    "presentRate": 0.9490445859872612,
+    "p50Ms": 2458
    },
    {
     "model": "e2ee-glm-5-3-flash",
@@ -304,7 +400,16 @@
    "costUsd": 0.00021736899999999997,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 110,
+    "readSec": 33
+   }
   },
   {
    "system": "halfdoor",
@@ -329,7 +434,16 @@
    "costUsd": 0.000586916,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 80,
+    "readSec": 24
+   }
   },
   {
    "system": "halfdoor",
@@ -354,7 +468,16 @@
    "costUsd": 0.00082706,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 68,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -379,7 +502,16 @@
    "costUsd": 0.0020161800000000002,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 93,
+    "readSec": 28
+   }
   },
   {
    "system": "halfdoor",
@@ -404,7 +536,16 @@
    "costUsd": 0.00021097399999999998,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 87,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor",
@@ -429,7 +570,16 @@
    "costUsd": 0.000589012,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 74,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor",
@@ -454,7 +604,16 @@
    "costUsd": 0.00076479,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 86,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor",
@@ -479,7 +638,16 @@
    "costUsd": 0.00124412,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 103,
+    "readSec": 31
+   }
   },
   {
    "system": "halfdoor",
@@ -504,7 +672,16 @@
    "costUsd": 0.00018978499999999999,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 78,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor",
@@ -525,11 +702,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 4505,
-   "costUsd": 0.0009001719999999999,
+   "latencyMs": 2335,
+   "costUsd": 0.000457568,
    "cached": true,
-   "safetyItems": 2,
-   "safetyPrompts": 2
+   "safetyItems": 4,
+   "safetyPrompts": 2,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 79,
+    "readSec": 24
+   }
   },
   {
    "system": "halfdoor",
@@ -554,7 +740,16 @@
    "costUsd": 0.0005726500000000001,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 63,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor",
@@ -579,7 +774,16 @@
    "costUsd": 0.0013994,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 78,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor",
@@ -604,7 +808,16 @@
    "costUsd": 0.00019025,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 99,
+    "readSec": 30
+   }
   },
   {
    "system": "halfdoor",
@@ -625,11 +838,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 4978,
-   "costUsd": 0.001017192,
+   "latencyMs": 2235,
+   "costUsd": 0.0005154879999999999,
    "cached": true,
-   "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyItems": 1,
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 80,
+    "readSec": 24
+   }
   },
   {
    "system": "halfdoor",
@@ -654,7 +876,16 @@
    "costUsd": 0.0009672000000000001,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 92,
+    "readSec": 28
+   }
   },
   {
    "system": "halfdoor",
@@ -679,7 +910,16 @@
    "costUsd": 0.0016391200000000002,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 107,
+    "readSec": 32
+   }
   },
   {
    "system": "halfdoor",
@@ -704,7 +944,16 @@
    "costUsd": 0.000181815,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 69,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor",
@@ -725,11 +974,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 5905,
-   "costUsd": 0.0011308120000000001,
+   "latencyMs": 3253,
+   "costUsd": 0.000582918,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 62,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor",
@@ -754,7 +1012,16 @@
    "costUsd": 0.00069823,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 35,
+    "readSec": 11
+   }
   },
   {
    "system": "halfdoor",
@@ -779,7 +1046,16 @@
    "costUsd": 0.0013356400000000001,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 74,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor",
@@ -804,7 +1080,16 @@
    "costUsd": 0.00018524600000000002,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 87,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor",
@@ -829,7 +1114,16 @@
    "costUsd": 0.0004791779999999999,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 80,
+    "readSec": 24
+   }
   },
   {
    "system": "halfdoor",
@@ -854,7 +1148,16 @@
    "costUsd": 0.00066066,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 68,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -879,7 +1182,16 @@
    "costUsd": 0.00117716,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 80,
+    "readSec": 24
+   }
   },
   {
    "system": "halfdoor",
@@ -904,7 +1216,16 @@
    "costUsd": 0.00019899099999999998,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 147,
+    "readSec": 44
+   }
   },
   {
    "system": "halfdoor",
@@ -929,7 +1250,16 @@
    "costUsd": 0.000594624,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 145,
+    "readSec": 44
+   }
   },
   {
    "system": "halfdoor",
@@ -954,7 +1284,16 @@
    "costUsd": 0.00087126,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 110,
+    "readSec": 33
+   }
   },
   {
    "system": "halfdoor",
@@ -979,7 +1318,16 @@
    "costUsd": 0.00170944,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 75,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor",
@@ -1004,7 +1352,16 @@
    "costUsd": 0.00015968000000000002,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 65,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -1029,7 +1386,16 @@
    "costUsd": 0.000392022,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 50,
+    "readSec": 15
+   }
   },
   {
    "system": "halfdoor",
@@ -1054,7 +1420,16 @@
    "costUsd": 0.0004927,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 37,
+    "readSec": 11
+   }
   },
   {
    "system": "halfdoor",
@@ -1079,7 +1454,16 @@
    "costUsd": 0.00142596,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 74,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor",
@@ -1104,7 +1488,16 @@
    "costUsd": 0.000330646,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 9,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 92,
+    "readSec": 28
+   }
   },
   {
    "system": "halfdoor",
@@ -1131,7 +1524,16 @@
    "costUsd": 0.00052892,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 73,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor",
@@ -1158,7 +1560,16 @@
    "costUsd": 0.0012194,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 52,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor",
@@ -1183,7 +1594,16 @@
    "costUsd": 0.0021398800000000003,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 9,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 108,
+    "readSec": 32
+   }
   },
   {
    "system": "halfdoor",
@@ -1208,7 +1628,16 @@
    "costUsd": 0.00020021999999999998,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 82,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor",
@@ -1233,7 +1662,16 @@
    "costUsd": 0.000504134,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 62,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor",
@@ -1258,7 +1696,16 @@
    "costUsd": 0.00098787,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 77,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor",
@@ -1283,7 +1730,16 @@
    "costUsd": 0.0012976600000000002,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 75,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor",
@@ -1308,7 +1764,16 @@
    "costUsd": 0.00022350099999999997,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 107,
+    "readSec": 32
+   }
   },
   {
    "system": "halfdoor",
@@ -1316,14 +1781,12 @@
    "storyId": "en-11",
    "noSafety": false,
    "score": {
-    "present": 2,
+    "present": 3,
     "total": 3,
-    "limiterPresent": 0,
+    "limiterPresent": 1,
     "limiterTotal": 1,
     "flips": [],
-    "missing": [
-     "both_parents_pickup"
-    ],
+    "missing": [],
     "trapHits": [],
     "trapClasses": {
      "flips": [],
@@ -1331,11 +1794,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 5272,
-   "costUsd": 0.0011884679999999998,
+   "latencyMs": 2924,
+   "costUsd": 0.000685496,
    "cached": true,
-   "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyItems": 4,
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 80,
+    "readSec": 24
+   }
   },
   {
    "system": "halfdoor",
@@ -1362,7 +1834,16 @@
    "costUsd": 0.00085709,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 64,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor",
@@ -1387,7 +1868,16 @@
    "costUsd": 0.0022068400000000003,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 89,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor",
@@ -1412,7 +1902,16 @@
    "costUsd": 0.00020608,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 113,
+    "readSec": 34
+   }
   },
   {
    "system": "halfdoor",
@@ -1437,7 +1936,16 @@
    "costUsd": 0.0007032019999999999,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 121,
+    "readSec": 36
+   }
   },
   {
    "system": "halfdoor",
@@ -1462,7 +1970,16 @@
    "costUsd": 0.0011550500000000001,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 66,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -1487,7 +2004,16 @@
    "costUsd": 0.0024803200000000003,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 138,
+    "readSec": 41
+   }
   },
   {
    "system": "halfdoor",
@@ -1512,7 +2038,16 @@
    "costUsd": 0.00017157999999999998,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 61,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor",
@@ -1537,7 +2072,16 @@
    "costUsd": 0.00045483799999999994,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -1562,7 +2106,18 @@
    "costUsd": 0.00108342,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [
+     "volunteers should encourage fair play."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 64,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor",
@@ -1587,7 +2142,16 @@
    "costUsd": 0.0023751600000000003,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 58,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -1612,7 +2176,16 @@
    "costUsd": 0.000219443,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 9,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 146,
+    "readSec": 44
+   }
   },
   {
    "system": "halfdoor",
@@ -1637,7 +2210,16 @@
    "costUsd": 0.0005096699999999999,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 103,
+    "readSec": 31
+   }
   },
   {
    "system": "halfdoor",
@@ -1664,7 +2246,16 @@
    "costUsd": 0.0007131800000000001,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 58,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -1689,7 +2280,16 @@
    "costUsd": 0.0012607800000000002,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 102,
+    "readSec": 31
+   }
   },
   {
    "system": "halfdoor",
@@ -1714,7 +2314,16 @@
    "costUsd": 0.000187682,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 59,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor",
@@ -1739,7 +2348,16 @@
    "costUsd": 0.000382124,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 51,
+    "readSec": 15
+   }
   },
   {
    "system": "halfdoor",
@@ -1766,7 +2384,16 @@
    "costUsd": 0.00034346,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 2,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 30,
+    "readSec": 9
+   }
   },
   {
    "system": "halfdoor",
@@ -1791,7 +2418,16 @@
    "costUsd": 0.0017301600000000001,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 61,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor",
@@ -1816,7 +2452,16 @@
    "costUsd": 0.000155231,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 58,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -1841,7 +2486,16 @@
    "costUsd": 0.00041353199999999993,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -1866,7 +2520,16 @@
    "costUsd": 0.00068146,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 51,
+    "readSec": 15
+   }
   },
   {
    "system": "halfdoor",
@@ -1891,7 +2554,16 @@
    "costUsd": 0.0008472,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": false,
+    "sentences": 0,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 60,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor",
@@ -1916,7 +2588,16 @@
    "costUsd": 0.000199892,
    "cached": true,
    "safetyItems": 6,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 164,
+    "readSec": 49
+   }
   },
   {
    "system": "halfdoor",
@@ -1941,7 +2622,16 @@
    "costUsd": 0.00036879199999999995,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 74,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor",
@@ -1966,7 +2656,16 @@
    "costUsd": 0.00080353,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 59,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor",
@@ -1991,7 +2690,16 @@
    "costUsd": 0.0008197800000000001,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 87,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor",
@@ -2016,7 +2724,16 @@
    "costUsd": 0.000165248,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 69,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor",
@@ -2041,7 +2758,16 @@
    "costUsd": 0.000423612,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 2
+   "safetyPrompts": 2,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 53,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor",
@@ -2066,7 +2792,16 @@
    "costUsd": 0.00075907,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 47,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor",
@@ -2091,7 +2826,16 @@
    "costUsd": 0.0016168400000000002,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 79,
+    "readSec": 24
+   }
   },
   {
    "system": "halfdoor",
@@ -2116,7 +2860,16 @@
    "costUsd": 0.00017883099999999998,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 77,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor",
@@ -2124,17 +2877,12 @@
    "storyId": "en-19",
    "noSafety": false,
    "score": {
-    "present": 0,
+    "present": 4,
     "total": 4,
-    "limiterPresent": 0,
+    "limiterPresent": 1,
     "limiterTotal": 1,
     "flips": [],
-    "missing": [
-     "latex_allergy",
-     "no_latex_balloons_gloves",
-     "shunt_symptoms_911",
-     "cath_every_3h"
-    ],
+    "missing": [],
     "trapHits": [],
     "trapClasses": {
      "flips": [],
@@ -2142,12 +2890,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 5406,
-   "costUsd": 0.0010509360000000001,
+   "latencyMs": 2860,
+   "costUsd": 0.0006043400000000001,
    "cached": true,
-   "safetyItems": 0,
+   "safetyItems": 3,
    "safetyPrompts": 0,
-   "error": "Error: the model did not return a usable card"
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 93,
+    "readSec": 28
+   }
   },
   {
    "system": "halfdoor",
@@ -2172,7 +2928,16 @@
    "costUsd": 0.0010156899999999999,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 60,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor",
@@ -2197,7 +2962,16 @@
    "costUsd": 0.0009186,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 77,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor",
@@ -2222,7 +2996,16 @@
    "costUsd": 0.000192969,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 108,
+    "readSec": 32
+   }
   },
   {
    "system": "halfdoor",
@@ -2247,7 +3030,16 @@
    "costUsd": 0.00047472199999999996,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 108,
+    "readSec": 32
+   }
   },
   {
    "system": "halfdoor",
@@ -2272,7 +3064,16 @@
    "costUsd": 0.00121914,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 89,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor",
@@ -2297,7 +3098,16 @@
    "costUsd": 0.00080692,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 85,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor",
@@ -2322,7 +3132,16 @@
    "costUsd": 0.000195016,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 139,
+    "readSec": 42
+   }
   },
   {
    "system": "halfdoor",
@@ -2347,7 +3166,16 @@
    "costUsd": 0.000458566,
    "cached": true,
    "safetyItems": 6,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 213,
+    "readSec": 64
+   }
   },
   {
    "system": "halfdoor",
@@ -2372,7 +3200,16 @@
    "costUsd": 0.00077766,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 70,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor",
@@ -2397,7 +3234,16 @@
    "costUsd": 0.00117822,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 99,
+    "readSec": 30
+   }
   },
   {
    "system": "halfdoor",
@@ -2422,7 +3268,18 @@
    "costUsd": 0.00022164500000000002,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [
+     "include him naturally with the group."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 133,
+    "readSec": 40
+   }
   },
   {
    "system": "halfdoor",
@@ -2430,12 +3287,14 @@
    "storyId": "en-22",
    "noSafety": false,
    "score": {
-    "present": 3,
+    "present": 2,
     "total": 3,
-    "limiterPresent": 2,
+    "limiterPresent": 1,
     "limiterTotal": 2,
     "flips": [],
-    "missing": [],
+    "missing": [
+     "no_plain_milk"
+    ],
     "trapHits": [],
     "trapClasses": {
      "flips": [],
@@ -2443,11 +3302,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 6109,
-   "costUsd": 0.0009224160000000001,
+   "latencyMs": 3801,
+   "costUsd": 0.00040792000000000004,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 2,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 53,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor",
@@ -2472,7 +3340,16 @@
    "costUsd": 0.0007714200000000001,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 76,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor",
@@ -2497,7 +3374,18 @@
    "costUsd": 0.0012815600000000002,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [
+     "He hates being singled out - avoid putting him on the spot in front of the group."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 107,
+    "readSec": 32
+   }
   },
   {
    "system": "halfdoor",
@@ -2522,7 +3410,16 @@
    "costUsd": 0.00016078999999999998,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 61,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor",
@@ -2547,7 +3444,16 @@
    "costUsd": 0.0005188279999999999,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 62,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor",
@@ -2572,7 +3478,16 @@
    "costUsd": 0.00071812,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 61,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor",
@@ -2597,7 +3512,16 @@
    "costUsd": 0.00085874,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 68,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -2622,7 +3546,16 @@
    "costUsd": 0.00016065300000000002,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": false,
+    "sentences": 0,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 71,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor",
@@ -2647,7 +3580,16 @@
    "costUsd": 0.000420882,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": false,
+    "sentences": 0,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -2672,7 +3614,16 @@
    "costUsd": 0.00096187,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 45,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor",
@@ -2697,7 +3648,16 @@
    "costUsd": 0.0007843,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -2722,7 +3682,18 @@
    "costUsd": 0.00021734199999999998,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [
+     "support her mobility as needed."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 136,
+    "readSec": 41
+   }
   },
   {
    "system": "halfdoor",
@@ -2747,7 +3718,16 @@
    "costUsd": 0.000605526,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 90,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor",
@@ -2772,7 +3752,16 @@
    "costUsd": 0.0012279800000000003,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 2,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 62,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor",
@@ -2797,7 +3786,18 @@
    "costUsd": 0.00263328,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [
+     "She laughs at everything — humor, silliness, and fun moments connect easily with her."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 132,
+    "readSec": 40
+   }
   },
   {
    "system": "halfdoor",
@@ -2822,7 +3822,16 @@
    "costUsd": 0.000150665,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 65,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -2847,7 +3856,16 @@
    "costUsd": 0.000325678,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 52,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor",
@@ -2872,7 +3890,16 @@
    "costUsd": 0.00061048,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 61,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor",
@@ -2897,7 +3924,16 @@
    "costUsd": 0.0012525400000000001,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 65,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -2922,7 +3958,16 @@
    "costUsd": 0.00019702699999999998,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 78,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor",
@@ -2947,7 +3992,16 @@
    "costUsd": 0.00040647,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 82,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor",
@@ -2972,7 +4026,16 @@
    "costUsd": 0.0006264700000000001,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 66,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -2997,7 +4060,16 @@
    "costUsd": 0.0014799000000000001,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 89,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor",
@@ -3022,7 +4094,16 @@
    "costUsd": 0.00017400899999999998,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": false,
+    "sentences": 0,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 52,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor",
@@ -3047,7 +4128,16 @@
    "costUsd": 0.00045719799999999997,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 36,
+    "readSec": 11
+   }
   },
   {
    "system": "halfdoor",
@@ -3072,7 +4162,16 @@
    "costUsd": 0.00059163,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 50,
+    "readSec": 15
+   }
   },
   {
    "system": "halfdoor",
@@ -3097,7 +4196,16 @@
    "costUsd": 0.00379066,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 64,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor",
@@ -3122,7 +4230,16 @@
    "costUsd": 0.00021188200000000002,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 9,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 125,
+    "readSec": 38
+   }
   },
   {
    "system": "halfdoor",
@@ -3130,13 +4247,12 @@
    "storyId": "en-29",
    "noSafety": false,
    "score": {
-    "present": 0,
+    "present": 1,
     "total": 2,
     "limiterPresent": 0,
     "limiterTotal": 0,
     "flips": [],
     "missing": [
-     "stairs_adult_behind",
      "josh_may_sign_out"
     ],
     "trapHits": [],
@@ -3146,12 +4262,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 4969,
-   "costUsd": 0.0010356719999999999,
+   "latencyMs": 2611,
+   "costUsd": 0.0005731079999999999,
    "cached": true,
-   "safetyItems": 0,
-   "safetyPrompts": 0,
-   "error": "Error: the model did not return a usable card"
+   "safetyItems": 1,
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 1,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 16,
+    "readSec": 5
+   }
   },
   {
    "system": "halfdoor",
@@ -3176,7 +4300,16 @@
    "costUsd": 0.00079131,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 30,
+    "readSec": 9
+   }
   },
   {
    "system": "halfdoor",
@@ -3201,7 +4334,16 @@
    "costUsd": 0.0008845,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 65,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -3226,7 +4368,16 @@
    "costUsd": 0.000163093,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 83,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor",
@@ -3251,7 +4402,16 @@
    "costUsd": 0.000352278,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 123,
+    "readSec": 37
+   }
   },
   {
    "system": "halfdoor",
@@ -3276,7 +4436,16 @@
    "costUsd": 0.00096161,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 89,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor",
@@ -3297,11 +4466,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 26509,
-   "costUsd": 0.00234518,
+   "latencyMs": 12202,
+   "costUsd": 0.00111184,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 90,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor",
@@ -3326,7 +4504,16 @@
    "costUsd": 0.000182898,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 72,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor",
@@ -3353,7 +4540,16 @@
    "costUsd": 0.000355178,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 41,
+    "readSec": 12
+   }
   },
   {
    "system": "halfdoor",
@@ -3378,7 +4574,16 @@
    "costUsd": 0.00085189,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": false,
+    "sentences": 0,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -3403,7 +4608,16 @@
    "costUsd": 0.0030024,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 91,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor",
@@ -3411,16 +4625,12 @@
    "storyId": "en-32",
    "noSafety": false,
    "score": {
-    "present": 0,
+    "present": 3,
     "total": 3,
-    "limiterPresent": 0,
+    "limiterPresent": 2,
     "limiterTotal": 2,
     "flips": [],
-    "missing": [
-     "absence_note_time",
-     "no_911_unless_fall_or_convulsive",
-     "water_arms_reach"
-    ],
+    "missing": [],
     "trapHits": [],
     "trapClasses": {
      "flips": [],
@@ -3428,12 +4638,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 11464,
-   "costUsd": 0.00038185499999999995,
+   "latencyMs": 6917,
+   "costUsd": 0.00019799099999999998,
    "cached": true,
-   "safetyItems": 0,
+   "safetyItems": 4,
    "safetyPrompts": 0,
-   "error": "Error: the model did not return a usable card"
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 114,
+    "readSec": 34
+   }
   },
   {
    "system": "halfdoor",
@@ -3458,7 +4676,16 @@
    "costUsd": 0.0005398979999999999,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 86,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor",
@@ -3483,7 +4710,16 @@
    "costUsd": 0.0009301500000000001,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 87,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor",
@@ -3508,7 +4744,16 @@
    "costUsd": 0.0017948400000000002,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 84,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor",
@@ -3533,7 +4778,16 @@
    "costUsd": 0.000161763,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 67,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -3558,7 +4812,16 @@
    "costUsd": 0.000375226,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 41,
+    "readSec": 12
+   }
   },
   {
    "system": "halfdoor",
@@ -3583,7 +4846,16 @@
    "costUsd": 0.0006806799999999999,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": false,
+    "sentences": 0,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 37,
+    "readSec": 11
+   }
   },
   {
    "system": "halfdoor",
@@ -3608,7 +4880,16 @@
    "costUsd": 0.0006994600000000001,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": false,
+    "sentences": 0,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 58,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -3633,7 +4914,16 @@
    "costUsd": 0.00017119799999999998,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 76,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor",
@@ -3658,7 +4948,16 @@
    "costUsd": 0.00037714,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 82,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor",
@@ -3683,7 +4982,16 @@
    "costUsd": 0.00058487,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 68,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -3708,7 +5016,16 @@
    "costUsd": 0.001206,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 86,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor",
@@ -3733,7 +5050,16 @@
    "costUsd": 0.00016210900000000002,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 62,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor",
@@ -3758,7 +5084,16 @@
    "costUsd": 0.000248878,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 63,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor",
@@ -3783,7 +5118,16 @@
    "costUsd": 0.0007931300000000001,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 61,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor",
@@ -3808,7 +5152,18 @@
    "costUsd": 0.0010579,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [
+     "She's obsessed with cats — cat stories, pictures, or toys are an easy way to connect."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 73,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor",
@@ -3833,7 +5188,16 @@
    "costUsd": 0.00022381999999999998,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 68,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -3858,7 +5222,16 @@
    "costUsd": 0.000899164,
    "cached": true,
    "safetyItems": 6,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 11,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 89,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor",
@@ -3883,7 +5256,16 @@
    "costUsd": 0.00099619,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 67,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -3908,7 +5290,16 @@
    "costUsd": 0.0019446,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 75,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor",
@@ -3935,7 +5326,16 @@
    "costUsd": 0.00019569,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 64,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor",
@@ -3962,7 +5362,16 @@
    "costUsd": 0.000586828,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 2
+   "safetyPrompts": 2,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 58,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -3989,7 +5398,16 @@
    "costUsd": 0.00071929,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 2
+   "safetyPrompts": 2,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -4014,7 +5432,16 @@
    "costUsd": 0.0009105200000000001,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 70,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor",
@@ -4039,7 +5466,16 @@
    "costUsd": 0.000208298,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 90,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor",
@@ -4064,7 +5500,16 @@
    "costUsd": 0.000364248,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 2,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 40,
+    "readSec": 12
+   }
   },
   {
    "system": "halfdoor",
@@ -4089,7 +5534,16 @@
    "costUsd": 0.00092196,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 42,
+    "readSec": 13
+   }
   },
   {
    "system": "halfdoor",
@@ -4114,7 +5568,16 @@
    "costUsd": 0.00129396,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 74,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor",
@@ -4139,7 +5602,16 @@
    "costUsd": 0.00018101499999999997,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 60,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor",
@@ -4147,12 +5619,16 @@
    "storyId": "es-04",
    "noSafety": false,
    "score": {
-    "present": 3,
+    "present": 0,
     "total": 3,
     "limiterPresent": 0,
     "limiterTotal": 0,
     "flips": [],
-    "missing": [],
+    "missing": [
+     "spray_after_3min",
+     "seizure_911",
+     "on_her_side"
+    ],
     "trapHits": [],
     "trapClasses": {
      "flips": [],
@@ -4160,11 +5636,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 4222,
-   "costUsd": 0.0009184999999999999,
+   "latencyMs": 2371,
+   "costUsd": 0.0005587719999999999,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 1,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 10,
+    "readSec": 3
+   }
   },
   {
    "system": "halfdoor",
@@ -4189,7 +5674,16 @@
    "costUsd": 0.00060229,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 53,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor",
@@ -4214,7 +5708,16 @@
    "costUsd": 0.00141258,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 59,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor",
@@ -4239,7 +5742,16 @@
    "costUsd": 0.000147207,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 53,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor",
@@ -4264,7 +5776,16 @@
    "costUsd": 0.000341094,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 35,
+    "readSec": 11
+   }
   },
   {
    "system": "halfdoor",
@@ -4289,7 +5810,16 @@
    "costUsd": 0.00111826,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 47,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor",
@@ -4314,7 +5844,16 @@
    "costUsd": 0.00236958,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 65,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -4339,7 +5878,16 @@
    "costUsd": 0.000191077,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 121,
+    "readSec": 36
+   }
   },
   {
    "system": "halfdoor",
@@ -4364,7 +5912,16 @@
    "costUsd": 0.000557592,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 111,
+    "readSec": 33
+   }
   },
   {
    "system": "halfdoor",
@@ -4389,7 +5946,16 @@
    "costUsd": 0.00089869,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 64,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor",
@@ -4414,7 +5980,16 @@
    "costUsd": 0.00090832,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 84,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor",
@@ -4439,7 +6014,16 @@
    "costUsd": 0.000174301,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 53,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor",
@@ -4464,7 +6048,16 @@
    "costUsd": 0.000546062,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -4489,7 +6082,16 @@
    "costUsd": 0.00079963,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 53,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor",
@@ -4514,7 +6116,16 @@
    "costUsd": 0.0007544200000000001,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 52,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor",
@@ -4539,7 +6150,16 @@
    "costUsd": 0.000171407,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 70,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor",
@@ -4564,7 +6184,16 @@
    "costUsd": 0.00040064599999999994,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 54,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor",
@@ -4589,7 +6218,16 @@
    "costUsd": 0.00044772000000000003,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 2,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 32,
+    "readSec": 10
+   }
   },
   {
    "system": "halfdoor",
@@ -4614,7 +6252,16 @@
    "costUsd": 0.00151986,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 58,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -4639,7 +6286,16 @@
    "costUsd": 0.000162637,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -4664,7 +6320,16 @@
    "costUsd": 0.0005432439999999999,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -4689,7 +6354,16 @@
    "costUsd": 0.0008932300000000001,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -4714,7 +6388,16 @@
    "costUsd": 0.00158196,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -4739,7 +6422,16 @@
    "costUsd": 0.000224101,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 142,
+    "readSec": 43
+   }
   },
   {
    "system": "halfdoor",
@@ -4764,7 +6456,16 @@
    "costUsd": 0.00042506799999999996,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 51,
+    "readSec": 15
+   }
   },
   {
    "system": "halfdoor",
@@ -4791,7 +6492,16 @@
    "costUsd": 0.0013405600000000002,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 72,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor",
@@ -4816,7 +6526,16 @@
    "costUsd": 0.0013737600000000001,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 73,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor",
@@ -4841,7 +6560,16 @@
    "costUsd": 0.000153766,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 47,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor",
@@ -4866,7 +6594,16 @@
    "costUsd": 0.0004782439999999999,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 48,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor",
@@ -4891,7 +6628,16 @@
    "costUsd": 0.00064545,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 47,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor",
@@ -4916,7 +6662,16 @@
    "costUsd": 0.00075012,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 50,
+    "readSec": 15
+   }
   },
   {
    "system": "halfdoor",
@@ -4941,7 +6696,16 @@
    "costUsd": 0.000208453,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 122,
+    "readSec": 37
+   }
   },
   {
    "system": "halfdoor",
@@ -4949,16 +6713,12 @@
    "storyId": "es-12",
    "noSafety": false,
    "score": {
-    "present": 0,
+    "present": 3,
     "total": 3,
     "limiterPresent": 0,
     "limiterTotal": 0,
     "flips": [],
-    "missing": [
-     "elopement_street",
-     "adult_hallway_door_closed",
-     "hearing_aids_off_wet"
-    ],
+    "missing": [],
     "trapHits": [],
     "trapClasses": {
      "flips": [],
@@ -4966,12 +6726,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 5621,
-   "costUsd": 0.001054012,
+   "latencyMs": 2974,
+   "costUsd": 0.00044421799999999997,
    "cached": true,
-   "safetyItems": 0,
+   "safetyItems": 2,
    "safetyPrompts": 0,
-   "error": "Error: the model did not return a usable card"
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 53,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor",
@@ -4996,7 +6764,16 @@
    "costUsd": 0.00080548,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 59,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor",
@@ -5021,7 +6798,16 @@
    "costUsd": 0.0015879800000000001,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 97,
+    "readSec": 29
+   }
   },
   {
    "system": "halfdoor",
@@ -5046,7 +6832,16 @@
    "costUsd": 0.00016372,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -5071,7 +6866,16 @@
    "costUsd": 0.000359534,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 45,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor",
@@ -5096,7 +6900,16 @@
    "costUsd": 0.0007168200000000001,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -5121,7 +6934,16 @@
    "costUsd": 0.00083982,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -5146,7 +6968,16 @@
    "costUsd": 0.000178822,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 66,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -5171,7 +7002,16 @@
    "costUsd": 0.000601522,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 85,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor",
@@ -5196,7 +7036,18 @@
    "costUsd": 0.0008687899999999999,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [
+     "no la quiten, es su voz."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 53,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor",
@@ -5221,7 +7072,16 @@
    "costUsd": 0.00361434,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 68,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -5246,7 +7106,16 @@
    "costUsd": 0.000176993,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 90,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor",
@@ -5271,7 +7140,16 @@
    "costUsd": 0.000576284,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 115,
+    "readSec": 35
+   }
   },
   {
    "system": "halfdoor",
@@ -5296,7 +7174,16 @@
    "costUsd": 0.00069199,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -5321,7 +7208,18 @@
    "costUsd": 0.0007666600000000001,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [
+     "le gusta hablar y conversar con los demás."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 76,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor",
@@ -5346,7 +7244,16 @@
    "costUsd": 0.00017470999999999999,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 74,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor",
@@ -5371,7 +7278,16 @@
    "costUsd": 0.00044439999999999996,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 82,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor",
@@ -5396,7 +7312,16 @@
    "costUsd": 0.0007030399999999999,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 82,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor",
@@ -5421,7 +7346,16 @@
    "costUsd": 0.0014772799999999999,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 82,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor",
@@ -5446,7 +7380,16 @@
    "costUsd": 0.000229723,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 531,
+    "readSec": 159
+   }
   },
   {
    "system": "halfdoor",
@@ -5471,7 +7414,16 @@
    "costUsd": 0.000410996,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 303,
+    "readSec": 91
+   }
   },
   {
    "system": "halfdoor",
@@ -5496,7 +7448,16 @@
    "costUsd": 0.0009640800000000001,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 317,
+    "readSec": 95
+   }
   },
   {
    "system": "halfdoor",
@@ -5521,7 +7482,16 @@
    "costUsd": 0.00176916,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 378,
+    "readSec": 113
+   }
   },
   {
    "system": "halfdoor",
@@ -5546,7 +7516,16 @@
    "costUsd": 0.000220151,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 101,
+    "readSec": 30
+   }
   },
   {
    "system": "halfdoor",
@@ -5571,7 +7550,16 @@
    "costUsd": 0.00036496399999999996,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 50,
+    "readSec": 15
+   }
   },
   {
    "system": "halfdoor",
@@ -5596,7 +7584,16 @@
    "costUsd": 0.0009760400000000001,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 45,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor",
@@ -5621,7 +7618,16 @@
    "costUsd": 0.0011765599999999999,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -5646,7 +7652,16 @@
    "costUsd": 0.00019402499999999999,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -5671,7 +7686,16 @@
    "costUsd": 0.00044840399999999996,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -5696,7 +7720,16 @@
    "costUsd": 0.00048477,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 39,
+    "readSec": 12
+   }
   },
   {
    "system": "halfdoor",
@@ -5721,7 +7754,16 @@
    "costUsd": 0.0014135800000000002,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -5746,7 +7788,18 @@
    "costUsd": 0.000173036,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [
+     "No la levanten, lo odia."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -5767,11 +7820,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 5155,
-   "costUsd": 0.001236096,
+   "latencyMs": 2758,
+   "costUsd": 0.0007358599999999999,
    "cached": true,
-   "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyItems": 3,
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 63,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor",
@@ -5798,7 +7860,16 @@
    "costUsd": 0.00117741,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 69,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor",
@@ -5823,7 +7894,16 @@
    "costUsd": 0.00122144,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 69,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor",
@@ -5848,7 +7928,16 @@
    "costUsd": 0.00018268899999999999,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -5873,7 +7962,16 @@
    "costUsd": 0.0005774700000000001,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 65,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -5898,7 +7996,16 @@
    "costUsd": 0.0008255,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -5923,7 +8030,16 @@
    "costUsd": 0.0017759400000000002,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 64,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor",
@@ -5948,7 +8064,16 @@
    "costUsd": 0.00020597900000000001,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 71,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor",
@@ -5973,7 +8098,16 @@
    "costUsd": 0.000538718,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 71,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor",
@@ -5998,7 +8132,16 @@
    "costUsd": 0.0007317700000000001,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 64,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor",
@@ -6023,7 +8166,16 @@
    "costUsd": 0.0014970200000000002,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 68,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor",
@@ -6048,7 +8200,16 @@
    "costUsd": 0.000132705,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 41,
+    "readSec": 12
+   }
   },
   {
    "system": "halfdoor",
@@ -6073,7 +8234,16 @@
    "costUsd": 0.000332558,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 45,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor",
@@ -6098,7 +8268,16 @@
    "costUsd": 0.00053638,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 27,
+    "readSec": 8
+   }
   },
   {
    "system": "halfdoor",
@@ -6123,7 +8302,16 @@
    "costUsd": 0.0008280000000000001,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 33,
+    "readSec": 10
+   }
   },
   {
    "system": "halfdoor",
@@ -6148,7 +8336,16 @@
    "costUsd": 0.000254123,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 131,
+    "readSec": 39
+   }
   },
   {
    "system": "halfdoor",
@@ -6173,7 +8370,16 @@
    "costUsd": 0.000393026,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -6198,7 +8404,16 @@
    "costUsd": 0.00045786000000000004,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 48,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor",
@@ -6223,7 +8438,16 @@
    "costUsd": 0.0011265399999999999,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 78,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor",
@@ -6248,7 +8472,16 @@
    "costUsd": 0.00017229899999999997,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -6273,7 +8506,16 @@
    "costUsd": 0.00036243399999999997,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor",
@@ -6298,7 +8540,16 @@
    "costUsd": 0.00069576,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 43,
+    "readSec": 13
+   }
   },
   {
    "system": "halfdoor",
@@ -6323,7 +8574,16 @@
    "costUsd": 0.0011003200000000001,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6348,7 +8608,16 @@
    "costUsd": 0.00021736899999999997,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 110,
+    "readSec": 33
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6373,7 +8642,16 @@
    "costUsd": 0.000586916,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 98,
+    "readSec": 29
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6398,7 +8676,16 @@
    "costUsd": 0.00082706,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 86,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6423,7 +8710,16 @@
    "costUsd": 0.0020161800000000002,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 93,
+    "readSec": 28
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6448,7 +8744,16 @@
    "costUsd": 0.00021097399999999998,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 87,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6473,7 +8778,16 @@
    "costUsd": 0.000589012,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 74,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6498,7 +8812,16 @@
    "costUsd": 0.00076479,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 86,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6523,7 +8846,16 @@
    "costUsd": 0.00124412,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 103,
+    "readSec": 31
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6548,7 +8880,16 @@
    "costUsd": 0.00018978499999999999,
    "cached": true,
    "safetyItems": 6,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 87,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6569,11 +8910,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 4505,
-   "costUsd": 0.0009001719999999999,
+   "latencyMs": 2335,
+   "costUsd": 0.000457568,
    "cached": true,
-   "safetyItems": 4,
-   "safetyPrompts": 2
+   "safetyItems": 6,
+   "safetyPrompts": 2,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 114,
+    "readSec": 34
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6598,7 +8948,16 @@
    "costUsd": 0.0005726500000000001,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 72,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6623,7 +8982,16 @@
    "costUsd": 0.0013994,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 87,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6648,7 +9016,16 @@
    "costUsd": 0.00019025,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 99,
+    "readSec": 30
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6669,11 +9046,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 4978,
-   "costUsd": 0.001017192,
+   "latencyMs": 2235,
+   "costUsd": 0.0005154879999999999,
    "cached": true,
-   "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyItems": 1,
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 80,
+    "readSec": 24
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6698,7 +9084,16 @@
    "costUsd": 0.0009672000000000001,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 92,
+    "readSec": 28
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6723,7 +9118,16 @@
    "costUsd": 0.0016391200000000002,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 107,
+    "readSec": 32
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6748,7 +9152,16 @@
    "costUsd": 0.000181815,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 69,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6769,11 +9182,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 5905,
-   "costUsd": 0.0011308120000000001,
+   "latencyMs": 3253,
+   "costUsd": 0.000582918,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 62,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6798,7 +9220,16 @@
    "costUsd": 0.00069823,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 41,
+    "readSec": 12
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6823,7 +9254,16 @@
    "costUsd": 0.0013356400000000001,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 74,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6848,7 +9288,16 @@
    "costUsd": 0.00018524600000000002,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 87,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6873,7 +9322,16 @@
    "costUsd": 0.0004791779999999999,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 80,
+    "readSec": 24
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6898,7 +9356,16 @@
    "costUsd": 0.00066066,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 68,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6923,7 +9390,16 @@
    "costUsd": 0.00117716,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 80,
+    "readSec": 24
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6948,7 +9424,16 @@
    "costUsd": 0.00019899099999999998,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 147,
+    "readSec": 44
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6973,7 +9458,16 @@
    "costUsd": 0.000594624,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 145,
+    "readSec": 44
+   }
   },
   {
    "system": "halfdoor_net",
@@ -6998,7 +9492,16 @@
    "costUsd": 0.00087126,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 110,
+    "readSec": 33
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7023,7 +9526,16 @@
    "costUsd": 0.00170944,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 75,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7048,7 +9560,16 @@
    "costUsd": 0.00015968000000000002,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 65,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7073,7 +9594,16 @@
    "costUsd": 0.000392022,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 50,
+    "readSec": 15
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7098,7 +9628,16 @@
    "costUsd": 0.0004927,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 37,
+    "readSec": 11
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7123,7 +9662,16 @@
    "costUsd": 0.00142596,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 74,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7148,7 +9696,16 @@
    "costUsd": 0.000330646,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 9,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 92,
+    "readSec": 28
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7173,7 +9730,16 @@
    "costUsd": 0.00052892,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 93,
+    "readSec": 28
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7198,7 +9764,16 @@
    "costUsd": 0.0012194,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 72,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7223,7 +9798,16 @@
    "costUsd": 0.0021398800000000003,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 9,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 108,
+    "readSec": 32
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7248,7 +9832,16 @@
    "costUsd": 0.00020021999999999998,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 82,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7273,7 +9866,16 @@
    "costUsd": 0.000504134,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 76,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7298,7 +9900,16 @@
    "costUsd": 0.00098787,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 77,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7323,7 +9934,16 @@
    "costUsd": 0.0012976600000000002,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 75,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7348,7 +9968,16 @@
    "costUsd": 0.00022350099999999997,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 107,
+    "readSec": 32
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7369,11 +9998,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 5272,
-   "costUsd": 0.0011884679999999998,
+   "latencyMs": 2924,
+   "costUsd": 0.000685496,
    "cached": true,
-   "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyItems": 4,
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 80,
+    "readSec": 24
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7398,7 +10036,16 @@
    "costUsd": 0.00085709,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 89,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7423,7 +10070,16 @@
    "costUsd": 0.0022068400000000003,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 89,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7448,7 +10104,16 @@
    "costUsd": 0.00020608,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 113,
+    "readSec": 34
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7473,7 +10138,16 @@
    "costUsd": 0.0007032019999999999,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 121,
+    "readSec": 36
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7498,7 +10172,16 @@
    "costUsd": 0.0011550500000000001,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 66,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7523,7 +10206,16 @@
    "costUsd": 0.0024803200000000003,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 138,
+    "readSec": 41
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7548,7 +10240,16 @@
    "costUsd": 0.00017157999999999998,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 61,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7573,7 +10274,16 @@
    "costUsd": 0.00045483799999999994,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 59,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7598,7 +10308,18 @@
    "costUsd": 0.00108342,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [
+     "volunteers should encourage fair play."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 66,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7623,7 +10344,16 @@
    "costUsd": 0.0023751600000000003,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 58,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7648,7 +10378,16 @@
    "costUsd": 0.000219443,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 9,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 146,
+    "readSec": 44
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7673,7 +10412,16 @@
    "costUsd": 0.0005096699999999999,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 103,
+    "readSec": 31
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7700,7 +10448,16 @@
    "costUsd": 0.0007131800000000001,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 75,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7725,7 +10482,16 @@
    "costUsd": 0.0012607800000000002,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 102,
+    "readSec": 31
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7750,7 +10516,16 @@
    "costUsd": 0.000187682,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 59,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7775,7 +10550,16 @@
    "costUsd": 0.000382124,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 51,
+    "readSec": 15
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7800,7 +10584,16 @@
    "costUsd": 0.00034346,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 47,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7825,7 +10618,16 @@
    "costUsd": 0.0017301600000000001,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 61,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7850,7 +10652,16 @@
    "costUsd": 0.000155231,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 58,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7875,7 +10686,16 @@
    "costUsd": 0.00041353199999999993,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7900,7 +10720,16 @@
    "costUsd": 0.00068146,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 51,
+    "readSec": 15
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7925,7 +10754,16 @@
    "costUsd": 0.0008472,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": false,
+    "sentences": 0,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 60,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7950,7 +10788,16 @@
    "costUsd": 0.000199892,
    "cached": true,
    "safetyItems": 6,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 164,
+    "readSec": 49
+   }
   },
   {
    "system": "halfdoor_net",
@@ -7975,7 +10822,16 @@
    "costUsd": 0.00036879199999999995,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 74,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8000,7 +10856,16 @@
    "costUsd": 0.00080353,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 59,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8025,7 +10890,16 @@
    "costUsd": 0.0008197800000000001,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 87,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8050,7 +10924,16 @@
    "costUsd": 0.000165248,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 85,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8075,7 +10958,16 @@
    "costUsd": 0.000423612,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 2
+   "safetyPrompts": 2,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 83,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8100,7 +10992,16 @@
    "costUsd": 0.00075907,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 61,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8125,7 +11026,16 @@
    "costUsd": 0.0016168400000000002,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 79,
+    "readSec": 24
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8150,7 +11060,16 @@
    "costUsd": 0.00017883099999999998,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 77,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8158,17 +11077,12 @@
    "storyId": "en-19",
    "noSafety": false,
    "score": {
-    "present": 0,
+    "present": 4,
     "total": 4,
-    "limiterPresent": 0,
+    "limiterPresent": 1,
     "limiterTotal": 1,
     "flips": [],
-    "missing": [
-     "latex_allergy",
-     "no_latex_balloons_gloves",
-     "shunt_symptoms_911",
-     "cath_every_3h"
-    ],
+    "missing": [],
     "trapHits": [],
     "trapClasses": {
      "flips": [],
@@ -8176,12 +11090,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 5406,
-   "costUsd": 0.0010509360000000001,
+   "latencyMs": 2860,
+   "costUsd": 0.0006043400000000001,
    "cached": true,
-   "safetyItems": 0,
+   "safetyItems": 3,
    "safetyPrompts": 0,
-   "error": "Error: the model did not return a usable card"
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 93,
+    "readSec": 28
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8206,7 +11128,16 @@
    "costUsd": 0.0010156899999999999,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 76,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8231,7 +11162,16 @@
    "costUsd": 0.0009186,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 77,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8256,7 +11196,16 @@
    "costUsd": 0.000192969,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 108,
+    "readSec": 32
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8281,7 +11230,16 @@
    "costUsd": 0.00047472199999999996,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 108,
+    "readSec": 32
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8306,7 +11264,16 @@
    "costUsd": 0.00121914,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 89,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8331,7 +11298,16 @@
    "costUsd": 0.00080692,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 85,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8356,7 +11332,16 @@
    "costUsd": 0.000195016,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 139,
+    "readSec": 42
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8381,7 +11366,16 @@
    "costUsd": 0.000458566,
    "cached": true,
    "safetyItems": 6,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 213,
+    "readSec": 64
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8406,7 +11400,16 @@
    "costUsd": 0.00077766,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 99,
+    "readSec": 30
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8431,7 +11434,16 @@
    "costUsd": 0.00117822,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 99,
+    "readSec": 30
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8456,7 +11468,18 @@
    "costUsd": 0.00022164500000000002,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [
+     "include him naturally with the group."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 133,
+    "readSec": 40
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8464,12 +11487,14 @@
    "storyId": "en-22",
    "noSafety": false,
    "score": {
-    "present": 3,
+    "present": 2,
     "total": 3,
-    "limiterPresent": 2,
+    "limiterPresent": 1,
     "limiterTotal": 2,
     "flips": [],
-    "missing": [],
+    "missing": [
+     "no_plain_milk"
+    ],
     "trapHits": [],
     "trapClasses": {
      "flips": [],
@@ -8477,11 +11502,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 6109,
-   "costUsd": 0.0009224160000000001,
+   "latencyMs": 3801,
+   "costUsd": 0.00040792000000000004,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 2,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 53,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8506,7 +11540,16 @@
    "costUsd": 0.0007714200000000001,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 76,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8531,7 +11574,18 @@
    "costUsd": 0.0012815600000000002,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [
+     "He hates being singled out - avoid putting him on the spot in front of the group."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 107,
+    "readSec": 32
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8556,7 +11610,16 @@
    "costUsd": 0.00016078999999999998,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 61,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8581,7 +11644,16 @@
    "costUsd": 0.0005188279999999999,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 62,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8606,7 +11678,16 @@
    "costUsd": 0.00071812,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 61,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8631,7 +11712,16 @@
    "costUsd": 0.00085874,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 68,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8656,7 +11746,16 @@
    "costUsd": 0.00016065300000000002,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": false,
+    "sentences": 0,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 71,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8681,7 +11780,16 @@
    "costUsd": 0.000420882,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": false,
+    "sentences": 0,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8706,7 +11814,16 @@
    "costUsd": 0.00096187,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 45,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8731,7 +11848,16 @@
    "costUsd": 0.0007843,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8756,7 +11882,18 @@
    "costUsd": 0.00021734199999999998,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [
+     "support her mobility as needed."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 136,
+    "readSec": 41
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8781,7 +11918,16 @@
    "costUsd": 0.000605526,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 90,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8806,7 +11952,16 @@
    "costUsd": 0.0012279800000000003,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 87,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8831,7 +11986,18 @@
    "costUsd": 0.00263328,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [
+     "She laughs at everything — humor, silliness, and fun moments connect easily with her."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 132,
+    "readSec": 40
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8856,7 +12022,16 @@
    "costUsd": 0.000150665,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 65,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8881,7 +12056,16 @@
    "costUsd": 0.000325678,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8906,7 +12090,16 @@
    "costUsd": 0.00061048,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 61,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8931,7 +12124,16 @@
    "costUsd": 0.0012525400000000001,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 65,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8956,7 +12158,16 @@
    "costUsd": 0.00019702699999999998,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 78,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor_net",
@@ -8981,7 +12192,16 @@
    "costUsd": 0.00040647,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 82,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9006,7 +12226,16 @@
    "costUsd": 0.0006264700000000001,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 66,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9031,7 +12260,16 @@
    "costUsd": 0.0014799000000000001,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 89,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9056,7 +12294,16 @@
    "costUsd": 0.00017400899999999998,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": false,
+    "sentences": 0,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 52,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9081,7 +12328,16 @@
    "costUsd": 0.00045719799999999997,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 36,
+    "readSec": 11
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9106,7 +12362,16 @@
    "costUsd": 0.00059163,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 50,
+    "readSec": 15
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9131,7 +12396,16 @@
    "costUsd": 0.00379066,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 64,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9156,7 +12430,16 @@
    "costUsd": 0.00021188200000000002,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 9,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 125,
+    "readSec": 38
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9164,15 +12447,12 @@
    "storyId": "en-29",
    "noSafety": false,
    "score": {
-    "present": 0,
+    "present": 2,
     "total": 2,
     "limiterPresent": 0,
     "limiterTotal": 0,
     "flips": [],
-    "missing": [
-     "stairs_adult_behind",
-     "josh_may_sign_out"
-    ],
+    "missing": [],
     "trapHits": [],
     "trapClasses": {
      "flips": [],
@@ -9180,12 +12460,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 4969,
-   "costUsd": 0.0010356719999999999,
+   "latencyMs": 2611,
+   "costUsd": 0.0005731079999999999,
    "cached": true,
-   "safetyItems": 0,
-   "safetyPrompts": 0,
-   "error": "Error: the model did not return a usable card"
+   "safetyItems": 2,
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 2,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 26,
+    "readSec": 8
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9210,7 +12498,16 @@
    "costUsd": 0.00079131,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 40,
+    "readSec": 12
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9235,7 +12532,16 @@
    "costUsd": 0.0008845,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 65,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9260,7 +12566,16 @@
    "costUsd": 0.000163093,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 83,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9285,7 +12600,16 @@
    "costUsd": 0.000352278,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 123,
+    "readSec": 37
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9310,7 +12634,16 @@
    "costUsd": 0.00096161,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 89,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9331,11 +12664,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 26509,
-   "costUsd": 0.00234518,
+   "latencyMs": 12202,
+   "costUsd": 0.00111184,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 90,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9360,7 +12702,16 @@
    "costUsd": 0.000182898,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 72,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9387,7 +12738,16 @@
    "costUsd": 0.000355178,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 61,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9412,7 +12772,16 @@
    "costUsd": 0.00085189,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 76,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9437,7 +12806,16 @@
    "costUsd": 0.0030024,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 91,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9445,16 +12823,12 @@
    "storyId": "en-32",
    "noSafety": false,
    "score": {
-    "present": 0,
+    "present": 3,
     "total": 3,
-    "limiterPresent": 0,
+    "limiterPresent": 2,
     "limiterTotal": 2,
     "flips": [],
-    "missing": [
-     "absence_note_time",
-     "no_911_unless_fall_or_convulsive",
-     "water_arms_reach"
-    ],
+    "missing": [],
     "trapHits": [],
     "trapClasses": {
      "flips": [],
@@ -9462,12 +12836,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 11464,
-   "costUsd": 0.00038185499999999995,
+   "latencyMs": 6917,
+   "costUsd": 0.00019799099999999998,
    "cached": true,
-   "safetyItems": 0,
+   "safetyItems": 4,
    "safetyPrompts": 0,
-   "error": "Error: the model did not return a usable card"
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 114,
+    "readSec": 34
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9492,7 +12874,16 @@
    "costUsd": 0.0005398979999999999,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 86,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9517,7 +12908,16 @@
    "costUsd": 0.0009301500000000001,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 87,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9542,7 +12942,16 @@
    "costUsd": 0.0017948400000000002,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 84,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9567,7 +12976,16 @@
    "costUsd": 0.000161763,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 71,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9592,7 +13010,16 @@
    "costUsd": 0.000375226,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 45,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9617,7 +13044,16 @@
    "costUsd": 0.0006806799999999999,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": false,
+    "sentences": 0,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 41,
+    "readSec": 12
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9642,7 +13078,16 @@
    "costUsd": 0.0006994600000000001,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": false,
+    "sentences": 0,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 58,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9667,7 +13112,16 @@
    "costUsd": 0.00017119799999999998,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 76,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9692,7 +13146,16 @@
    "costUsd": 0.00037714,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 82,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9717,7 +13180,16 @@
    "costUsd": 0.00058487,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 68,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9742,7 +13214,16 @@
    "costUsd": 0.001206,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 86,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9767,7 +13248,16 @@
    "costUsd": 0.00016210900000000002,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 62,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9792,7 +13282,16 @@
    "costUsd": 0.000248878,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 63,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9817,7 +13316,16 @@
    "costUsd": 0.0007931300000000001,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 61,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9842,7 +13350,18 @@
    "costUsd": 0.0010579,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [
+     "She's obsessed with cats — cat stories, pictures, or toys are an easy way to connect."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 73,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9867,7 +13386,16 @@
    "costUsd": 0.00022381999999999998,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 68,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9892,7 +13420,16 @@
    "costUsd": 0.000899164,
    "cached": true,
    "safetyItems": 6,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 11,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 89,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9917,7 +13454,16 @@
    "costUsd": 0.00099619,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 67,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9942,7 +13488,16 @@
    "costUsd": 0.0019446,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 75,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9967,7 +13522,16 @@
    "costUsd": 0.00019569,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 70,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor_net",
@@ -9992,7 +13556,16 @@
    "costUsd": 0.000586828,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 2
+   "safetyPrompts": 2,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 70,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10017,7 +13590,16 @@
    "costUsd": 0.00071929,
    "cached": true,
    "safetyItems": 6,
-   "safetyPrompts": 2
+   "safetyPrompts": 2,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 69,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10042,7 +13624,16 @@
    "costUsd": 0.0009105200000000001,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 70,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10067,7 +13658,16 @@
    "costUsd": 0.000208298,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 90,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10092,7 +13692,16 @@
    "costUsd": 0.000364248,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10117,7 +13726,16 @@
    "costUsd": 0.00092196,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10142,7 +13760,16 @@
    "costUsd": 0.00129396,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 74,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10167,7 +13794,16 @@
    "costUsd": 0.00018101499999999997,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 60,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10175,12 +13811,14 @@
    "storyId": "es-04",
    "noSafety": false,
    "score": {
-    "present": 3,
+    "present": 2,
     "total": 3,
     "limiterPresent": 0,
     "limiterTotal": 0,
     "flips": [],
-    "missing": [],
+    "missing": [
+     "on_her_side"
+    ],
     "trapHits": [],
     "trapClasses": {
      "flips": [],
@@ -10188,11 +13826,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 4222,
-   "costUsd": 0.0009184999999999999,
+   "latencyMs": 2371,
+   "costUsd": 0.0005587719999999999,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 2,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 39,
+    "readSec": 12
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10217,7 +13864,16 @@
    "costUsd": 0.00060229,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 53,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10242,7 +13898,16 @@
    "costUsd": 0.00141258,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 59,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10267,7 +13932,16 @@
    "costUsd": 0.000147207,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 53,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10292,7 +13966,16 @@
    "costUsd": 0.000341094,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 35,
+    "readSec": 11
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10317,7 +14000,16 @@
    "costUsd": 0.00111826,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 47,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10342,7 +14034,16 @@
    "costUsd": 0.00236958,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 65,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10367,7 +14068,16 @@
    "costUsd": 0.000191077,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 121,
+    "readSec": 36
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10392,7 +14102,16 @@
    "costUsd": 0.000557592,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 114,
+    "readSec": 34
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10417,7 +14136,16 @@
    "costUsd": 0.00089869,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 67,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10442,7 +14170,16 @@
    "costUsd": 0.00090832,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 84,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10467,7 +14204,16 @@
    "costUsd": 0.000174301,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10492,7 +14238,16 @@
    "costUsd": 0.000546062,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10517,7 +14272,16 @@
    "costUsd": 0.00079963,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10542,7 +14306,16 @@
    "costUsd": 0.0007544200000000001,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10567,7 +14340,16 @@
    "costUsd": 0.000171407,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 70,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10592,7 +14374,16 @@
    "costUsd": 0.00040064599999999994,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 69,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10617,7 +14408,16 @@
    "costUsd": 0.00044772000000000003,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 47,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10642,7 +14442,16 @@
    "costUsd": 0.00151986,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 73,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10667,7 +14476,16 @@
    "costUsd": 0.000162637,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10692,7 +14510,16 @@
    "costUsd": 0.0005432439999999999,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10717,7 +14544,16 @@
    "costUsd": 0.0008932300000000001,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10742,7 +14578,16 @@
    "costUsd": 0.00158196,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10767,7 +14612,16 @@
    "costUsd": 0.000224101,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 142,
+    "readSec": 43
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10792,7 +14646,16 @@
    "costUsd": 0.00042506799999999996,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 51,
+    "readSec": 15
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10819,7 +14682,16 @@
    "costUsd": 0.0013405600000000002,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 72,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10844,7 +14716,16 @@
    "costUsd": 0.0013737600000000001,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 73,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10869,7 +14750,16 @@
    "costUsd": 0.000153766,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 47,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10894,7 +14784,16 @@
    "costUsd": 0.0004782439999999999,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 48,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10919,7 +14818,16 @@
    "costUsd": 0.00064545,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 47,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10944,7 +14852,16 @@
    "costUsd": 0.00075012,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 50,
+    "readSec": 15
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10969,7 +14886,16 @@
    "costUsd": 0.000208453,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 122,
+    "readSec": 37
+   }
   },
   {
    "system": "halfdoor_net",
@@ -10977,16 +14903,12 @@
    "storyId": "es-12",
    "noSafety": false,
    "score": {
-    "present": 0,
+    "present": 3,
     "total": 3,
     "limiterPresent": 0,
     "limiterTotal": 0,
     "flips": [],
-    "missing": [
-     "elopement_street",
-     "adult_hallway_door_closed",
-     "hearing_aids_off_wet"
-    ],
+    "missing": [],
     "trapHits": [],
     "trapClasses": {
      "flips": [],
@@ -10994,12 +14916,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 5621,
-   "costUsd": 0.001054012,
+   "latencyMs": 2974,
+   "costUsd": 0.00044421799999999997,
    "cached": true,
-   "safetyItems": 0,
+   "safetyItems": 2,
    "safetyPrompts": 0,
-   "error": "Error: the model did not return a usable card"
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 53,
+    "readSec": 16
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11024,7 +14954,16 @@
    "costUsd": 0.00080548,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 59,
+    "readSec": 18
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11049,7 +14988,16 @@
    "costUsd": 0.0015879800000000001,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 97,
+    "readSec": 29
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11074,7 +15022,16 @@
    "costUsd": 0.00016372,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11099,7 +15056,16 @@
    "costUsd": 0.000359534,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 45,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11124,7 +15090,16 @@
    "costUsd": 0.0007168200000000001,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11149,7 +15124,16 @@
    "costUsd": 0.00083982,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11174,7 +15158,16 @@
    "costUsd": 0.000178822,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 66,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11199,7 +15192,16 @@
    "costUsd": 0.000601522,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 85,
+    "readSec": 26
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11224,7 +15226,18 @@
    "costUsd": 0.0008687899999999999,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [
+     "no la quiten, es su voz."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 70,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11249,7 +15262,16 @@
    "costUsd": 0.00361434,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 68,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11274,7 +15296,16 @@
    "costUsd": 0.000176993,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 90,
+    "readSec": 27
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11299,7 +15330,16 @@
    "costUsd": 0.000576284,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 115,
+    "readSec": 35
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11324,7 +15364,16 @@
    "costUsd": 0.00069199,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11349,7 +15398,18 @@
    "costUsd": 0.0007666600000000001,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [
+     "le gusta hablar y conversar con los demás."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 76,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11374,7 +15434,16 @@
    "costUsd": 0.00017470999999999999,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 74,
+    "readSec": 22
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11399,7 +15468,16 @@
    "costUsd": 0.00044439999999999996,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 82,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11424,7 +15502,16 @@
    "costUsd": 0.0007030399999999999,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 82,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11449,7 +15536,16 @@
    "costUsd": 0.0014772799999999999,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 82,
+    "readSec": 25
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11474,7 +15570,16 @@
    "costUsd": 0.000229723,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 531,
+    "readSec": 159
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11499,7 +15604,16 @@
    "costUsd": 0.000410996,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 303,
+    "readSec": 91
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11524,7 +15638,16 @@
    "costUsd": 0.0009640800000000001,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 317,
+    "readSec": 95
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11549,7 +15672,16 @@
    "costUsd": 0.00176916,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 378,
+    "readSec": 113
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11574,7 +15706,16 @@
    "costUsd": 0.000220151,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 101,
+    "readSec": 30
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11599,7 +15740,16 @@
    "costUsd": 0.00036496399999999996,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 50,
+    "readSec": 15
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11624,7 +15774,16 @@
    "costUsd": 0.0009760400000000001,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 45,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11649,7 +15808,16 @@
    "costUsd": 0.0011765599999999999,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11674,7 +15842,16 @@
    "costUsd": 0.00019402499999999999,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11699,7 +15876,16 @@
    "costUsd": 0.00044840399999999996,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11724,7 +15910,16 @@
    "costUsd": 0.00048477,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11749,7 +15944,16 @@
    "costUsd": 0.0014135800000000002,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11774,7 +15978,18 @@
    "costUsd": 0.000173036,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [
+     "No la levanten, lo odia."
+    ],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11795,11 +16010,20 @@
      "sibling": []
     }
    },
-   "latencyMs": 5155,
-   "costUsd": 0.001236096,
+   "latencyMs": 2758,
+   "costUsd": 0.0007358599999999999,
    "cached": true,
-   "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyItems": 3,
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 63,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11826,7 +16050,16 @@
    "costUsd": 0.00117741,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 69,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11851,7 +16084,16 @@
    "costUsd": 0.00122144,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 69,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11876,7 +16118,16 @@
    "costUsd": 0.00018268899999999999,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11901,7 +16152,16 @@
    "costUsd": 0.0005774700000000001,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 65,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11926,7 +16186,16 @@
    "costUsd": 0.0008255,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 56,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11951,7 +16220,16 @@
    "costUsd": 0.0017759400000000002,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 64,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor_net",
@@ -11976,7 +16254,16 @@
    "costUsd": 0.00020597900000000001,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 71,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor_net",
@@ -12001,7 +16288,16 @@
    "costUsd": 0.000538718,
    "cached": true,
    "safetyItems": 5,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 7,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 71,
+    "readSec": 21
+   }
   },
   {
    "system": "halfdoor_net",
@@ -12026,7 +16322,16 @@
    "costUsd": 0.0007317700000000001,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 64,
+    "readSec": 19
+   }
   },
   {
    "system": "halfdoor_net",
@@ -12051,7 +16356,16 @@
    "costUsd": 0.0014970200000000002,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 6,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 68,
+    "readSec": 20
+   }
   },
   {
    "system": "halfdoor_net",
@@ -12076,7 +16390,16 @@
    "costUsd": 0.000132705,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 41,
+    "readSec": 12
+   }
   },
   {
    "system": "halfdoor_net",
@@ -12101,7 +16424,16 @@
    "costUsd": 0.000332558,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 45,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor_net",
@@ -12126,7 +16458,16 @@
    "costUsd": 0.00053638,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 27,
+    "readSec": 8
+   }
   },
   {
    "system": "halfdoor_net",
@@ -12151,7 +16492,16 @@
    "costUsd": 0.0008280000000000001,
    "cached": true,
    "safetyItems": 0,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 33,
+    "readSec": 10
+   }
   },
   {
    "system": "halfdoor_net",
@@ -12176,7 +16526,16 @@
    "costUsd": 0.000254123,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 8,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 131,
+    "readSec": 39
+   }
   },
   {
    "system": "halfdoor_net",
@@ -12201,7 +16560,16 @@
    "costUsd": 0.000393026,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 57,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -12226,7 +16594,16 @@
    "costUsd": 0.00045786000000000004,
    "cached": true,
    "safetyItems": 1,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 3,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 48,
+    "readSec": 14
+   }
   },
   {
    "system": "halfdoor_net",
@@ -12251,7 +16628,16 @@
    "costUsd": 0.0011265399999999999,
    "cached": true,
    "safetyItems": 2,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 4,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 78,
+    "readSec": 23
+   }
   },
   {
    "system": "halfdoor_net",
@@ -12276,7 +16662,16 @@
    "costUsd": 0.00017229899999999997,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -12301,7 +16696,16 @@
    "costUsd": 0.00036243399999999997,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -12326,7 +16730,16 @@
    "costUsd": 0.00069576,
    "cached": true,
    "safetyItems": 3,
-   "safetyPrompts": 1
+   "safetyPrompts": 1,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   },
   {
    "system": "halfdoor_net",
@@ -12351,7 +16764,16 @@
    "costUsd": 0.0011003200000000001,
    "cached": true,
    "safetyItems": 4,
-   "safetyPrompts": 0
+   "safetyPrompts": 0,
+   "prov": {
+    "supportScored": true,
+    "sentences": 5,
+    "unsupported": [],
+    "unsaidLabels": [],
+    "unsaidFamilies": [],
+    "words": 55,
+    "readSec": 17
+   }
   }
  ]
 }

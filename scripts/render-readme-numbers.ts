@@ -2,7 +2,7 @@
 //   pnpm tsx scripts/render-readme-numbers.ts      (no-op for files or blocks that are absent)
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { adjudicate, frac, headlineTable, readAdjudication, readResults, sec, usd, type Adjudication, type ResultsFile } from '../eval/results';
+import { adjudicate, frac, headlineTable, num, provenanceTable, readAdjudication, readResults, sec, usd, type Adjudication, type ResultsFile } from '../eval/results';
 
 const BLOCK = /<!-- eval:([\w-]+) -->([\s\S]*?)<!-- \/eval:\1 -->/g;
 
@@ -24,7 +24,8 @@ export function replaceEvalBlocks(doc: string, values: Record<string, string>): 
 
 /**
  * Every name a README/CLAIMS block may use. Per system: `<system>-present|limiter|traps|flips|number|sibling|
- * stories-with-trap|p50|p95|cost` (automatic scoring) and `<system>-reviewed-present|reviewed-traps` (after hand review).
+ * stories-with-trap|p50|p95|cost` (automatic scoring), `<system>-reviewed-present|reviewed-traps` (after hand review),
+ * `<system>-ungrounded|words|read|unsaid-labels` (provenance); also `headline` and `provenance` tables.
  */
 export function evalValues(f: ResultsFile, adj: Adjudication = { items: {} }): Record<string, string> {
   const reviewed = adjudicate(f, adj);
@@ -49,7 +50,15 @@ export function evalValues(f: ResultsFile, adj: Adjudication = { items: {} }): R
     v[`${system}-reviewed-present`] = frac(r.present, r.total);
     v[`${system}-reviewed-traps`] = String(r.trapHits);
     if (agg.noSafety.safetyItems !== null) v[`${system}-noise`] = `${agg.noSafety.safetyItems} items, ${agg.noSafety.safetyPrompts} prompts on ${agg.noSafety.stories} no-safety stories`;
+    const p = agg.provenance;
+    if (p) {
+      v[`${system}-ungrounded`] = num(p.unsupportedMean, 2);
+      v[`${system}-words`] = String(Math.round(p.wordsMean));
+      v[`${system}-read`] = sec(p.readSecMean * 1000);
+      v[`${system}-unsaid-labels`] = String(p.outputsWithUnsaidFamily);
+    }
   }
+  v.provenance = provenanceTable(f);
   if (f.aggregates[0]) v['facts-total'] = String(f.aggregates[0].agg.total);
   return v;
 }

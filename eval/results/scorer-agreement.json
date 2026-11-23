@@ -1,0 +1,187 @@
+{
+ "source": "b277f60:eval/results/final.json",
+ "reviewed": 25,
+ "before": {
+  "agree": 7,
+  "disagree": [
+   "baseline_claude/en-01/only_mom_grandma",
+   "baseline_claude/en-13/cancelled_med.singulair",
+   "baseline_claude/en-23/sibling.diabetes",
+   "baseline_claude/en-32/doesnt_need.911_for_absence",
+   "baseline_claude/en-34/parents_no_pickup",
+   "baseline_claude/es-01/only_mom_grandma",
+   "baseline_claude/es-02/no_insulin",
+   "baseline_claude/es-07/only_rosa_marta",
+   "baseline_claude/es-17/double_negation.never_escapes",
+   "baseline_claude/es-19/sibling.asthma",
+   "baseline_same/en-14/father_no_pickup",
+   "baseline_same/en-17/doesnt_need.epipen",
+   "baseline_same/en-20/cancelled_med.diastat",
+   "baseline_same/en-23/sibling.diabetes",
+   "baseline_same/en-32/doesnt_need.911_for_absence",
+   "baseline_same/en-34/parents_no_pickup",
+   "baseline_same/es-24/negated_pickup.parents",
+   "baseline_same/es-24/parents_no_pickup"
+  ]
+ },
+ "after": {
+  "agree": 23,
+  "disagree": [
+   "baseline_claude/en-23/sibling.diabetes",
+   "baseline_same/en-32/doesnt_need.911_for_absence"
+  ]
+ },
+ "unreviewedNewFlags": [],
+ "items": [
+  {
+   "key": "baseline_claude/en-01/only_mom_grandma",
+   "verdict": "scorer",
+   "before": true,
+   "after": false
+  },
+  {
+   "key": "baseline_claude/en-13/cancelled_med.singulair",
+   "verdict": "scorer",
+   "before": true,
+   "after": false
+  },
+  {
+   "key": "baseline_claude/en-23/sibling.diabetes",
+   "verdict": "scorer",
+   "before": true,
+   "after": true
+  },
+  {
+   "key": "baseline_claude/en-32/doesnt_need.911_for_absence",
+   "verdict": "scorer",
+   "before": true,
+   "after": false
+  },
+  {
+   "key": "baseline_claude/en-34/parents_no_pickup",
+   "verdict": "scorer",
+   "before": true,
+   "after": false
+  },
+  {
+   "key": "baseline_claude/es-01/only_mom_grandma",
+   "verdict": "scorer",
+   "before": true,
+   "after": false
+  },
+  {
+   "key": "baseline_claude/es-02/no_insulin",
+   "verdict": "scorer",
+   "before": true,
+   "after": false
+  },
+  {
+   "key": "baseline_claude/es-07/only_rosa_marta",
+   "verdict": "scorer",
+   "before": true,
+   "after": false
+  },
+  {
+   "key": "baseline_claude/es-17/double_negation.never_escapes",
+   "verdict": "scorer",
+   "before": true,
+   "after": false
+  },
+  {
+   "key": "baseline_claude/es-19/sibling.asthma",
+   "verdict": "scorer",
+   "before": true,
+   "after": false
+  },
+  {
+   "key": "baseline_same/en-14/father_no_pickup",
+   "verdict": "scorer",
+   "before": true,
+   "after": false
+  },
+  {
+   "key": "baseline_same/en-17/doesnt_need.epipen",
+   "verdict": "scorer",
+   "before": true,
+   "after": false
+  },
+  {
+   "key": "baseline_same/en-20/cancelled_med.diastat",
+   "verdict": "scorer",
+   "before": true,
+   "after": false
+  },
+  {
+   "key": "baseline_same/en-23/sibling.diabetes",
+   "verdict": "scorer",
+   "before": true,
+   "after": false
+  },
+  {
+   "key": "baseline_same/en-32/doesnt_need.911_for_absence",
+   "verdict": "scorer",
+   "before": true,
+   "after": true
+  },
+  {
+   "key": "baseline_same/en-34/parents_no_pickup",
+   "verdict": "scorer",
+   "before": true,
+   "after": false
+  },
+  {
+   "key": "baseline_same/es-24/negated_pickup.parents",
+   "verdict": "scorer",
+   "before": true,
+   "after": false
+  },
+  {
+   "key": "baseline_same/es-24/parents_no_pickup",
+   "verdict": "scorer",
+   "before": true,
+   "after": false
+  },
+  {
+   "key": "halfdoor/en-32/absence_note_time",
+   "verdict": "real",
+   "before": true,
+   "after": true
+  },
+  {
+   "key": "halfdoor/en-32/no_911_unless_fall_or_convulsive",
+   "verdict": "real",
+   "before": true,
+   "after": true
+  },
+  {
+   "key": "halfdoor/en-32/water_arms_reach",
+   "verdict": "real",
+   "before": true,
+   "after": true
+  },
+  {
+   "key": "halfdoor/es-02/t1d",
+   "verdict": "real",
+   "before": true,
+   "after": true
+  },
+  {
+   "key": "halfdoor_net/en-32/absence_note_time",
+   "verdict": "real",
+   "before": true,
+   "after": true
+  },
+  {
+   "key": "halfdoor_net/en-32/no_911_unless_fall_or_convulsive",
+   "verdict": "real",
+   "before": true,
+   "after": true
+  },
+  {
+   "key": "halfdoor_net/en-32/water_arms_reach",
+   "verdict": "real",
+   "before": true,
+   "after": true
+  }
+ ]
+}

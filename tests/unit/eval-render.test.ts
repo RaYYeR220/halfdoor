@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { adjudicate, type Adjudication, type ResultsFile } from '../../eval/results';
+import { adjudicate, plural, provenanceTable, usd, type Adjudication, type ResultsFile } from '../../eval/results';
+import type { Aggregate } from '../../eval/score';
 import { aggregate } from '../../eval/score';
 import { replaceEvalBlocks } from '../../scripts/render-readme-numbers';
 
@@ -67,5 +68,31 @@ describe('adjudicate', () => {
     const m = adjudicate(f, adj);
     expect(m.get('a')).toEqual({ present: 3, total: 4, trapHits: 0, scorerMisses: 1, scorerTraps: 1, unreviewed: 0 });
     expect(m.get('b')).toEqual({ present: 2, total: 2, trapHits: 1, scorerMisses: 0, scorerTraps: 0, unreviewed: 1 });
+  });
+});
+
+describe('formatting', () => {
+  test('usd: 4 decimals below $1, 2 above, the same rule for every row', () => {
+    expect(usd(0.0114)).toBe('$0.0114');
+    expect(usd(0.43)).toBe('$0.4300');
+    expect(usd(12.345)).toBe('$12.35');
+  });
+  test('plural counts facts and stories exactly', () => {
+    expect(plural(1, 'missed fact', 'missed facts')).toBe('1 missed fact');
+    expect(plural(4, 'story', 'stories')).toBe('4 stories');
+  });
+  test('provenanceTable lists only systems with metrics and reports unscored rows', () => {
+    const prov = { supportScored: 1, unsupportedMean: 2, storiesWithUnsupported: 1, sentencesMean: 5, outputsWithUnsaidLabel: 1, outputsWithUnsaidFamily: 0, wordsMean: 200, wordsP50: 200, readSecMean: 60, readSecP50: 60 };
+    const f = {
+      meta: {} as ResultsFile['meta'],
+      rows: [],
+      aggregates: [
+        { system: 'baseline_same', model: 'm', agg: { stories: 2, provenance: prov } as unknown as Aggregate },
+        { system: 'x', model: 'm', agg: { stories: 2, provenance: null } as unknown as Aggregate },
+      ],
+    } as ResultsFile;
+    const t = provenanceTable(f).split('\n');
+    expect(t).toHaveLength(3);
+    expect(t[2]).toBe('| Plain summary, same enclave model | 2.00 (of 5.0 sentences) | 1/1 (1 not scored: other language) | 1 / 0 outputs | 200 / 200 | 60.0 s / 60.0 s |');
   });
 });

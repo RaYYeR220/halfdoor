@@ -1,14 +1,15 @@
 {
-  "about": "Hand review of every automatic miss and trap hit in final.json. verdict \"real\" = the output really lacks the fact or really states the wrong claim; \"scorer\" = the output states the fact correctly and the sentence-scoped regex could not see it (markdown headings, table cells and bullet lists split sentences; a pronoun or a word missing from a pattern list). Quotes are from the outputs in final.json.",
+  "about": "Hand review of every automatic miss and trap hit in the first final run (commit b277f60, before the round-1 pipeline and scorer fixes). verdict \"real\" = the output really lacks the fact or really states the wrong claim; \"scorer\" = the output states the fact correctly and the sentence-scoped regex could not see it. Used to validate the scorer (eval/agreement.ts, scorer-agreement.json). A key that still matches a flag in the current final.json carries its note into summary.md.",
   "notes": {
-    "final": "**Read this with the adjudicated table below.** Every baseline miss and trap hit in this run is a scorer artifact: the plain summaries kept every safety fact with the right polarity, but in markdown (headings, tables, bullet lists) or wording the sentence-scoped patterns do not cover. Halfdoor's two misses are real. On this story set Halfdoor does not keep more safety facts than a plain summary; what it adds is that every safety line on the card is the parent's own sentence, located in the story, so polarity can be checked by code instead of by a reader.",
-    "sweep": "All four enclave models had 0 flips and 0 trap hits on the card. `e2ee-glm-5-3-flash` kept the most facts (157/157) but had p50 31.6 s and p95 124.7 s, and 2 of its 60 first attempts hit the 180 s client timeout (es-10, es-14; the second attempt is what is scored). Read in strict order, the rule would pick it; with the latency clause as a requirement it is out, and `e2ee-deepseek-v4-flash` (153/157, p50 7.2 s) is chosen. Every \"no card\" in the sweep (deepseek en-32; qwen en-19, en-29, es-12) is the same pipeline issue: the draft is rejected whole when one tag or one section name is outside the schema enum.",
-    "burden": "What the Halfdoor items were: es-05 \"No tiene ninguna condición médica.\" and es-11 \"No tiene alergias ni medicamentos.\" (the parent's own all-clear, harmless on a card); es-18 \"Tiene una hermanita de 3 años que también viene a la iglesia…\" filed under safety (noise); and one safety-net prompt on en-33 \"No medical stuff.\" (the lexicon matches \"medic\" in a negative statement). Accepting it adds that line to the card (halfdoor_net)."
+    "pipeline": "the first run lost en-32 entirely because the model added one tag outside the schema (\"safety\") and the whole draft was rejected; the same rule cost the qwen model three cards in the sweep. Items and tags are now validated one by one (bad ones dropped, recorded as invalid_shape), and a draft with no usable item (en-09 came back as a skeleton of empty items once) is retried. Verbatim safety lines no longer keep the parent's list marker (\"- - …\").",
+    "burden": "What the Halfdoor items were: es-05 \"No tiene ninguna condición médica.\" and es-11 \"No tiene alergias ni medicamentos.\" (the parent's own all-clear, harmless on a card); es-18 \"Tiene una hermanita de 3 años que también viene a la iglesia…\" filed under safety (noise); and one safety-net prompt on en-33 \"No medical stuff.\" (the lexicon matches \"medic\" in a negative statement). Accepting it adds that line to the card (halfdoor_net).",
+    "sweep": "All four enclave models had 0 flips and 0 trap hits on the card. `e2ee-glm-5-3-flash` keeps the most facts but its p50 is over 30 s and its p95 about two minutes, and 2 of its 60 first attempts hit the 180 s client timeout (es-10, es-14; the scored rows are the second attempt). Read in strict order the rule would pick it; with the latency clause as a requirement it is out.",
+    "residual": "Both are left as they are. The en-32 table row (\"Falls and gets hurt | Call 911\") would have to be read as \"if … then …\", which is not true of tables in general; en-23 has the qualifier in the next prose sentence (\"These belong to her brother Sam\"), and joining prose sentences would hide real flips such as \"Dad can pick him up. Grandma cannot.\""
   },
   "items": {
     "halfdoor/en-32/absence_note_time": {
       "verdict": "real",
-      "note": "No card. The model returned a correct card on both attempts (all three safety items quoted) but added a tag \"safety\", which is not a valid tag; the schema rejects the whole draft and the parent sees an error. Pipeline bug: unknown tags should be dropped, not fatal."
+      "note": "No card. The model returned a correct card on both attempts (all three safety items quoted) but added a tag \"safety\", which is not a valid tag; the schema rejects the whole draft and the parent sees an error. Pipeline bug: unknown tags should be dropped, not fatal. (Fixed in round 1: tolerant draft parsing.)"
     },
     "halfdoor/en-32/no_911_unless_fall_or_convulsive": {
       "verdict": "real",
@@ -20,7 +21,7 @@
     },
     "halfdoor_net/en-32/absence_note_time": {
       "verdict": "real",
-      "note": "No card to accept prompts into (same rejected draft)."
+      "note": "No card to accept prompts into (same rejected draft). (Fixed in round 1: tolerant draft parsing.)"
     },
     "halfdoor_net/en-32/no_911_unless_fall_or_convulsive": {
       "verdict": "real",
