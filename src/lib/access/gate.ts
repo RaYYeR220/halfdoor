@@ -19,6 +19,15 @@ export type GateResult =
   | { allowed: true; reason: 'checked_in' | 'director' | 'parent' | 'room_safety'; scope: Scope }
   | { allowed: false; reason: 'not_acknowledged' | 'not_assigned' | 'not_checked_in' | 'checked_out' | 'outside_window' | 'other_service' | 'wrong_church' | 'role' };
 
+/** One definition of "this buddy is on this child at this service": match, same service, not merely proposed. */
+export function isActiveAssignmentFor(
+  a: { buddyId: string; serviceId: string; status: 'proposed' | 'approved' | 'scheduled_in_pco' } | null | undefined,
+  buddyId: string,
+  serviceId: string,
+): boolean {
+  return !!a && a.buddyId === buddyId && a.serviceId === serviceId && a.status !== 'proposed';
+}
+
 export const WINDOW_MS = 30 * 60_000;
 
 export function inWindow(service: { startsAt: Date; endsAt: Date }, now: Date): boolean {
@@ -48,7 +57,7 @@ export function canReadCard(i: GateInput): GateResult {
       return { allowed: true, reason: 'director', scope };
     case 'buddy': {
       const a = i.assignment;
-      if (!i.service || !a || a.buddyId !== viewer.personId || a.serviceId !== i.service.id || a.status === 'proposed') {
+      if (!i.service || !isActiveAssignmentFor(a, viewer.personId, i.service.id)) {
         return { allowed: false, reason: 'not_assigned' };
       }
       // Only after assignment: an unassigned buddy must not learn whether a card is acknowledged.

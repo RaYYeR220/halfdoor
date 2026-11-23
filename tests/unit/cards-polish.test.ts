@@ -174,6 +174,15 @@ describe('heartbeat codes and sealed question', () => {
     expect((await (await beat(w)).json()).checkins).toHaveLength(2);
   });
 
+  it('a proposed assignment returns no security code to the buddy', async () => {
+    const w = await world();
+    await db.update(schema.assignments).set({ status: 'proposed' }).where(eq(schema.assignments.serviceId, w.service.id));
+    h.viewer = w.as('Hannah', 'director');
+    await station(w, 'Leo', 'in');
+    h.viewer = w.as('Priya', 'buddy');
+    expect((await (await beat(w)).json()).checkins).toEqual([]);
+  });
+
   it('the returned question is sealed at rest', async () => {
     const w = await world();
     h.viewer = w.as('Hannah', 'director');

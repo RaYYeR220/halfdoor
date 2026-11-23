@@ -3,6 +3,7 @@ import { listCheckins } from '@/db/repo/checkins';
 import { getChurch } from '@/db/repo/churches';
 import { listHouseholdLinks } from '@/db/repo/people';
 import { getServiceInChurch } from '@/db/repo/services';
+import { isActiveAssignmentFor } from '@/lib/access/gate';
 import { closeStaleAccess } from '@/lib/access/read';
 import type { Viewer } from '@/lib/auth/viewer';
 import { refreshFromPco } from '@/lib/pco/hooks';
@@ -38,7 +39,7 @@ export async function heartbeat(viewer: Viewer, serviceId: string, now: Date): P
   }
   if (viewer.role === 'buddy') {
     // A buddy gets pickup codes only for the children assigned to them at this service.
-    const mine = new Set((await listAssignments(service.id)).filter((a) => a.buddyId === viewer.personId).map((a) => a.childId));
+    const mine = new Set((await listAssignments(service.id)).filter((a) => isActiveAssignmentFor(a, viewer.personId, service.id)).map((a) => a.childId));
     rows = rows.filter((r) => mine.has(r.childId));
   }
   // Newest row per child wins: a child may check out and back in.
