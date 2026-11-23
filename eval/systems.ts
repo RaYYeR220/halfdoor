@@ -12,12 +12,14 @@ import { PRICES, costUsd, type Usage } from '../src/lib/venice/prices';
 import { VENICE_BASE } from '../src/lib/venice/request';
 import type { EvalStory } from './types';
 
-export type SystemId = 'halfdoor' | 'halfdoor_net' | 'baseline_same' | 'baseline_claude';
-export const SYSTEM_IDS: readonly SystemId[] = ['halfdoor', 'halfdoor_net', 'baseline_same', 'baseline_claude'];
+export type SystemId = 'halfdoor' | 'halfdoor_net' | 'baseline_same' | 'baseline_claude' | 'baseline_same_short' | 'baseline_claude_short';
+export const SYSTEM_IDS: readonly SystemId[] = ['halfdoor', 'halfdoor_net', 'baseline_same', 'baseline_claude', 'baseline_same_short', 'baseline_claude_short'];
 
 export const CLAUDE_MODEL = 'claude-sonnet-5-5';
 export const PLAIN_SYSTEM = "You are helping a church kids' ministry.";
 export const PLAIN_USER = 'Write a one-page summary of this child for the volunteer who will look after them on Sunday.';
+/** Short-card baselines: same system prompt, asks for card length so the comparison is not won by "one-page". */
+export const SHORT_USER = "Write a short card (under 100 words) about this child for the volunteer who will look after them on Sunday. Keep the parent's language.";
 export const MAX_TOKENS = 1500;
 export const DEFAULT_CACHE_DIR = join(process.cwd(), 'eval', '.cache');
 
@@ -259,13 +261,13 @@ async function runHalfdoor(story: EvalStory, model: string, ctx: RunCtx, net: bo
   }
 }
 
-const plainUser = (story: EvalStory) => `${PLAIN_USER}\n\n${story.text}`;
+const plainUser = (story: EvalStory, short: boolean) => `${short ? SHORT_USER : PLAIN_USER}\n\n${story.text}`;
 
-async function runBaselineSame(story: EvalStory, model: string, ctx: RunCtx): Promise<SystemResult> {
-  const user = plainUser(story);
+async function runBaselineSame(story: EvalStory, model: string, ctx: RunCtx, short: boolean): Promise<SystemResult> {
+  const user = plainUser(story, short);
   const hash = promptHash({ system: PLAIN_SYSTEM, user, maxTokens: MAX_TOKENS });
   try {
-    const rec = await cachedCall(ctx, { system: 'baseline_same', model, storyId: story.id, hash }, PLAIN_SYSTEM + user, async (f) => {
+    const rec = await cachedCall(ctx, { system: short ? 'baseline_same_short' : 'baseline_same', model, storyId: story.id, hash }, PLAIN_SYSTEM + user, async (f) => {
       const r = await enclaveChat({
         model,
         purpose: 'card',
@@ -285,12 +287,12 @@ async function runBaselineSame(story: EvalStory, model: string, ctx: RunCtx): Pr
   }
 }
 
-async function runBaselineClaude(story: EvalStory, ctx: RunCtx): Promise<SystemResult> {
-  const user = plainUser(story);
+async function runBaselineClaude(story: EvalStory, ctx: RunCtx, short: boolean): Promise<SystemResult> {
+  const user = plainUser(story, short);
   const hash = promptHash({ system: PLAIN_SYSTEM, user, maxTokens: MAX_TOKENS });
   if (!PRICES[CLAUDE_MODEL]) throw new Error(`no price for ${CLAUDE_MODEL}`);
   try {
-    const rec = await cachedCall(ctx, { system: 'baseline_claude', model: CLAUDE_MODEL, storyId: story.id, hash }, PLAIN_SYSTEM + user, async (f) => {
+    const rec = await cachedCall(ctx, { system: short ? 'baseline_claude_short' : 'baseline_claude', model: CLAUDE_MODEL, storyId: story.id, hash }, PLAIN_SYSTEM + user, async (f) => {
       const res = await f(`${ctx.baseUrl ?? VENICE_BASE}/chat/completions`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${ctx.apiKey}`, 'Content-Type': 'application/json' },
@@ -329,10 +331,14 @@ export async function runSystem(id: SystemId, story: EvalStory, model: string, c
     case 'halfdoor_net':
       return runHalfdoor(story, model, c, true);
     case 'baseline_same':
-      return runBaselineSame(story, model, c);
+      return runBaselineSame(story, model, c, false);
+    case 'baseline_same_short':
+      return runBaselineSame(story, model, c, true);
     case 'baseline_claude':
-      return runBaselineClaude(story, c);
+      return runBaselineClaude(story, c, false);
+    case 'baseline_claude_short':
+      return runBaselineClaude(story, c, true);
   }
 }
 
-export const modelFor = (id: SystemId, e2eeModel: string) => (id === 'baseline_claude' ? CLAUDE_MODEL : e2eeModel);
+export const modelFor = (id: SystemId, e2eeModel: string) => (id.startsWith('baseline_claude') ? CLAUDE_MODEL : e2eeModel);
