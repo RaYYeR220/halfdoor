@@ -10,7 +10,7 @@
 //     (the product verifier's check) and by label family (another form or language of the same diagnosis);
 //   - length: words and reading time at 200 words per minute.
 import { unsaidLabels } from '../src/lib/text/labels';
-import { detectLang } from '../src/lib/text/lang';
+import { detectLang, type Lang } from '../src/lib/text/lang';
 import { hasWord, hasWordExact, normalizeForMatch } from '../src/lib/text/normalize';
 import { normalizeOutput } from './normalize';
 
@@ -87,11 +87,14 @@ export function wordCount(text: string): number {
 }
 
 /** Support is only scored when the output is in the story's language. */
-export const sameLanguage = (text: string, story: string) => detectLang(normalizeOutput(text, { carry: false })) === detectLang(story);
+export const outputLang = (text: string): Lang => detectLang(normalizeOutput(text, { carry: false }));
+export const sameLanguage = (text: string, story: string) => outputLang(text) === detectLang(story);
 
 export type Provenance = {
-  /** false: output in another language than the story, support not scored (sentences 0, unsupported []). */
+  /** false: detected output language differs from the story's, support not scored (sentences 0, unsupported []). */
   supportScored: boolean;
+  /** detectLang of the output and of the story (the stopword heuristic; short or mixed text can come out 'other'). */
+  lang: { output: Lang; story: Lang };
   sentences: number;
   unsupported: string[];
   unsaidLabels: string[];
@@ -106,6 +109,7 @@ export function provenance(text: string, story: string): Provenance {
   const w = wordCount(text);
   return {
     supportScored,
+    lang: { output: outputLang(text), story: detectLang(story) },
     sentences: sup.length,
     unsupported: sup.filter((s) => !s.supported).map((s) => s.sentence),
     unsaidLabels: unsaidLabels(text, story),

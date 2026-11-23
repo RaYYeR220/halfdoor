@@ -5,12 +5,14 @@ Generated 2026-11-23 from `final.json`: 60 synthetic parent stories (35 EN, 25 E
 - **Halfdoor card**: the product pipeline. The child's name is redacted, an E2EE enclave model drafts a card with quotes, and a deterministic verifier keeps every safety item as the parent's own sentence.
 - **+ safety net accepted**: the same card after accepting every safety-net prompt (story sentences with safety words that the model left off the card).
 - **Plain summary**: "Write a one-page summary of this child for the volunteer who will look after them on Sunday." plus the story, sent to the same enclave model, and to Claude through Venice's standard (non-E2EE) API, which is allowed only because the stories are synthetic.
+- **Short card prompt**: "Write a short card (under 100 words) about this child for the volunteer who will look after them on Sunday. Keep the parent's language." plus the story, to the same two models, so the comparison is not won by the word "one-page".
 
 ## Bottom line
 
-- **Safety facts: a plain summary is as good as Halfdoor.** Halfdoor card 99.4% (156/157), with the safety net accepted 100.0% (157/157); plain summaries 100.0% (157/157) (same model) and 100.0% (157/157) (Claude).
-- **Wrong claims:** Halfdoor 0 trap hits; plain summaries 1 and 1. The baseline trap hits are the 2 known scorer artifacts listed in appendix A (the summaries say the right thing); no system made a wrong safety claim that survived review.
-- **What the output adds (the product's actual claim):** Halfdoor cards carry 0.05 sentences per card that are not grounded in the story; plain summaries carry 11.6 and 12.5 per summary (advice, boilerplate and elaboration the parent never wrote). A card is 92 words (27.8 s to read) against 258 and 291 words (77.3 s and 87.4 s).
+- **Safety facts: a plain summary is as good as Halfdoor.** Halfdoor card 99.4% (156/157), with the safety net accepted 100.0% (157/157); baselines 100.0% (157/157) (one-page, same model), 100.0% (157/157) (one-page, Claude), 98.7% (155/157) (short card, same model), 100.0% (157/157) (short card, Claude).
+- **Wrong claims:** Halfdoor 0 trap hits; baselines 1 (one-page, same model), 1 (one-page, Claude), 1 (short card, same model), 1 (short card, Claude). Of the 4 baseline trap hits in this run, 4 are reviewed scorer artifacts (the output says the right thing; appendix A), 0 real.
+- **Halfdoor's grounding numbers are expected by construction.** Its 0.05 sentences per card not grounded in the story and its 0 unsaid diagnosis labels follow from the design: the verifier drops any item it cannot point to in the story (a quote it cannot find, a paraphrase sharing no word with its quote, a diagnosis the parent did not use). That row shows the verifier works; it is not an independent finding.
+- **Length follows the prompt.** Asked for a one-page summary, the baselines write 258 words with 11.6 ungrounded sentences (one-page, same model) and 291 words with 12.5 ungrounded sentences (one-page, Claude); asked for a short card, 75 words with 0.5 ungrounded sentences (short card, same model) and 86 words with 0.8 ungrounded sentences (short card, Claude). A Halfdoor card is 92 words. With the short prompt a plain model gets close to the card on length and grounding; what stays different is that Halfdoor guarantees it by construction (every safety line is the parent's located sentence, nothing unlocated survives) and runs in the enclave, where a prompt only makes it likely.
 
 ## Safety facts and wrong claims (automatic scoring)
 
@@ -20,19 +22,25 @@ Generated 2026-11-23 from `final.json`: 60 synthetic parent stories (35 EN, 25 E
 | Halfdoor card + safety net accepted | `e2ee-deepseek-v4-flash` | 100.0% (157/157) | 100.0% (60/60) | 0 (0 / 0 / 0) | 0/60 |
 | Plain summary, same enclave model | `e2ee-deepseek-v4-flash` | 100.0% (157/157) | 100.0% (60/60) | 1 (1 / 0 / 0) | 1/60 |
 | Plain summary, Claude Sonnet 5.5 | `claude-sonnet-5-5` | 100.0% (157/157) | 100.0% (60/60) | 1 (0 / 0 / 1) | 1/60 |
+| Short card prompt, same enclave model | `e2ee-deepseek-v4-flash` | 98.7% (155/157) | 98.3% (59/60) | 1 (0 / 0 / 1) | 1/60 |
+| Short card prompt, Claude Sonnet 5.5 | `claude-sonnet-5-5` | 100.0% (157/157) | 100.0% (60/60) | 1 (0 / 0 / 1) | 1/60 |
 
-Outputs are read through a markdown-aware normalizer before the key is applied (`eval/normalize.ts`): headings, table rows, list items and "Only these people:" leads become units the sentence-scoped patterns can read; a trap counts only if it fires both with and without that structure. Against a hand review of every flag in the first run, the scorer agrees on 23/25 items (the README rules read raw agreed on 7/25); details in appendix A.
+Outputs are read through a markdown-aware normalizer before the key is applied (`eval/normalize.ts`): headings, table rows, list items and "Only these people:" leads become units the sentence-scoped patterns can read; a trap counts only if it fires both with and without that structure. Against a hand review of every flag in the first run, the scorer agrees on 23/25 items (the README rules read raw agreed on 7/25). That agreement is in-sample: the normalizer was written while looking at those same items. Details in appendix A.
 
 ## Provenance: what each output adds
 
 | System | Sentences not grounded in the story, per output | Outputs with any | Unsaid diagnosis labels: exact word / label family | Words, mean / median | Reading time at 200 wpm, mean / median |
 |---|---|---|---|---|---|
-| Halfdoor card | 0.05 (of 5.8 sentences) | 3/58 (2 not scored: other language) | 0 / 0 outputs | 92 / 74 | 27.8 s / 22.0 s |
-| Halfdoor card + safety net accepted | 0.05 (of 5.9 sentences) | 3/58 (2 not scored: other language) | 0 / 0 outputs | 93 / 76 | 27.9 s / 23.0 s |
-| Plain summary, same enclave model | 11.61 (of 23.8 sentences) | 33/33 (27 not scored: other language) | 13 / 0 outputs | 258 / 225 | 77.3 s / 68.0 s |
-| Plain summary, Claude Sonnet 5.5 | 12.48 (of 23.2 sentences) | 52/52 (8 not scored: other language) | 3 / 0 outputs | 291 / 292 | 87.4 s / 88.0 s |
+| Halfdoor card | 0.05 (of 5.8 sentences) | 3/58 (2 not scored) | 0 / 0 outputs | 92 / 74 | 27.8 s / 22.0 s |
+| Halfdoor card + safety net accepted | 0.05 (of 5.9 sentences) | 3/58 (2 not scored) | 0 / 0 outputs | 93 / 76 | 27.9 s / 23.0 s |
+| Plain summary, same enclave model | 11.61 (of 23.8 sentences) | 33/33 (27 not scored) | 13 / 0 outputs | 258 / 225 | 77.3 s / 68.0 s |
+| Plain summary, Claude Sonnet 5.5 | 12.48 (of 23.2 sentences) | 52/52 (8 not scored) | 3 / 0 outputs | 291 / 292 | 87.4 s / 88.0 s |
+| Short card prompt, same enclave model | 0.51 (of 6.5 sentences) | 23/51 (9 not scored) | 5 / 0 outputs | 75 / 75 | 22.4 s / 23.0 s |
+| Short card prompt, Claude Sonnet 5.5 | 0.80 (of 7.3 sentences) | 29/54 (6 not scored) | 1 / 0 outputs | 86 / 86 | 25.9 s / 26.0 s |
 
-- **Not grounded**: a sentence counts as grounded when at least 33% of its content words (4+ letters, not stopwords, compared by 5-letter prefix) also occur in the story. Lines of 4 words or fewer are ignored, and outputs in another language than the story are not scored, because word overlap cannot see a translation (the same-model summary answered most Spanish stories in English). Hand check on a fresh random sample (appendix B): 17/20 flagged sentences really add something the parent did not write, and 14/20 passed sentences really are grounded, so the counts are approximate and lean low.
+- **Halfdoor's row is by construction.** The verifier only keeps what it can point to in the story and blocks diagnosis words the parent did not use, so near-zero here is the design working, not a separate result. The comparison that matters is between the baselines, and between a baseline and what the parent wrote.
+- **Not grounded**: a sentence counts as grounded when at least 33% of its content words (4+ letters, not stopwords, compared by 5-letter prefix) also occur in the story. Lines of 4 words or fewer are ignored. Hand check on a fresh random sample (appendix B): 17/20 flagged sentences really add something the parent did not write, and 14/20 passed sentences really are grounded, so the counts are approximate and lean low.
+- **Not scored for grounding**: an output whose detected language (a stopword heuristic) differs from its story's is skipped, because word overlap cannot see a translation. The one-page same-model summary answered all 25 Spanish stories in English. The detector also disagrees on some stories in either language, for every system (short or mixed text can come out as neither language, and code-switched stories can read as English). Skipped per system: Halfdoor card: 2 (2 detector mismatches); Halfdoor card + safety net accepted: 2 (2 detector mismatches); Plain summary, same enclave model: 27 (25 Spanish stories answered in English, 2 detector mismatches); Plain summary, Claude Sonnet 5.5: 8 (6 Spanish stories answered in English, 2 detector mismatches); Short card prompt, same enclave model: 9 (7 Spanish stories answered in English, 2 detector mismatches); Short card prompt, Claude Sonnet 5.5: 6 (2 Spanish stories answered in English, 4 detector mismatches).
 - **Unsaid labels**: diagnosis words (autism, ADHD, Down syndrome…) the story does not contain. "Exact word" is the check the product verifier applies; "label family" also accepts another form of the same diagnosis (autistic for autism, autismo for autism, the parent's lowercase "adhd", "CP").
 
 Every Halfdoor sentence flagged as not grounded:
@@ -41,21 +49,28 @@ Every Halfdoor sentence flagged as not grounded:
 - en-25: "support her mobility as needed."
 - es-20: "No la levanten, lo odia."
 
-Three random flagged sentences from "Plain summary, same enclave model":
+Flagged sentences from each baseline, three per system, chosen at random (seeded, at least 6 words, at most one per story):
 
-- en-30: "She is a blessing, and your care will help her have a wonderful Sunday."
-- en-34: "While this may not come up in class, it's important context."
-- en-08: "Just needs a little extra warmth at drop-off and her blanket close by."
-
-Three random flagged sentences from "Plain summary, Claude Sonnet 5.5":
-
-- es-05: "Preguntarle por su equipo favorito o su dinosaurio preferido puede ayudarlo a relajarse."
-- es-18: "Es normal que al principio no quiera unirse a las actividades."
-- en-02: "You're doing a great job looking after her!"
+- Plain summary, same enclave model:
+  - en-30: "She is a blessing, and your care will help her have a wonderful Sunday."
+  - en-34: "While this may not come up in class, it's important context."
+  - en-08: "Just needs a little extra warmth at drop-off and her blanket close by."
+- Plain summary, Claude Sonnet 5.5:
+  - es-05: "Preguntarle por su equipo favorito o su dinosaurio preferido puede ayudarlo a relajarse."
+  - es-18: "Es normal que al principio no quiera unirse a las actividades."
+  - en-02: "You're doing a great job looking after her!"
+- Short card prompt, same enclave model:
+  - en-12: "Harper (age 6) — Important Info for Sunday"
+  - en-15: "Keep doors closed and eyes on him."
+  - en-07: "Noah, age 5 — Sunday Volunteer Card"
+- Short card prompt, Claude Sonnet 5.5:
+  - es-01: "Si alguien más se presenta, no lo entregue y avise a un líder."
+  - en-05: "Thank you for caring for him!"
+  - en-33: "Thanks for loving on him this Sunday!"
 
 ## What went wrong
 
-- **On safety-fact recall a plain summary is as good as Halfdoor.** Both plain summaries keep every safety fact with the right polarity on these stories; the Halfdoor card has 1 missed fact in 1 story (no missed fact once the safety net is accepted). Halfdoor's case rests on provenance, length and privacy, not on recall.
+- **On safety-fact recall a plain summary is as good as Halfdoor.** The baselines keep nearly every safety fact with the right polarity on these stories (157/157 (one-page, same model), 157/157 (one-page, Claude), 155/157 (short card, same model), 157/157 (short card, Claude); the 2 automatic baseline misses are all reviewed scorer artifacts); the Halfdoor card has 1 missed fact in 1 story (no missed fact once the safety net is accepted). Halfdoor's case rests on provenance, privacy and a fixed card shape, not on recall.
 - Halfdoor card:
   - **es-02** · missed `t1d` (medical) — **real**: The card lists the pump, the low and high thresholds and NO insulin, but leaves off the header line "Valentina, 8 años — diabetes tipo 1". The safety net flags that line; accepting it restores the fact (halfdoor_net keeps it).
 - **Noise on the 8 stories with no safety facts:** the card put 3 items in its safety section and the safety net raised 1 prompt, on 4 of 8 stories. What the Halfdoor items were: es-05 "No tiene ninguna condición médica." and es-11 "No tiene alergias ni medicamentos." (the parent's own all-clear, harmless on a card); es-18 "Tiene una hermanita de 3 años que también viene a la iglesia…" filed under safety (noise); and one safety-net prompt on en-33 "No medical stuff." (the lexicon matches "medic" in a negative statement). Accepting it adds that line to the card (halfdoor_net).
@@ -73,6 +88,8 @@ Three random flagged sentences from "Plain summary, Claude Sonnet 5.5":
 | Halfdoor card + safety net accepted | 100.0% (60/60) | 4 | 1 |
 | Plain summary, same enclave model | 100.0% (60/60) | n/a | n/a |
 | Plain summary, Claude Sonnet 5.5 | 100.0% (60/60) | n/a | n/a |
+| Short card prompt, same enclave model | 98.3% (59/60) | n/a | n/a |
+| Short card prompt, Claude Sonnet 5.5 | 100.0% (60/60) | n/a | n/a |
 
 ### Latency and cost
 
@@ -82,6 +99,8 @@ Three random flagged sentences from "Plain summary, Claude Sonnet 5.5":
 | Halfdoor card + safety net accepted | 7.1 s | 20.5 s | $0.0114 | $0.0002 |
 | Plain summary, same enclave model | 19.1 s | 63.4 s | $0.0100 | $0.0002 |
 | Plain summary, Claude Sonnet 5.5 | 6.7 s | 13.1 s | $0.4301 | $0.0072 |
+| Short card prompt, same enclave model | 4.4 s | 10.8 s | $0.0041 | $0.0001 |
+| Short card prompt, Claude Sonnet 5.5 | 2.6 s | 3.5 s | $0.1469 | $0.0024 |
 
 Cost from the usage each response reports, at Venice list prices (`src/lib/venice/prices.ts`). The two Halfdoor rows share one model call per story.
 
@@ -100,7 +119,20 @@ All four enclave models had 0 flips and 0 trap hits on the card. `e2ee-glm-5-3-f
 
 ## Appendix A: scorer validation
 
-Every miss and trap hit the automatic scorer raised in the first run (`b277f60:eval/results/final.json`, before the round-1 fixes) was read in context and marked real or scorer artifact (`adjudication.json`). Agreement with that review: **7/25** with the README rules read raw, **23/25** with the markdown-aware scorer, which raised no new flag on those outputs.
+Every miss and trap hit the automatic scorer raised in the first run (`b277f60:eval/results/final.json`, before the round-1 fixes) was read in context and marked real or scorer artifact (`adjudication.json`). Agreement with that review: **7/25** with the README rules read raw, **23/25** with the markdown-aware scorer, which raised no new flag on those outputs. This is in-sample: the normalizer was built while reading these items.
+
+Out of sample, on the short-card baselines added after the normalizer was written, the scorer raised 4 flags: 0 real, 4 scorer artifacts (a qualifier after a semicolon or in the next prose sentence, a wording the key does not list). Read the baselines' automatic misses and trap hits as upper bounds.
+
+| System | Facts kept, raw README rules | Facts kept, normalized | Trap hits, raw | Trap hits, normalized |
+|---|---|---|---|---|
+| Halfdoor card | 156/157 | 156/157 | 0 | 0 |
+| Halfdoor card + safety net accepted | 157/157 | 157/157 | 0 | 0 |
+| Plain summary, same enclave model | 154/157 | 157/157 | 5 | 1 |
+| Plain summary, Claude Sonnet 5.5 | 152/157 | 157/157 | 5 | 1 |
+| Short card prompt, same enclave model | 154/157 | 155/157 | 1 | 1 |
+| Short card prompt, Claude Sonnet 5.5 | 157/157 | 157/157 | 1 | 1 |
+
+Halfdoor's scores are identical under the raw README rules and the normalized scorer (its card is short labelled lines, one item each), so the known limit of the normalizer (two sentences inside one bullet are read together, which can mask a flip) does not touch its numbers.
 
 Remaining disagreements (both make a plain summary look worse than it is):
 
@@ -136,6 +168,10 @@ Both are left as they are. The en-32 table row ("Falls and gets hurt | Call 911"
 - `baseline_claude/en-32/doesnt_need.911_for_absence` — **scorer**: Heading "## When to call 911", then "Call 911 only if:" followed by bullets "Emma falls and is injured, or" / "She has a full convulsive seizure", then "A staring spell on its own does not need 911." The heading line stands alone as a sentence.
 - `baseline_claude/es-17/double_negation.never_escapes` — **scorer**: Says “Benja se ha escapado en dos ocasiones” and then “No debe darse por hecho que "nunca se escapa"” (do not assume he never runs off): the correct reading.
 - `baseline_claude/es-19/sibling.asthma` — **scorer**: Summary table row "| Asma | NO. El inhalador es de Lucas |"; the cell "Asma" stands alone.
+- `baseline_same_short/en-23/sibling.diabetes` — **scorer**: "You may find glucose tabs in her bag; those are her brother Sam's. Nora is not diabetic — please don't give them to her." The qualifier is after the ";", which splits the sentence.
+- `baseline_claude_short/en-23/sibling.diabetes` — **scorer**: "You may find glucose tabs in that bag too. Those are her brother Sam's. Nora is not diabetic, so please don't give them to her." The qualifier is in the next prose sentence.
+- `baseline_same_short/es-10/headcount_visual` — **scorer**: "In an emergency she will not shout or answer if called, so please keep her in sight at all times." Same safety point as "cuéntenla con la vista" (check her by sight, do not rely on calling her); "sight" is not in the key's word list. (The card is in English although the prompt asked for the parent's language.)
+- `baseline_same_short/es-24/uncle_raul_can` — **scorer**: "Solo su abuela y su tío Raúl (autorizado desde octubre) pueden recogerlo." Correct; the key's list has "ya sí / sí puede / ya puede / en la lista" but not "autorizado" or "pueden".
 
 </details>
 

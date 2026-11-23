@@ -1,5 +1,5 @@
 {
-  "about": "Hand review of every automatic miss and trap hit in the first final run (commit b277f60, before the round-1 pipeline and scorer fixes). verdict \"real\" = the output really lacks the fact or really states the wrong claim; \"scorer\" = the output states the fact correctly and the sentence-scoped regex could not see it. Used to validate the scorer (eval/agreement.ts, scorer-agreement.json). A key that still matches a flag in the current final.json carries its note into summary.md.",
+  "about": "Hand review of automatic misses and trap hits. Items for halfdoor, baseline_same and baseline_claude were reviewed on the first final run (commit b277f60, before the round-1 fixes) and are the in-sample set the scorer agreement is measured on. Items for the *_short systems were reviewed on their own outputs (fix round 2) after the normalizer was written, so they are out of sample. verdict \"real\" = the output really lacks the fact or really states the wrong claim; \"scorer\" = the output states the fact correctly and the sentence-scoped regex could not see it. A key that matches a flag in the current final.json carries its note into summary.md.",
   "notes": {
     "pipeline": "the first run lost en-32 entirely because the model added one tag outside the schema (\"safety\") and the whole draft was rejected; the same rule cost the qwen model three cards in the sweep. Items and tags are now validated one by one (bad ones dropped, recorded as invalid_shape), and a draft with no usable item (en-09 came back as a skeleton of empty items once) is retried. Verbatim safety lines no longer keep the parent's list marker (\"- - …\").",
     "burden": "What the Halfdoor items were: es-05 \"No tiene ninguna condición médica.\" and es-11 \"No tiene alergias ni medicamentos.\" (the parent's own all-clear, harmless on a card); es-18 \"Tiene una hermanita de 3 años que también viene a la iglesia…\" filed under safety (noise); and one safety-net prompt on en-33 \"No medical stuff.\" (the lexicon matches \"medic\" in a negative statement). Accepting it adds that line to the card (halfdoor_net).",
@@ -106,6 +106,22 @@
     "baseline_claude/es-19/sibling.asthma": {
       "verdict": "scorer",
       "note": "Summary table row \"| Asma | NO. El inhalador es de Lucas |\"; the cell \"Asma\" stands alone."
+    },
+    "baseline_same_short/en-23/sibling.diabetes": {
+      "verdict": "scorer",
+      "note": "\"You may find glucose tabs in her bag; those are her brother Sam's. Nora is not diabetic — please don't give them to her.\" The qualifier is after the \";\", which splits the sentence."
+    },
+    "baseline_claude_short/en-23/sibling.diabetes": {
+      "verdict": "scorer",
+      "note": "\"You may find glucose tabs in that bag too. Those are her brother Sam's. Nora is not diabetic, so please don't give them to her.\" The qualifier is in the next prose sentence."
+    },
+    "baseline_same_short/es-10/headcount_visual": {
+      "verdict": "scorer",
+      "note": "\"In an emergency she will not shout or answer if called, so please keep her in sight at all times.\" Same safety point as \"cuéntenla con la vista\" (check her by sight, do not rely on calling her); \"sight\" is not in the key's word list. (The card is in English although the prompt asked for the parent's language.)"
+    },
+    "baseline_same_short/es-24/uncle_raul_can": {
+      "verdict": "scorer",
+      "note": "\"Solo su abuela y su tío Raúl (autorizado desde octubre) pueden recogerlo.\" Correct; the key's list has \"ya sí / sí puede / ya puede / en la lista\" but not \"autorizado\" or \"pueden\"."
     }
   }
 }

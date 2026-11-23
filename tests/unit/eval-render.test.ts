@@ -93,6 +93,6 @@ describe('formatting', () => {
     } as ResultsFile;
     const t = provenanceTable(f).split('\n');
     expect(t).toHaveLength(3);
-    expect(t[2]).toBe('| Plain summary, same enclave model | 2.00 (of 5.0 sentences) | 1/1 (1 not scored: other language) | 1 / 0 outputs | 200 / 200 | 60.0 s / 60.0 s |');
+    expect(t[2]).toBe('| Plain summary, same enclave model | 2.00 (of 5.0 sentences) | 1/1 (1 not scored) | 1 / 0 outputs | 200 / 200 | 60.0 s / 60.0 s |');
   });
 });

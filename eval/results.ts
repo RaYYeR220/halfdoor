@@ -73,6 +73,8 @@ export const SYSTEM_LABEL: Record<string, string> = {
   halfdoor_net: 'Halfdoor card + safety net accepted',
   baseline_same: 'Plain summary, same enclave model',
   baseline_claude: 'Plain summary, Claude Sonnet 5.5',
+  baseline_same_short: 'Short card prompt, same enclave model',
+  baseline_claude_short: 'Short card prompt, Claude Sonnet 5.5',
 };
 
 export function table(head: string[], rows: (string | number)[][]): string {
@@ -111,7 +113,7 @@ export function provenanceTable(f: ResultsFile): string {
         [
           SYSTEM_LABEL[system] ?? system,
           `${num(p.unsupportedMean, 2)} (of ${num(p.sentencesMean)} sentences)`,
-          `${p.storiesWithUnsupported}/${p.supportScored}${other > 0 ? ` (${other} not scored: other language)` : ''}`,
+          `${p.storiesWithUnsupported}/${p.supportScored}${other > 0 ? ` (${other} not scored)` : ''}`,
           `${p.outputsWithUnsaidLabel} / ${p.outputsWithUnsaidFamily} outputs`,
           `${Math.round(p.wordsMean)} / ${p.wordsP50}`,
           `${sec(p.readSecMean * 1000)} / ${sec(p.readSecP50 * 1000)}`,

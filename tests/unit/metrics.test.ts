@@ -33,6 +33,7 @@ describe('provenance', () => {
     const es = 'Mateo tiene 5 años y tiene autismo. Le encantan los trenes y los rompecabezas. Los ruidos fuertes lo asustan.';
     const p = provenance('Mateo is 5 and autistic. He loves trains and puzzles. Loud noises scare him, so give him a quiet corner.', es);
     expect(p.supportScored).toBe(false);
+    expect(p.lang).toEqual({ output: 'en', story: 'es' });
     expect(p.unsupported).toEqual([]);
   });
   test('unsaid labels: exact words, and label families across inflection and EN/ES', () => {
@@ -55,6 +56,8 @@ describe('provenance', () => {
   });
 });
 
+const EN = { output: 'en' as const, story: 'en' as const };
+
 describe('aggregateProvenance', () => {
   const row = (prov: Row['prov']): Row => ({
     system: 's', model: 'm', storyId: 'x', noSafety: false, latencyMs: 1, costUsd: 0, cached: true, prov,
@@ -62,9 +65,9 @@ describe('aggregateProvenance', () => {
   });
   test('means over scored rows; labels and length over all rows', () => {
     const a = aggregateProvenance([
-      row({ supportScored: true, sentences: 4, unsupported: ['a', 'b'], unsaidLabels: ['autism'], unsaidFamilies: [], words: 100, readSec: 30 }),
-      row({ supportScored: true, sentences: 2, unsupported: [], unsaidLabels: [], unsaidFamilies: [], words: 300, readSec: 90 }),
-      row({ supportScored: false, sentences: 0, unsupported: [], unsaidLabels: ['ADHD'], unsaidFamilies: ['ADHD'], words: 200, readSec: 60 }),
+      row({ lang: EN, supportScored: true, sentences: 4, unsupported: ['a', 'b'], unsaidLabels: ['autism'], unsaidFamilies: [], words: 100, readSec: 30 }),
+      row({ lang: EN, supportScored: true, sentences: 2, unsupported: [], unsaidLabels: [], unsaidFamilies: [], words: 300, readSec: 90 }),
+      row({ lang: EN, supportScored: false, sentences: 0, unsupported: [], unsaidLabels: ['ADHD'], unsaidFamilies: ['ADHD'], words: 200, readSec: 60 }),
     ])!;
     expect(a).toMatchObject({ supportScored: 2, unsupportedMean: 1, storiesWithUnsupported: 1, sentencesMean: 3, outputsWithUnsaidLabel: 2, outputsWithUnsaidFamily: 1, wordsMean: 200, wordsP50: 200, readSecMean: 60, readSecP50: 60 });
     expect(aggregateProvenance([row(undefined)])).toBeNull();
