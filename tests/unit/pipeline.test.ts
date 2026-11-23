@@ -10,7 +10,11 @@ import type { DraftCard } from '@/lib/card/schema';
 const LEO =
   'Leo is 7. He loves trains and the color yellow. Loud music hurts his ears so he wears his blue headphones during worship. When he starts humming loudly and covering his face he needs a quiet break. He used to be allergic to eggs but he outgrew it last year. He IS allergic to peanuts - he has an EpiPen in his backpack. His dad is NOT allowed to pick him up, only me (Maria) or his grandma Rosa.';
 
-const A: AttestationSummary = { verified: true, nonceOk: true, provider: 'p', hardware: null, model: 'e2ee-x', signingAddress: null, modelPublicKey: 'k', checkedAt: 'now' };
+const A: AttestationSummary = {
+  verified: true, nonceOk: true, provider: 'p', hardware: null, model: 'e2ee-x', signingAddress: null, modelPublicKey: 'k', checkedAt: 'now',
+  binding: { addressMatches: true, nonceMatches: true, paddingZero: true, debug: false, teeType: 0x81, mrtd: 'm' },
+  quote: { mrtd: 'm', tdAttributes: '0000001000000000', signature: 'pending' },
+};
 
 const GOOD_LEO_DRAFT: DraftCard = {
   items: [

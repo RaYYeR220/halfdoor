@@ -34,6 +34,12 @@ const call = (churchId: string, cost = '0.001') =>
   insertAiCall({ churchId, purpose: 'card', model: 'e2ee-deepseek-v4-flash', e2ee: true, ok: true, costUsd: cost });
 const slug = (p: string) => `${p}-${randomBytes(4).toString('hex')}`;
 
+/** Binding + quote parts of a browser-side AttestationSummary (see checkAttestation). */
+const ATT_QUOTE = {
+  binding: { addressMatches: true, nonceMatches: true, paddingZero: true, debug: false, teeType: 0x81, mrtd: 'ab'.repeat(48) },
+  quote: { mrtd: 'ab'.repeat(48), tdAttributes: '0000001000000000', signature: 'pending' as const },
+};
+
 describe('prices', () => {
   test('costUsd uses the price table', () => {
     expect(costUsd('e2ee-deepseek-v4-flash', { prompt_tokens: 1e6, completion_tokens: 0 })).toBeCloseTo(0.182, 3);
@@ -158,7 +164,7 @@ describe('POST /api/tee/chat', () => {
     vi.stubGlobal('fetch', f);
     const att = {
       verified: true, nonceOk: true, provider: 'p', hardware: null, model: 'e2ee-deepseek-v4-flash',
-      signingAddress: null, modelPublicKey: model.publicKeyHex, checkedAt: 'now',
+      signingAddress: null, modelPublicKey: model.publicKeyHex, checkedAt: 'now', ...ATT_QUOTE,
     };
     const r = await POST(body({ maxTokens: 99999, attestation: att }));
     expect(r.status).toBe(200);
@@ -221,7 +227,7 @@ describe('POST /api/tee/chat', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(sse([USAGE])));
     const att = {
       verified: true, nonceOk: true, provider: 'p', hardware: null, model: 'e2ee-deepseek-v4-flash',
-      signingAddress: null, modelPublicKey: newClientKeys().publicKeyHex, checkedAt: 'now',
+      signingAddress: null, modelPublicKey: newClientKeys().publicKeyHex, checkedAt: 'now', ...ATT_QUOTE,
     };
     await (await POST(body({ attestation: att }))).text();
     const rows = await listAiCalls(churchId);
@@ -232,11 +238,11 @@ describe('POST /api/tee/chat', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(sse([USAGE])));
     const att = {
       verified: true, nonceOk: true, provider: 'p', hardware: null, model: 'e2ee-deepseek-v4-flash',
-      signingAddress: null, modelPublicKey: model.publicKeyHex.slice(2), checkedAt: 'now',
+      signingAddress: null, modelPublicKey: model.publicKeyHex.slice(2), checkedAt: 'now', ...ATT_QUOTE,
     };
     await (await POST(body({ attestation: att }))).text();
     const rows = await listAiCalls(churchId);
-    expect(rows[0].attestation).toMatchObject({ verified: true });
+    expect(rows[0].attestation).toMatchObject({ verified: true, binding: { nonceMatches: true }, quote: { signature: 'pending' } });
     expect(rows[0].attestationMismatch).toBe(false);
   });
   test('stream error records exactly one ok=false row', async () => {

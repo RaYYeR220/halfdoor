@@ -33,3 +33,24 @@ export function upstreamHeaders(apiKey: string, clientPubKey: string, modelPubKe
     'X-Venice-TEE-Signing-Algo': 'ecdsa',
   };
 }
+
+/** Venice rate-limits attestation per key+model within ~4 s: a 429 is retried after these waits. */
+export const ATTESTATION_RETRY_DELAYS_MS = [1500, 3000, 5000] as const;
+
+const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+/** Fetches an attestation, retrying only a 429 (up to 3 times); returns the last response. */
+export async function fetchAttestationWithRetry(
+  url: string,
+  init: RequestInit,
+  opts: { fetchImpl?: typeof fetch; sleep?: (ms: number) => Promise<void> } = {},
+): Promise<Response> {
+  const f = opts.fetchImpl ?? fetch;
+  const sleep = opts.sleep ?? wait;
+  for (let attempt = 0; ; attempt++) {
+    const res = await f(url, init);
+    if (res.status !== 429 || attempt >= ATTESTATION_RETRY_DELAYS_MS.length) return res;
+    await res.body?.cancel().catch(() => undefined);
+    await sleep(ATTESTATION_RETRY_DELAYS_MS[attempt]);
+  }
+}

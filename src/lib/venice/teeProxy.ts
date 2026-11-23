@@ -13,6 +13,7 @@ export const pubKeyHex = z.string().refine(isPubKeyHex, 'bad public key');
 export const modelId = z.string().refine((m) => m.startsWith('e2ee-') && m in PRICES && ALLOWED_BROWSER_MODELS.includes(m), 'unsupported model');
 export const nonceHex = z.string().length(64).regex(HEX);
 
+/** What the browser reports it checked (client-supplied, stored as a record only; never trusted for decisions). */
 export const AttestationSummarySchema = z.object({
   verified: z.boolean(),
   nonceOk: z.boolean(),
@@ -22,6 +23,25 @@ export const AttestationSummarySchema = z.object({
   signingAddress: z.string().max(100).nullable(),
   modelPublicKey: z.string().max(200),
   checkedAt: z.string().max(40),
+  binding: z.object({
+    addressMatches: z.boolean(),
+    nonceMatches: z.boolean(),
+    paddingZero: z.boolean(),
+    debug: z.boolean(),
+    teeType: z.number().int(),
+    mrtd: z.string().max(96),
+  }),
+  quote: z.object({
+    mrtd: z.string().max(96),
+    tdAttributes: z.string().max(16),
+    signature: z.enum(['pending', 'verified', 'unverified']),
+    signatureCheckedIn: z.enum(['browser', 'node']).optional(),
+    signatureCheckedAt: z.string().max(40).optional(),
+    tcbStatus: z.string().max(60).optional(),
+    advisoryIds: z.array(z.string().max(40)).max(50).optional(),
+    reasonCode: z.enum(['collateral_unavailable', 'verification_failed', 'verifier_unavailable']).optional(),
+    reason: z.string().max(200).optional(),
+  }),
 });
 
 export const ChatBody = z.object({

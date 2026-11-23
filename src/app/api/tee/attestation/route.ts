@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getViewer } from '@/lib/auth/viewer';
+import { fetchAttestationWithRetry } from '@/lib/venice/request';
 import { VENICE_BASE, modelId, nonceHex } from '@/lib/venice/teeProxy';
 
 export async function GET(req: Request) {
@@ -15,7 +16,8 @@ export async function GET(req: Request) {
   if (!apiKey) return NextResponse.json({ error: 'not configured' }, { status: 500 });
 
   try {
-    const res = await fetch(`${VENICE_BASE}/tee/attestation?model=${model.data}&nonce=${nonce.data}`, {
+    // Venice 429 (attestation rate limit per key+model) is retried with backoff before giving up with 502.
+    const res = await fetchAttestationWithRetry(`${VENICE_BASE}/tee/attestation?model=${model.data}&nonce=${nonce.data}`, {
       headers: { Authorization: `Bearer ${apiKey}` },
       cache: 'no-store',
     });
