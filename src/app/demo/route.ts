@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { listPeople } from '@/db/repo/people';
 import { createSandboxReserved, purgeExpiredSandboxes } from '@/db/sandbox';
+import { purgeExpiredCards } from '@/lib/access/purge';
 import { clientIp } from '@/lib/auth/clientIp';
 import { hashClient, signValue } from '@/lib/auth/tokens';
 import { COOKIE_AS, COOKIE_SANDBOX, SANDBOX_COOKIE_MAX_AGE, cookieOptions } from '@/lib/auth/viewer';
@@ -21,6 +22,7 @@ export async function GET(req: Request) {
   }
 
   await purgeExpiredSandboxes();
+  await purgeExpiredCards().catch(() => 0); // retention: best effort, never blocks the demo
   const made = await createSandboxReserved(hashClient(clientIp(req)));
   if (!made) return new NextResponse('Too many demo churches from this connection. Try again in an hour.', { status: 429 });
   const { churchId, slug } = made;

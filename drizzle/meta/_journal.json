@@ -15,6 +15,13 @@
       "when": 1795448613561,
       "tag": "0001_lively_charles_xavier",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795471433903,
+      "tag": "0002_minor_scorpion",
+      "breakpoints": true
     }
   ]
 }

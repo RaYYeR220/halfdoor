@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { getDb } from '../client';
 import { services } from '../schema';
 
@@ -16,4 +16,10 @@ export async function listServices(churchId: string): Promise<Service[]> {
 
 export async function insertServices(rows: NewService[]): Promise<Service[]> {
   return getDb().insert(services).values(rows).returning();
+}
+
+/** Tenant-scoped: the service must belong to the church. */
+export async function getServiceInChurch(churchId: string, id: string): Promise<Service | undefined> {
+  const [row] = await getDb().select().from(services).where(and(eq(services.churchId, churchId), eq(services.id, id)));
+  return row;
 }

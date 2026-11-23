@@ -131,10 +131,12 @@ export const parentNotes = pgTable('parent_notes', {
 
 export const cardAccessLog = pgTable('card_access_log', {
   id: id(),
-  cardId: uuid('card_id').notNull().references(() => cards.id, { onDelete: 'cascade' }),
+  /** SET NULL: deleting a card keeps its log rows (plus a 'deleted' tombstone) for the parent. */
+  cardId: uuid('card_id').references(() => cards.id, { onDelete: 'set null' }),
+  childId: uuid('child_id').references(() => people.id, { onDelete: 'cascade' }),
   viewerId: uuid('viewer_id').references(() => people.id, { onDelete: 'set null' }),
   role: text('role').notNull(),
-  reason: text('reason', { enum: ['checked_in', 'director', 'parent', 'room_safety'] }).notNull(),
+  reason: text('reason', { enum: ['checked_in', 'director', 'parent', 'room_safety', 'deleted'] }).notNull(),
   openedAt: ts('opened_at').notNull().defaultNow(),
   closedAt: ts('closed_at'),
 });
