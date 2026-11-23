@@ -14,3 +14,9 @@ export async function onAssignmentApproved(churchId: string, assignmentId: strin
 export async function refreshFromPco(serviceId: string): Promise<void> {
   void serviceId;
 }
+
+/** True when the buddy is already scheduled elsewhere in PCO Services for an overlapping time (Task 16). */
+export async function isBusyInPco(churchId: string, buddyPcoPersonId: string | null, startsAt: Date, endsAt: Date): Promise<boolean> {
+  void churchId; void buddyPcoPersonId; void startsAt; void endsAt;
+  return false;
+}
