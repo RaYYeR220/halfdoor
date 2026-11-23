@@ -79,7 +79,13 @@ function classify(raw: string): Line {
 
 const endsWithColon = (s: string) => /:\s*$/u.test(s);
 
-export function normalizeOutput(text: string): string {
+/**
+ * `carry` (default true): headings and leads are carried onto the next unit / list children and list items
+ * become single units (for the sentence-scoped key patterns). `carry: false` keeps every heading, lead and
+ * item as its own line with its own sentences (for counting sentences, e.g. the support metric).
+ */
+export function normalizeOutput(text: string, opts: { carry?: boolean } = {}): string {
+  const carry = opts.carry !== false;
   const lines = text
     .normalize('NFC')
     .replace(/\r\n?/g, '\n')
@@ -95,7 +101,8 @@ export function normalizeOutput(text: string): string {
   const emit = (u: string) => {
     const body = u.trim();
     if (!body) return;
-    const withHeading = heading ? `${heading.replace(/[:.]\s*$/u, '')}: ${body}` : body;
+    if (!carry && heading) units.push(canon(heading));
+    const withHeading = carry && heading ? `${heading.replace(/[:.]\s*$/u, '')}: ${body}` : body;
     heading = null;
     units.push(canon(withHeading));
   };
@@ -122,16 +129,20 @@ export function normalizeOutput(text: string): string {
           .split('|')
           .map((c) => stripInline(c).replace(/[?:]+\s*$/u, '').trim())
           .filter(Boolean);
-        emit(joinSentences(cells.join(': ')));
+        emit(carry ? joinSentences(cells.join(': ')) : cells.join(': '));
         break;
       }
       case 'item': {
         while (leads.length && leads[leads.length - 1].indent >= l.indent) leads.pop();
         const next = nextNonBlank(i);
-        if (endsWithColon(l.text) && next?.kind === 'item' && next.indent > l.indent) {
+        if (carry && endsWithColon(l.text) && next?.kind === 'item' && next.indent > l.indent) {
           // A new lead at the level of a text lead's children replaces that text lead.
           while (leads.length && leads[leads.length - 1].indent < 0 && (leads[leads.length - 1].childIndent ?? 0) >= l.indent) leads.pop();
           leads.push({ indent: l.indent, text: joinSentences(l.text) });
+          break;
+        }
+        if (!carry) {
+          emit(l.text);
           break;
         }
         const prefix = leads.map((x) => x.text).join(' ');
@@ -140,7 +151,7 @@ export function normalizeOutput(text: string): string {
       }
       case 'text': {
         const next = nextNonBlank(i);
-        if (endsWithColon(l.text) && next?.kind === 'item') {
+        if (carry && endsWithColon(l.text) && next?.kind === 'item') {
           leads.push({ indent: -1, text: joinSentences(l.text), childIndent: next.indent });
           break;
         }

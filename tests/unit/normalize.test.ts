@@ -71,6 +71,17 @@ describe('normalized scoring on real keys', () => {
   });
 });
 
+describe('two views: structure can suppress a trap, never create one', () => {
+  test('a correct bullet with two clauses does not fire a trap that neither clause fires (es-15, glm card)', () => {
+    const card = 'HELPS:\n- El pescado sí está permitido; solo evitar camarón y mariscos.\n\nSAFETY:\n- tomás 8 años, alergia SEVERA a camarón y todos los mariscos.';
+    expect(scoreOutput(load('es-15'), card).trapHits).toEqual([]);
+  });
+  test('known limit: two sentences inside ONE bullet are read together, so a flip next to a negation is masked', () => {
+    // Prose keeps them apart (see "flipped prose still fires"); a single bullet does not.
+    expect(scoreOutput(load('en-01'), '- Dad can pick him up. Grandma cannot.').trapHits).toEqual([]);
+  });
+});
+
 describe('agreement', () => {
   test('counts agreement before and after normalization against the review', () => {
     const story = load('en-01');

@@ -7,6 +7,7 @@ import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { E2EE_MODEL } from '../src/lib/venice/prices';
 import { pct, sec, usd, type ResultsFile } from './results';
+import { provenance } from './metrics';
 import { aggregate, chooseModel, scoreOutput, type Row } from './score';
 import { BudgetStop, CLAUDE_MODEL, MAX_TOKENS, SYSTEM_IDS, getBalanceUsd, modelFor, runSystem, type RunCtx, type SystemId } from './systems';
 import type { EvalStory } from './types';
@@ -100,6 +101,7 @@ async function main() {
             ...(r.safetyItems !== undefined ? { safetyItems: r.safetyItems, safetyPrompts: r.safetyPrompts } : {}),
             ...(r.error ? { error: r.error } : {}),
             ...(args.text ? { text: r.text } : {}),
+            prov: provenance(r.text, story.text),
           };
           done++;
           if (!r.cached || r.error) {

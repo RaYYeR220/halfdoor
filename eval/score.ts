@@ -1,5 +1,6 @@
 // Scoring per eval/stories/README.md: facts are AND-of-OR regex groups over the whole output,
 // limiter facts carry their negation inside the pattern, traps fire when their pattern matches.
+import type { Provenance } from './metrics';
 import { normalizeOutput } from './normalize';
 import type { EvalStory } from './types';
 
@@ -40,24 +41,32 @@ export type Score = {
 };
 
 /**
- * `normalize` (default true) runs the markdown-aware normalizer first (eval/normalize.ts);
- * false scores the raw text exactly as the README rules read it (used to compare the two).
+ * `normalize` (default true) reads the output through the markdown-aware normalizer (eval/normalize.ts) in two
+ * views: `split` (markdown stripped, every heading / lead / item / sentence on its own) and `joined` (headings
+ * and leads carried onto their units, list items and table rows as one unit). A fact counts if it is present in
+ * either view; a trap counts only if it fires in both, so structure can suppress a trap (the qualifier sits in
+ * the same bullet or row) but never create one. `normalize: false` scores the raw text exactly as the README
+ * rules read it (used to measure what the normalizer changes).
  */
 export function scoreOutput(story: EvalStory, text: string, opts: { normalize?: boolean } = {}): Score {
-  const out = opts.normalize === false ? text.normalize('NFC') : normalizeOutput(text);
+  const raw = text.normalize('NFC');
+  const split = opts.normalize === false ? raw : normalizeOutput(text, { carry: false });
+  const joined = opts.normalize === false ? raw : normalizeOutput(text);
+  const inEither = (src: string) => re(src).test(split) || re(src).test(joined);
+  const inBoth = (src: string) => re(src).test(split) && re(src).test(joined);
   const missing: string[] = [];
   let present = 0;
   let limiterPresent = 0;
   let limiterTotal = 0;
   for (const f of story.facts) {
-    const ok = f.must.every((group) => group.some((src) => re(src).test(out)));
+    const ok = f.must.every((group) => group.some(inEither));
     if (f.limiter) limiterTotal++;
     if (ok) {
       present++;
       if (f.limiter) limiterPresent++;
     } else missing.push(f.id);
   }
-  const trapHits = story.traps.filter((t) => re(t.pattern).test(out)).map((t) => t.id);
+  const trapHits = story.traps.filter((t) => inBoth(t.pattern)).map((t) => t.id);
   const trapClasses: Record<TrapClass, string[]> = { flips: [], number: [], sibling: [] };
   for (const id of trapHits) trapClasses[trapClass(id)].push(id);
   return { present, total: story.facts.length, limiterPresent, limiterTotal, flips: [...trapClasses.flips], missing, trapHits, trapClasses };
@@ -78,6 +87,8 @@ export type Row = {
   safetyPrompts?: number;
   error?: string;
   text?: string;
+  /** Provenance metrics (eval/metrics.ts), from the output and its story. */
+  prov?: Provenance;
 };
 
 /** Nearest-rank percentile; 0 for an empty list. */
@@ -101,7 +112,43 @@ export type Aggregate = {
   p95Ms: number;
   costUsd: number;
   errors: number;
+  /** null when the rows carry no provenance metrics. */
+  provenance: ProvenanceAggregate | null;
 };
+
+export type ProvenanceAggregate = {
+  /** Rows whose support was scored (output in the story's language). */
+  supportScored: number;
+  unsupportedMean: number;
+  storiesWithUnsupported: number;
+  sentencesMean: number;
+  outputsWithUnsaidLabel: number;
+  outputsWithUnsaidFamily: number;
+  wordsMean: number;
+  wordsP50: number;
+  readSecMean: number;
+  readSecP50: number;
+};
+
+const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
+
+export function aggregateProvenance(rows: Row[]): ProvenanceAggregate | null {
+  const ps = rows.flatMap((r) => (r.prov ? [r.prov] : []));
+  if (ps.length === 0) return null;
+  const scored = ps.filter((p) => p.supportScored);
+  return {
+    supportScored: scored.length,
+    unsupportedMean: mean(scored.map((p) => p.unsupported.length)),
+    storiesWithUnsupported: scored.filter((p) => p.unsupported.length > 0).length,
+    sentencesMean: mean(scored.map((p) => p.sentences)),
+    outputsWithUnsaidLabel: ps.filter((p) => p.unsaidLabels.length > 0).length,
+    outputsWithUnsaidFamily: ps.filter((p) => p.unsaidFamilies.length > 0).length,
+    wordsMean: mean(ps.map((p) => p.words)),
+    wordsP50: percentile(ps.map((p) => p.words), 50),
+    readSecMean: mean(ps.map((p) => p.readSec)),
+    readSecP50: percentile(ps.map((p) => p.readSec), 50),
+  };
+}
 
 export function aggregate(rows: Row[]): Aggregate {
   const sum = (f: (r: Row) => number) => rows.reduce((a, r) => a + f(r), 0);
@@ -132,6 +179,7 @@ export function aggregate(rows: Row[]): Aggregate {
     p95Ms: percentile(lat, 95),
     costUsd: sum((r) => r.costUsd),
     errors: rows.filter((r) => r.error).length,
+    provenance: aggregateProvenance(rows),
   };
 }
 
