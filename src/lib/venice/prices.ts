@@ -11,6 +11,9 @@ export const PRICES: Record<string, { in: number; out: number }> = {
 /** Default enclave model; final value set by Task 9. */
 export const E2EE_MODEL = 'e2ee-deepseek-v4-flash';
 
+/** Models the browser routes accept. The Node eval path may use any priced e2ee model. */
+export const ALLOWED_BROWSER_MODELS: readonly string[] = [E2EE_MODEL];
+
 export const CAPS = { perSandboxCalls: 15, dailyUsd: 3, maxTokens: 1500 } as const;
 
 export type Usage = { prompt_tokens: number; completion_tokens: number };

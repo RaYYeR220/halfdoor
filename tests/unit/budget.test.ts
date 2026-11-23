@@ -9,7 +9,8 @@ import * as schema from '@/db/schema';
 import { createSandbox } from '@/db/sandbox';
 import { insertChurch } from '@/db/repo/churches';
 import { insertAiCall, listAiCalls } from '@/db/repo/aiCalls';
-import { checkBudget } from '@/lib/venice/budget';
+import { checkBudget, estimateUsd, reserveBudget } from '@/lib/venice/budget';
+import { deleteChurch } from '@/db/repo/churches';
 import { costUsd, PRICES } from '@/lib/venice/prices';
 import { encryptForEnclave, newClientKeys } from '@/lib/crypto/e2ee';
 
@@ -67,6 +68,39 @@ describe('checkBudget', () => {
     await call(b.id, '3.5');
     expect(await checkBudget(a.id)).toEqual({ ok: false, reason: 'daily_cap' });
     expect(await checkBudget(a.id, new Date(Date.now() + 26 * 3600_000))).toEqual({ ok: true });
+  });
+});
+
+describe('reservation and ledger durability', () => {
+  const R = (churchId: string) => ({ churchId, purpose: 'card' as const, model: 'e2ee-deepseek-v4-flash', estimateUsd: 0.001, attestation: null });
+  beforeEach(async () => {
+    await db.delete(schema.aiCalls);
+  });
+  test('parallel reservations cannot overshoot the sandbox cap', async () => {
+    const { churchId } = await createSandbox();
+    for (let i = 0; i < 12; i++) await call(churchId, '0.000001');
+    const results = await Promise.all(Array.from({ length: 8 }, () => reserveBudget(R(churchId))));
+    expect(results.filter((r) => r.ok)).toHaveLength(3);
+    expect(results.filter((r) => !r.ok && r.reason === 'sandbox_cap')).toHaveLength(5);
+    expect(await listAiCalls(churchId)).toHaveLength(15);
+  });
+  test('pending estimates count toward the daily cap', async () => {
+    const c = await insertChurch({ name: 'D', slug: slug('d'), mode: 'live', wrappedDek: 'x' });
+    expect((await reserveBudget({ ...R(c.id), estimateUsd: 2.9 })).ok).toBe(true);
+    expect(await reserveBudget({ ...R(c.id), estimateUsd: 0.2 })).toEqual({ ok: false, reason: 'daily_cap' });
+  });
+  test('estimate is worst case (max_tokens out + ciphertext/6 in)', () => {
+    expect(estimateUsd('e2ee-deepseek-v4-flash', 6_000, 1500)).toBeCloseTo((1000 * 0.182 + 1500 * 0.373) / 1e6, 8);
+  });
+  test('purging a church keeps its spend in the daily cap', async () => {
+    const c = await insertChurch({ name: 'P', slug: slug('p'), mode: 'sandbox', wrappedDek: 'x' });
+    await call(c.id, '3.5');
+    await deleteChurch(c.id);
+    const rows = await db.select().from(schema.aiCalls);
+    expect(rows).toHaveLength(1);
+    expect(rows[0].churchId).toBeNull();
+    const other = await insertChurch({ name: 'O', slug: slug('o'), mode: 'live', wrappedDek: 'x' });
+    expect(await checkBudget(other.id)).toEqual({ ok: false, reason: 'daily_cap' });
   });
 });
 
@@ -149,14 +183,52 @@ describe('POST /api/tee/chat', () => {
     expect(Number(rows[0].costUsd)).toBeCloseTo(0.182, 3);
     expect(rows[0].attestation).toMatchObject({ verified: true });
   });
-  test('upstream non-200 relays the status and records ok=false', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('secret detail', { status: 503 })));
+  test.each([401, 402, 403, 429, 503])('upstream %i maps to our 502, ok=false, not billed', async (status) => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('secret detail', { status })));
     const r = await POST(body());
-    expect(r.status).toBe(503);
-    expect(await r.json()).toEqual({ error: 'upstream error' });
+    expect(r.status).toBe(502);
+    expect(await r.json()).toEqual({ error: 'upstream' });
     const rows = await listAiCalls(churchId);
     expect(rows).toHaveLength(1);
     expect(rows[0].ok).toBe(false);
+    expect(Number(rows[0].costUsd)).toBe(0);
+  });
+  test('cancelled stream keeps the worst-case estimate (ok=false)', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(sse(['data: {"choices":[]}\n\n'])));
+    const r = await POST(body());
+    await r.body!.cancel();
+    const rows = await listAiCalls(churchId);
+    expect(rows).toHaveLength(1);
+    expect(rows[0].ok).toBe(false);
+    expect(Number(rows[0].costUsd)).toBeGreaterThan(0);
+  });
+  test('allowlist: only the default model, size cap, pubkey shape', async () => {
+    expect((await POST(body({ model: 'e2ee-kimi-k3-1-pro-p' }))).status).toBe(400);
+    expect((await POST(body({ messages: [{ role: 'user', content: 'a'.repeat(100_001) }] }))).status).toBe(400);
+    expect((await POST(body({ clientPubKey: 'f'.repeat(130) }))).status).toBe(400);
+    expect((await POST(body({ clientPubKey: client.publicKeyHex.slice(2) + '00' }))).status).toBe(400);
+  });
+  test('attestation that does not match the request is not stored and flagged', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(sse([USAGE])));
+    const att = {
+      verified: true, nonceOk: true, provider: 'p', hardware: null, model: 'e2ee-deepseek-v4-flash',
+      signingAddress: null, modelPublicKey: newClientKeys().publicKeyHex, checkedAt: 'now',
+    };
+    await (await POST(body({ attestation: att }))).text();
+    const rows = await listAiCalls(churchId);
+    expect(rows[0].attestation).toBeNull();
+    expect(rows[0].attestationMismatch).toBe(true);
+  });
+  test('stored attestation is accepted with or without the 04 prefix', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(sse([USAGE])));
+    const att = {
+      verified: true, nonceOk: true, provider: 'p', hardware: null, model: 'e2ee-deepseek-v4-flash',
+      signingAddress: null, modelPublicKey: model.publicKeyHex.slice(2), checkedAt: 'now',
+    };
+    await (await POST(body({ attestation: att }))).text();
+    const rows = await listAiCalls(churchId);
+    expect(rows[0].attestation).toMatchObject({ verified: true });
+    expect(rows[0].attestationMismatch).toBe(false);
   });
   test('stream error records exactly one ok=false row', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(sse(['data: {"choices":[]}\n\n'], true)));
@@ -165,6 +237,7 @@ describe('POST /api/tee/chat', () => {
     const rows = await listAiCalls(churchId);
     expect(rows).toHaveLength(1);
     expect(rows[0].ok).toBe(false);
+    expect(Number(rows[0].costUsd)).toBeGreaterThan(0);
   });
   test('429 with reason when over the sandbox cap', async () => {
     for (let i = 0; i < 15; i++) await call(churchId, '0.000001');

@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getViewer } from '@/lib/auth/viewer';
-import { checkBudget } from '@/lib/venice/budget';
-import { ChatBody, VENICE_BASE, buildUpstreamBody, recordFailure, relayAndRecord, upstreamHeaders } from '@/lib/venice/teeProxy';
+import { estimateUsd, reserveBudget } from '@/lib/venice/budget';
+import { CAPS } from '@/lib/venice/prices';
+import {
+  ChatBody, VENICE_BASE, attestationForLedger, buildUpstreamBody, failReserved, relayAndRecord, upstreamHeaders,
+} from '@/lib/venice/teeProxy';
+
+const upstreamError = () => NextResponse.json({ error: 'upstream' }, { status: 502 });
 
 export async function POST(req: Request) {
   const viewer = await getViewer();
@@ -12,31 +17,41 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: 'bad request' }, { status: 400 });
   const body = parsed.data;
 
-  const budget = await checkBudget(viewer.churchId);
-  if (!budget.ok) return NextResponse.json({ reason: budget.reason }, { status: 429 });
-
   const apiKey = process.env.VENICE_API_KEY;
   if (!apiKey) return NextResponse.json({ error: 'not configured' }, { status: 500 });
 
-  const base = { churchId: viewer.churchId, purpose: body.purpose, model: body.model, attestation: body.attestation ?? null };
+  // Reserve worst-case spend under a lock BEFORE the upstream call (parallel or cancelled calls cannot beat the caps).
+  const chars = body.messages.reduce((n, m) => n + m.content.length, 0);
+  const { attestation, mismatch } = attestationForLedger(body);
+  const res = await reserveBudget({
+    churchId: viewer.churchId,
+    purpose: body.purpose,
+    model: body.model,
+    estimateUsd: estimateUsd(body.model, chars, body.maxTokens ?? CAPS.maxTokens),
+    attestation,
+    attestationMismatch: mismatch,
+  });
+  if (!res.ok) return NextResponse.json({ reason: res.reason }, { status: 429 });
+  const row = { id: res.id, model: body.model };
+
   let upstream: Response;
   try {
     upstream = await fetch(`${VENICE_BASE}/chat/completions`, {
       method: 'POST',
-      headers: upstreamHeaders(apiKey, body),
-      body: JSON.stringify(buildUpstreamBody(body)),
+      headers: upstreamHeaders(apiKey, body.clientPubKey, body.modelPubKey),
+      body: JSON.stringify(buildUpstreamBody(body.model, body.messages, body.maxTokens)),
       signal: req.signal,
     });
   } catch {
-    await recordFailure(base);
-    return NextResponse.json({ error: 'upstream unavailable' }, { status: 502 });
+    await failReserved(row);
+    return upstreamError();
   }
   if (upstream.status !== 200 || !upstream.body) {
     await upstream.body?.cancel().catch(() => undefined);
-    await recordFailure(base);
-    return NextResponse.json({ error: 'upstream error' }, { status: upstream.status === 200 ? 502 : upstream.status });
+    await failReserved(row);
+    return upstreamError();
   }
-  return new Response(relayAndRecord(upstream.body, base), {
+  return new Response(relayAndRecord(upstream.body, row), {
     status: 200,
     headers: { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store, no-transform' },
   });

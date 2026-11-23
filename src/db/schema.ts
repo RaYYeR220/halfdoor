@@ -17,6 +17,8 @@ export const churches = pgTable('churches', {
   pcoOrgId: text('pco_org_id'),
   wrappedDek: text('wrapped_dek').notNull(),
   expiresAt: ts('expires_at'),
+  /** Sandboxes only: salted HMAC of the creating client's IP (never the raw IP), for rate limiting. */
+  creatorHash: text('creator_hash'),
   createdAt: ts('created_at').notNull().defaultNow(),
 });
 
@@ -139,7 +141,8 @@ export const cardAccessLog = pgTable('card_access_log', {
 
 export const aiCalls = pgTable('ai_calls', {
   id: id(),
-  churchId: uuid('church_id').notNull().references(() => churches.id, { onDelete: 'cascade' }),
+  /** SET NULL: purging a sandbox must not erase its spend from the daily cap. */
+  churchId: uuid('church_id').references(() => churches.id, { onDelete: 'set null' }),
   purpose: text('purpose', { enum: ['card', 'translate', 'note', 'lesson'] }).notNull(),
   model: text('model').notNull(),
   e2ee: boolean('e2ee').notNull(),
@@ -147,6 +150,8 @@ export const aiCalls = pgTable('ai_calls', {
   tokensIn: integer('tokens_in'),
   tokensOut: integer('tokens_out'),
   costUsd: numeric('cost_usd', { precision: 10, scale: 6 }),
-  ok: boolean('ok').notNull(),
+  /** null = reserved / in flight (cost_usd holds the worst-case estimate). */
+  ok: boolean('ok'),
+  attestationMismatch: boolean('attestation_mismatch').notNull().default(false),
   at: ts('at').notNull().defaultNow(),
 });

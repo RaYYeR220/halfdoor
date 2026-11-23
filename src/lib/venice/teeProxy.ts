@@ -1,14 +1,16 @@
 // SERVER-ONLY. Validation and ciphertext relay for the Venice TEE proxy. Never logs bodies.
 import { z } from 'zod';
 import { looksEncrypted } from '@/lib/crypto/e2ee';
-import { recordAiCall } from './budget';
-import { CAPS, PRICES, type Usage } from './prices';
+import { finalizeAiCall } from './budget';
+import { ALLOWED_BROWSER_MODELS, PRICES, type Usage } from './prices';
+import { isPubKeyHex, normalizePubKey } from './request';
 
-export const VENICE_BASE = 'https://api.venice.ai/api/v1';
+export { VENICE_BASE, buildUpstreamBody, upstreamHeaders } from './request';
 
 const HEX = /^[0-9a-f]+$/i;
-export const pubKeyHex = z.string().min(128).max(130).regex(HEX);
-export const modelId = z.string().refine((m) => m.startsWith('e2ee-') && m in PRICES, 'unsupported model');
+export const pubKeyHex = z.string().refine(isPubKeyHex, 'bad public key');
+/** Browser routes only accept the allowlisted model(s), which must also be priced e2ee models. */
+export const modelId = z.string().refine((m) => m.startsWith('e2ee-') && m in PRICES && ALLOWED_BROWSER_MODELS.includes(m), 'unsupported model');
 export const nonceHex = z.string().length(64).regex(HEX);
 
 export const AttestationSummarySchema = z.object({
@@ -26,7 +28,7 @@ export const ChatBody = z.object({
   model: modelId,
   purpose: z.enum(['card', 'translate', 'note']),
   messages: z
-    .array(z.object({ role: z.enum(['system', 'user']), content: z.string().refine(looksEncrypted, 'plaintext rejected') }))
+    .array(z.object({ role: z.enum(['system', 'user']), content: z.string().max(100_000).refine(looksEncrypted, 'plaintext rejected') }))
     .min(1)
     .max(4),
   clientPubKey: pubKeyHex,
@@ -36,40 +38,25 @@ export const ChatBody = z.object({
 });
 export type ChatBody = z.infer<typeof ChatBody>;
 
-/** The upstream body is rebuilt from validated fields only. */
-export function buildUpstreamBody(b: ChatBody) {
-  return {
-    model: b.model,
-    messages: b.messages.map((m) => ({ role: m.role, content: m.content })),
-    stream: true,
-    max_tokens: Math.min(b.maxTokens ?? CAPS.maxTokens, CAPS.maxTokens),
-    venice_parameters: { include_venice_system_prompt: false, disable_thinking: true },
-  };
+/** Client-supplied attestation is stored only if it matches this request's model and enclave key. */
+export function attestationForLedger(b: ChatBody): { attestation: unknown; mismatch: boolean } {
+  const a = b.attestation;
+  if (!a) return { attestation: null, mismatch: false };
+  const ok = a.model === b.model && normalizePubKey(a.modelPublicKey) === normalizePubKey(b.modelPubKey);
+  return ok ? { attestation: a, mismatch: false } : { attestation: null, mismatch: true };
 }
 
-export function upstreamHeaders(apiKey: string, b: Pick<ChatBody, 'clientPubKey' | 'modelPubKey'>): Record<string, string> {
-  return {
-    Authorization: `Bearer ${apiKey}`,
-    'Content-Type': 'application/json',
-    'X-Venice-TEE-Client-Pub-Key': b.clientPubKey,
-    'X-Venice-TEE-Model-Pub-Key': b.modelPubKey,
-    'X-Venice-TEE-Signing-Algo': 'ecdsa',
-  };
-}
-
-export type LedgerBase = { churchId: string; purpose: ChatBody['purpose']; model: string; attestation: unknown };
-
-/** Passes the SSE bytes through unchanged; records exactly one ai_calls row at the end. */
-export function relayAndRecord(upstream: ReadableStream<Uint8Array>, base: LedgerBase): ReadableStream<Uint8Array> {
+/** Passes the SSE bytes through unchanged; finalises the reserved ledger row at the end. */
+export function relayAndRecord(upstream: ReadableStream<Uint8Array>, row: { id: string; model: string }): ReadableStream<Uint8Array> {
   const reader = upstream.getReader();
   const dec = new TextDecoder();
   let buf = '';
   let usage: Usage | null = null;
-  let recorded = false;
+  let finished = false;
 
-  const scan = (final: boolean) => {
+  const scan = (rest: boolean) => {
     const lines = buf.split('\n');
-    buf = final ? '' : (lines.pop() ?? '');
+    buf = rest ? '' : (lines.pop() ?? '');
     for (const line of lines) {
       if (!line.startsWith('data:')) continue;
       const d = line.slice(5).trim();
@@ -82,12 +69,12 @@ export function relayAndRecord(upstream: ReadableStream<Uint8Array>, base: Ledge
       } catch { /* not JSON */ }
     }
   };
-  const record = async (ok: boolean) => {
-    if (recorded) return;
-    recorded = true;
+  const finish = async (ok: boolean) => {
+    if (finished) return;
+    finished = true;
     try {
-      await recordAiCall({ ...base, attestation: base.attestation ?? null, e2ee: true, ok, usage });
-    } catch { /* ledger failure must not break the stream; nothing logged */ }
+      await finalizeAiCall(row.id, { ok, model: row.model, usage });
+    } catch { /* the reservation (estimate) stays; nothing logged */ }
   };
 
   return new ReadableStream<Uint8Array>({
@@ -97,7 +84,7 @@ export function relayAndRecord(upstream: ReadableStream<Uint8Array>, base: Ledge
         if (done) {
           buf += dec.decode();
           scan(true);
-          await record(true);
+          await finish(true);
           controller.close();
           return;
         }
@@ -105,19 +92,20 @@ export function relayAndRecord(upstream: ReadableStream<Uint8Array>, base: Ledge
         scan(false);
         controller.enqueue(value);
       } catch {
-        await record(false);
+        await finish(false);
         controller.error(new Error('upstream stream failed'));
       }
     },
     async cancel() {
-      await record(false);
+      await finish(false);
       await reader.cancel().catch(() => undefined);
     },
   });
 }
 
-export async function recordFailure(base: LedgerBase): Promise<void> {
+/** Upstream refused before streaming: not billed, but the call still counts. */
+export async function failReserved(row: { id: string; model: string }): Promise<void> {
   try {
-    await recordAiCall({ ...base, attestation: base.attestation ?? null, e2ee: true, ok: false });
+    await finalizeAiCall(row.id, { ok: false, model: row.model, free: true });
   } catch { /* ignore */ }
 }

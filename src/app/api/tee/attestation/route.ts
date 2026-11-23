@@ -19,9 +19,9 @@ export async function GET(req: Request) {
       headers: { Authorization: `Bearer ${apiKey}` },
       cache: 'no-store',
     });
-    if (!res.ok) return NextResponse.json({ error: 'upstream error' }, { status: res.status });
+    if (!res.ok) return NextResponse.json({ error: 'upstream' }, { status: 502 });
     return NextResponse.json(await res.json(), { headers: { 'Cache-Control': 'no-store' } });
   } catch {
-    return NextResponse.json({ error: 'upstream unavailable' }, { status: 502 });
+    return NextResponse.json({ error: 'upstream' }, { status: 502 });
   }
 }

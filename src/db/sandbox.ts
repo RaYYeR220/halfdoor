@@ -19,7 +19,7 @@ const RETENTION = 365 * DAY;
 const PAST_WEEKS = 5;
 
 /** Copy the Fernbrook fixture into a fresh church with its own DEK. Times are relative to now. */
-export async function createSandbox(): Promise<{ churchId: string; slug: string }> {
+export async function createSandbox(opts: { creatorHash?: string } = {}): Promise<{ churchId: string; slug: string }> {
   const T = Date.now();
   const at = (offsetMs: number) => new Date(T + offsetMs);
   const wrappedDek = newWrappedDek();
@@ -27,7 +27,7 @@ export async function createSandbox(): Promise<{ churchId: string; slug: string 
 
   const church = await insertChurch({
     name: FERNBROOK_NAME, slug, tz: FERNBROOK_TZ, mode: 'sandbox', wrappedDek,
-    createdAt: at(0), expiresAt: at(SANDBOX_TTL),
+    createdAt: at(0), expiresAt: at(SANDBOX_TTL), creatorHash: opts.creatorHash ?? null,
   });
   try {
     await seed(church.id, wrappedDek, T);
