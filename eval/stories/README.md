@@ -52,6 +52,6 @@ Trap ids are `<type>.<slug>`. 94 traps across 51 stories (rule: at least 40 stor
 
 ## Validation
 
-`node ../validate.mjs` checks shape, compiles every regex, asserts every `must` OR-group matches the story's own text, asserts no trap matches the story's own text (the parent never makes the wrong claim), and checks the set-level counts. It prints `60 stories OK` or the failures; `--stats` adds counts.
+`pnpm eval:validate` (`../validate.ts`) checks shape, compiles every regex, asserts every `must` OR-group matches the story's own text, asserts no trap matches the story's own text (the parent never makes the wrong claim), and checks the set-level counts. It prints `60 stories OK` or the failures; `--stats` adds counts.
 
 Keys were also probed with hand-written careful summaries (must hit every fact, no trap) and flipped summaries (must fire a trap), in both languages, markdown/card and prose styles.

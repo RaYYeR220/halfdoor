@@ -1,0 +1,110 @@
+{
+  "about": "Hand review of every automatic miss and trap hit in final.json. verdict \"real\" = the output really lacks the fact or really states the wrong claim; \"scorer\" = the output states the fact correctly and the sentence-scoped regex could not see it (markdown headings, table cells and bullet lists split sentences; a pronoun or a word missing from a pattern list). Quotes are from the outputs in final.json.",
+  "notes": {
+    "final": "**Read this with the adjudicated table below.** Every baseline miss and trap hit in this run is a scorer artifact: the plain summaries kept every safety fact with the right polarity, but in markdown (headings, tables, bullet lists) or wording the sentence-scoped patterns do not cover. Halfdoor's two misses are real. On this story set Halfdoor does not keep more safety facts than a plain summary; what it adds is that every safety line on the card is the parent's own sentence, located in the story, so polarity can be checked by code instead of by a reader.",
+    "sweep": "All four enclave models had 0 flips and 0 trap hits on the card. `e2ee-glm-5-3-flash` kept the most facts (157/157) but had p50 31.6 s and p95 124.7 s, and 2 of its 60 first attempts hit the 180 s client timeout (es-10, es-14; the second attempt is what is scored). Read in strict order, the rule would pick it; with the latency clause as a requirement it is out, and `e2ee-deepseek-v4-flash` (153/157, p50 7.2 s) is chosen. Every \"no card\" in the sweep (deepseek en-32; qwen en-19, en-29, es-12) is the same pipeline issue: the draft is rejected whole when one tag or one section name is outside the schema enum.",
+    "burden": "What the Halfdoor items were: es-05 \"No tiene ninguna condición médica.\" and es-11 \"No tiene alergias ni medicamentos.\" (the parent's own all-clear, harmless on a card); es-18 \"Tiene una hermanita de 3 años que también viene a la iglesia…\" filed under safety (noise); and one safety-net prompt on en-33 \"No medical stuff.\" (the lexicon matches \"medic\" in a negative statement). Accepting it adds that line to the card (halfdoor_net)."
+  },
+  "items": {
+    "halfdoor/en-32/absence_note_time": {
+      "verdict": "real",
+      "note": "No card. The model returned a correct card on both attempts (all three safety items quoted) but added a tag \"safety\", which is not a valid tag; the schema rejects the whole draft and the parent sees an error. Pipeline bug: unknown tags should be dropped, not fatal."
+    },
+    "halfdoor/en-32/no_911_unless_fall_or_convulsive": {
+      "verdict": "real",
+      "note": "Same rejected draft as absence_note_time (invalid tag \"safety\")."
+    },
+    "halfdoor/en-32/water_arms_reach": {
+      "verdict": "real",
+      "note": "Same rejected draft as absence_note_time (invalid tag \"safety\")."
+    },
+    "halfdoor_net/en-32/absence_note_time": {
+      "verdict": "real",
+      "note": "No card to accept prompts into (same rejected draft)."
+    },
+    "halfdoor_net/en-32/no_911_unless_fall_or_convulsive": {
+      "verdict": "real",
+      "note": "No card (same rejected draft)."
+    },
+    "halfdoor_net/en-32/water_arms_reach": {
+      "verdict": "real",
+      "note": "No card (same rejected draft)."
+    },
+    "halfdoor/es-02/t1d": {
+      "verdict": "real",
+      "note": "The card lists the pump, the low and high thresholds and NO insulin, but leaves off the header line \"Valentina, 8 años — diabetes tipo 1\". The safety net flags that line; accepting it restores the fact (halfdoor_net keeps it)."
+    },
+    "baseline_same/en-14/father_no_pickup": {
+      "verdict": "scorer",
+      "note": "\"Father (Derek): Has supervised visits only through an agency. He is NOT on the pickup list and is not permitted to take Zoe anywhere.\" The negation is in the next sentence, which says \"He\"."
+    },
+    "baseline_same/en-34/parents_no_pickup": {
+      "verdict": "scorer",
+      "note": "\"NOT AUTHORIZED FOR PICKUP OR VISITATION:\" followed by bullet lines \"Elias's Mother\" / \"Elias's Father\"; the negation and the names are on different lines."
+    },
+    "baseline_same/es-24/parents_no_pickup": {
+      "verdict": "scorer",
+      "note": "\"Neither of his parents may collect him, even if they arrive with paperwork.\" \"Neither\" is not in the negation word list."
+    },
+    "baseline_claude/en-01/only_mom_grandma": {
+      "verdict": "scorer",
+      "note": "\"Leo may **only** be released to:\" followed by bullets \"Sara (mom)\" / \"Ruth (grandma)\"; \"only\" and the names are on different lines."
+    },
+    "baseline_claude/en-34/parents_no_pickup": {
+      "verdict": "scorer",
+      "note": "\"No one else may pick Elias up or visit him at church. This includes:\" followed by bullets \"Elias's mother\" / \"Elias's father\"."
+    },
+    "baseline_claude/es-01/only_mom_grandma": {
+      "verdict": "scorer",
+      "note": "Heading \"Autorización de recogida: solo dos personas\", then \"Únicamente pueden recoger a Mateo:\" followed by bullets \"Daniela (mamá)\" / \"Carmen (abuela)\"; the limiter and the names are on different lines."
+    },
+    "baseline_claude/es-02/no_insulin": {
+      "verdict": "scorer",
+      "note": "\"NO le dé insulina.\" The pattern's verbs are dar/darle/give/administer/poner, not the imperative \"dé\"."
+    },
+    "baseline_claude/es-07/only_rosa_marta": {
+      "verdict": "scorer",
+      "note": "\"Solo pueden recogerlo:\" followed by a numbered list \"Rosa, su abuela\" / \"Marta, su tía\", plus \"Si llega alguien más que no sea Rosa o Marta, no entregue al niño\"."
+    },
+    "baseline_same/en-17/doesnt_need.epipen": {
+      "verdict": "scorer",
+      "note": "Table row \"| EpiPen? | Not needed |\": \"|\" separates sentences, so the cell \"EpiPen?\" stands alone. The prose also says \"She does **not** need an EpiPen\"."
+    },
+    "baseline_same/en-20/cancelled_med.diastat": {
+      "verdict": "scorer",
+      "note": "\"Old paperwork may mention **Diastat**. **Ignore it—Diastat is no longer used.**\" The qualifier is in the next sentence."
+    },
+    "baseline_same/en-23/sibling.diabetes": {
+      "verdict": "scorer",
+      "note": "\"You may also find **glucose tabs** in the bag. **These are NOT for Nora** — they belong to her brother Sam. She is **not diabetic**\". The qualifier is in the next sentence."
+    },
+    "baseline_same/en-32/doesnt_need.911_for_absence": {
+      "verdict": "scorer",
+      "note": "Quick-reference table: \"| Staring spell (10–20 sec) | Note the time; tell parent at pickup. No 911. |\" and \"| Falls and gets hurt | Call 911. |\"; table cells split the sentence."
+    },
+    "baseline_same/es-24/negated_pickup.parents": {
+      "verdict": "scorer",
+      "note": "\"Neither of his parents may collect him\" is the correct claim; \"neither\" is not in the trap's qualifier list."
+    },
+    "baseline_claude/en-13/cancelled_med.singulair": {
+      "verdict": "scorer",
+      "note": "\"**Not currently taking:** Singulair. His family stopped it in September, so please disregard any older forms that list it.\" \"Not currently\" is not in the trap's qualifier list; \"stopped\" is in the next sentence."
+    },
+    "baseline_claude/en-23/sibling.diabetes": {
+      "verdict": "scorer",
+      "note": "Heading \"## Please Note: Glucose Tablets\" followed by \"These belong to her brother Sam. Nora is not diabetic. Please do not give them to her.\""
+    },
+    "baseline_claude/en-32/doesnt_need.911_for_absence": {
+      "verdict": "scorer",
+      "note": "Heading \"## When to call 911\", then \"Call 911 only if:\" followed by bullets \"Emma falls and is injured, or\" / \"She has a full convulsive seizure\", then \"A staring spell on its own does not need 911.\" The heading line stands alone as a sentence."
+    },
+    "baseline_claude/es-17/double_negation.never_escapes": {
+      "verdict": "scorer",
+      "note": "Says “Benja se ha escapado en dos ocasiones” and then “No debe darse por hecho que \"nunca se escapa\"” (do not assume he never runs off): the correct reading."
+    },
+    "baseline_claude/es-19/sibling.asthma": {
+      "verdict": "scorer",
+      "note": "Summary table row \"| Asma | NO. El inhalador es de Lucas |\"; the cell \"Asma\" stands alone."
+    }
+  }
+}

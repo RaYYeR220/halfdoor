@@ -1,0 +1,339 @@
+{
+ "meta": {
+  "createdAt": "2026-11-23T16:05:15.197Z",
+  "stories": 2,
+  "systems": [
+   "halfdoor",
+   "halfdoor_net",
+   "baseline_same",
+   "baseline_claude"
+  ],
+  "models": [
+   "e2ee-deepseek-v4-flash"
+  ],
+  "claudeModel": "claude-sonnet-5-5",
+  "maxTokens": 1500,
+  "concurrency": 4,
+  "balanceBeforeUsd": 94.67305682,
+  "balanceAfterUsd": 94.65551969,
+  "liveSpendUsd": 0.017537116
+ },
+ "aggregates": [
+  {
+   "system": "halfdoor",
+   "model": "e2ee-deepseek-v4-flash",
+   "agg": {
+    "stories": 2,
+    "present": 7,
+    "total": 7,
+    "limiterPresent": 4,
+    "limiterTotal": 4,
+    "trapHits": 0,
+    "trapClasses": {
+     "flips": 0,
+     "number": 0,
+     "sibling": 0
+    },
+    "storiesWithTrap": 0,
+    "noSafety": {
+     "stories": 0,
+     "safetyItems": null,
+     "safetyPrompts": null,
+     "storiesWithAny": null
+    },
+    "p50Ms": 22342,
+    "p95Ms": 23408,
+    "costUsd": 0.000411722,
+    "errors": 0
+   }
+  },
+  {
+   "system": "halfdoor_net",
+   "model": "e2ee-deepseek-v4-flash",
+   "agg": {
+    "stories": 2,
+    "present": 7,
+    "total": 7,
+    "limiterPresent": 4,
+    "limiterTotal": 4,
+    "trapHits": 0,
+    "trapClasses": {
+     "flips": 0,
+     "number": 0,
+     "sibling": 0
+    },
+    "storiesWithTrap": 0,
+    "noSafety": {
+     "stories": 0,
+     "safetyItems": null,
+     "safetyPrompts": null,
+     "storiesWithAny": null
+    },
+    "p50Ms": 22342,
+    "p95Ms": 23408,
+    "costUsd": 0.000411722,
+    "errors": 0
+   }
+  },
+  {
+   "system": "baseline_same",
+   "model": "e2ee-deepseek-v4-flash",
+   "agg": {
+    "stories": 2,
+    "present": 7,
+    "total": 7,
+    "limiterPresent": 4,
+    "limiterTotal": 4,
+    "trapHits": 0,
+    "trapClasses": {
+     "flips": 0,
+     "number": 0,
+     "sibling": 0
+    },
+    "storiesWithTrap": 0,
+    "noSafety": {
+     "stories": 0,
+     "safetyItems": null,
+     "safetyPrompts": null,
+     "storiesWithAny": null
+    },
+    "p50Ms": 6779,
+    "p95Ms": 15071,
+    "costUsd": 0.00031939399999999997,
+    "errors": 0
+   }
+  },
+  {
+   "system": "baseline_claude",
+   "model": "claude-sonnet-5-5",
+   "agg": {
+    "stories": 2,
+    "present": 6,
+    "total": 7,
+    "limiterPresent": 3,
+    "limiterTotal": 4,
+    "trapHits": 0,
+    "trapClasses": {
+     "flips": 0,
+     "number": 0,
+     "sibling": 0
+    },
+    "storiesWithTrap": 0,
+    "noSafety": {
+     "stories": 0,
+     "safetyItems": null,
+     "safetyPrompts": null,
+     "storiesWithAny": null
+    },
+    "p50Ms": 6728,
+    "p95Ms": 7585,
+    "costUsd": 0.016806,
+    "errors": 0
+   }
+  }
+ ],
+ "rows": [
+  {
+   "system": "halfdoor",
+   "model": "e2ee-deepseek-v4-flash",
+   "storyId": "en-01",
+   "noSafety": false,
+   "score": {
+    "present": 3,
+    "total": 3,
+    "limiterPresent": 2,
+    "limiterTotal": 2,
+    "flips": [],
+    "missing": [],
+    "trapHits": [],
+    "trapClasses": {
+     "flips": [],
+     "number": [],
+     "sibling": []
+    }
+   },
+   "latencyMs": 23408,
+   "costUsd": 0.000187902,
+   "cached": false,
+   "safetyItems": 2,
+   "safetyPrompts": 1,
+   "text": "LOVES:\n- Loves dinosaurs and anything with wheels.\n\nHARD:\n- Loud music in big rooms is really hard; he covers his ears and drops to the floor.\n\nHELPS:\n- He is no longer allergic to eggs, so snacks are fine now.\n\nSAFETY:\n- The important thing: his dad is NOT allowed to pick him up, there's a court order, only me (Sara) or his grandma Ruth.\n- When he's overwhelmed he bolts for the nearest door, so please keep an eye on the exits."
+  },
+  {
+   "system": "halfdoor_net",
+   "model": "e2ee-deepseek-v4-flash",
+   "storyId": "en-01",
+   "noSafety": false,
+   "score": {
+    "present": 3,
+    "total": 3,
+    "limiterPresent": 2,
+    "limiterTotal": 2,
+    "flips": [],
+    "missing": [],
+    "trapHits": [],
+    "trapClasses": {
+     "flips": [],
+     "number": [],
+     "sibling": []
+    }
+   },
+   "latencyMs": 23408,
+   "costUsd": 0.000187902,
+   "cached": true,
+   "safetyItems": 3,
+   "safetyPrompts": 1,
+   "text": "LOVES:\n- Loves dinosaurs and anything with wheels.\n\nHARD:\n- Loud music in big rooms is really hard; he covers his ears and drops to the floor.\n\nHELPS:\n- He is no longer allergic to eggs, so snacks are fine now.\n\nSAFETY:\n- The important thing: his dad is NOT allowed to pick him up, there's a court order, only me (Sara) or his grandma Ruth.\n- When he's overwhelmed he bolts for the nearest door, so please keep an eye on the exits.\n- He used to be allergic to eggs but he outgrew it last year, so snacks are fine now."
+  },
+  {
+   "system": "baseline_same",
+   "model": "e2ee-deepseek-v4-flash",
+   "storyId": "en-01",
+   "noSafety": false,
+   "score": {
+    "present": 3,
+    "total": 3,
+    "limiterPresent": 2,
+    "limiterTotal": 2,
+    "flips": [],
+    "missing": [],
+    "trapHits": [],
+    "trapClasses": {
+     "flips": [],
+     "number": [],
+     "sibling": []
+    }
+   },
+   "latencyMs": 15071,
+   "costUsd": 0.00015843200000000002,
+   "cached": false,
+   "text": "Here's a one-page summary for the volunteer:\n\n---\n\n# Sunday Care Summary: Leo (Age 6)\n\n**About Leo:** Leo is a 6-year-old boy. He is autistic. He is a delight and has clear, predictable preferences that help him feel safe.\n\n**What He Loves:**\n- Dinosaurs — a great way to connect with him!\n- Anything with wheels (cars, trucks, trains)\n\n**Sensory Needs:**\n- **Loud music in big rooms is really hard for him.** He will cover his ears and may drop to the floor. Please give him warning before any music or loud group activities, and let him move to a quieter spot if needed.\n\n**Safety — Please Read Carefully:**\n- **Exit watch:** When Leo is overwhelmed, he bolts for the nearest door. Please keep an eye on the exits and stay close to him during transitions. If he heads for a door, calmly redirect him.\n- **Pickup authorization:** Leo's dad is **NOT** allowed to pick him up — there is a court order. **Only Sara (mom) or Grandma Ruth may collect him.** If anyone else asks for him, do not release him; contact the children's ministry lead immediately.\n\n**Snacks/Allergies:**\n- Leo used to be allergic to eggs but outgrew it last year, so regular snacks are fine now.\n\n**Quick Tips:**\n- Offer dinosaur or wheel-themed toys/activities to help him settle.\n- Watch for early signs of overwhelm (covering ears, agitation) and offer a quiet alternative before he escalates.\n\nThank you for caring for Leo!\n\n---\n\nWant me to trim this down further or adjust the tone (e.g., more formal for a check-in sheet)?"
+  },
+  {
+   "system": "baseline_claude",
+   "model": "claude-sonnet-5-5",
+   "storyId": "en-01",
+   "noSafety": false,
+   "score": {
+    "present": 3,
+    "total": 3,
+    "limiterPresent": 2,
+    "limiterTotal": 2,
+    "flips": [],
+    "missing": [],
+    "trapHits": [],
+    "trapClasses": {
+     "flips": [],
+     "number": [],
+     "sibling": []
+    }
+   },
+   "latencyMs": 6728,
+   "costUsd": 0.008028,
+   "cached": false,
+   "text": "# Leo: Volunteer Summary\n\n**Age:** 6\n\n## Pickup and Safety (Please Read First)\n\n**Authorized pickup is limited to two people:**\n- **Sara** (Leo's mom)\n- **Ruth** (Leo's grandma)\n\n**Leo's father is not permitted to pick him up. There is a court order in place.** Please do not release Leo to anyone other than Sara or Ruth, even if someone says they've been approved. If anyone else attempts to pick him up, politely ask them to wait and contact the ministry leader right away.\n\n**Exits:** When Leo is overwhelmed, he may bolt for the nearest door. Please keep an eye on exits at all times, and try to position yourself between Leo and the door when he's showing signs of distress.\n\n## About Leo\n\nLeo is a sweet, curious 6-year-old who is autistic. He loves **dinosaurs** and **anything with wheels** (cars, trucks, trains). These are great tools for connecting with him, calming him, or redirecting his attention. Dinosaur books, toy trucks, or a simple conversation about his favorites can go a long way.\n\n## What Can Be Hard for Him\n\n**Loud music in big rooms** is very difficult for Leo. When it's too much, he may cover his ears and drop to the floor. If you see this, it's not misbehavior. He's overwhelmed.\n\n**Ways to help:**\n- Move him to a quieter space as soon as you notice signs of distress\n- Stay calm and speak softly\n- Offer a favorite toy or a dinosaur book\n- Avoid pressuring him to rejoin the group until he's ready\n\nIf worship time or a large group activity is likely to be loud, consider giving him a quiet option or a short break beforehand.\n\n## Food and Snacks\n\nLeo previously had an egg allergy but **outgrew it last year**, so regular snacks are fine. If you have any questions about a specific snack, check with Sara or Ruth at drop-off.\n\n## Quick Reminders\n\n- Check in with Sara or Ruth at drop-off for anything new or different that day\n- Keep exits in view\n- Release Leo **only** to Sara or Ruth\n- When in doubt, ask the ministry leader\n\nThank you for caring for Leo. A little patience and a few dinosaurs will go a long way!"
+  },
+  {
+   "system": "halfdoor",
+   "model": "e2ee-deepseek-v4-flash",
+   "storyId": "es-01",
+   "noSafety": false,
+   "score": {
+    "present": 4,
+    "total": 4,
+    "limiterPresent": 2,
+    "limiterTotal": 2,
+    "flips": [],
+    "missing": [],
+    "trapHits": [],
+    "trapClasses": {
+     "flips": [],
+     "number": [],
+     "sibling": []
+    }
+   },
+   "latencyMs": 22342,
+   "costUsd": 0.00022381999999999998,
+   "cached": false,
+   "safetyItems": 4,
+   "safetyPrompts": 0,
+   "text": "LOVES:\n- Le encantan los trenes y los rompecabezas.\n\nHARD:\n- Los ruidos fuertes lo asustan.\n\nHELPS:\n- Si se tapa los oídos, llévenlo a un lugar tranquilo.\n\nSAFETY:\n- Es alérgico al maní (cacahuate); una vez tuvo que ir a urgencias.\n- Su EpiPen está en la mochila azul.\n- Muy importante: su papá NO puede recogerlo, hay una orden del juez.\n- Solo su mamá (yo, Daniela) o su abuela Carmen pueden recogerlo."
+  },
+  {
+   "system": "halfdoor_net",
+   "model": "e2ee-deepseek-v4-flash",
+   "storyId": "es-01",
+   "noSafety": false,
+   "score": {
+    "present": 4,
+    "total": 4,
+    "limiterPresent": 2,
+    "limiterTotal": 2,
+    "flips": [],
+    "missing": [],
+    "trapHits": [],
+    "trapClasses": {
+     "flips": [],
+     "number": [],
+     "sibling": []
+    }
+   },
+   "latencyMs": 22342,
+   "costUsd": 0.00022381999999999998,
+   "cached": true,
+   "safetyItems": 4,
+   "safetyPrompts": 0,
+   "text": "LOVES:\n- Le encantan los trenes y los rompecabezas.\n\nHARD:\n- Los ruidos fuertes lo asustan.\n\nHELPS:\n- Si se tapa los oídos, llévenlo a un lugar tranquilo.\n\nSAFETY:\n- Es alérgico al maní (cacahuate); una vez tuvo que ir a urgencias.\n- Su EpiPen está en la mochila azul.\n- Muy importante: su papá NO puede recogerlo, hay una orden del juez.\n- Solo su mamá (yo, Daniela) o su abuela Carmen pueden recogerlo."
+  },
+  {
+   "system": "baseline_same",
+   "model": "e2ee-deepseek-v4-flash",
+   "storyId": "es-01",
+   "noSafety": false,
+   "score": {
+    "present": 4,
+    "total": 4,
+    "limiterPresent": 2,
+    "limiterTotal": 2,
+    "flips": [],
+    "missing": [],
+    "trapHits": [],
+    "trapClasses": {
+     "flips": [],
+     "number": [],
+     "sibling": []
+    }
+   },
+   "latencyMs": 6779,
+   "costUsd": 0.00016096199999999998,
+   "cached": false,
+   "text": "Here is a one-page summary in English for the volunteer:\n\n---\n\n**CHILD SUMMARY – SUNDAY VOLUNTEER SHEET**\n\n**Child's Name:** Mateo\n**Age:** 5\n**Parent/Guardian:** Daniela (mother)\n\n**About Mateo:**\nMateo is a 5-year-old boy with autism. He loves trains and puzzles — these are great tools to help him feel comfortable and engaged. He may need extra support with transitions and unfamiliar situations, so patience and a calm approach are appreciated.\n\n**Medical – Allergy (IMPORTANT):**\nMateo is **severely allergic to peanuts**. He has previously required an emergency room visit due to a reaction. His **EpiPen is in his blue backpack**. In case of any suspected exposure or reaction, act immediately and follow emergency procedures. Please ensure no peanut-containing snacks are given to him.\n\n**Sensory Needs:**\nLoud noises frighten Mateo. If he covers his ears, this is a sign he is overwhelmed — please take him to a quiet, calm space to help him regulate.\n\n**Pick-Up Authorization (VERY IMPORTANT):**\n- ✅ **Only** his mother, **Daniela**, or his grandmother, **Carmen**, are authorized to pick him up.\n- ❌ **His father may NOT pick him up** — there is a **court order** in place.\n- Please verify identity before releasing Mateo to anyone. If someone other than Daniela or Carmen requests pick-up, do not release him and contact Daniela immediately.\n\n**Thank you for caring for Mateo!** Please reach out to Daniela with any questions.\n\n---\n\nLet me know if you'd like this formatted differently or shortened further."
+  },
+  {
+   "system": "baseline_claude",
+   "model": "claude-sonnet-5-5",
+   "storyId": "es-01",
+   "noSafety": false,
+   "score": {
+    "present": 3,
+    "total": 4,
+    "limiterPresent": 1,
+    "limiterTotal": 2,
+    "flips": [],
+    "missing": [
+     "only_mom_grandma"
+    ],
+    "trapHits": [],
+    "trapClasses": {
+     "flips": [],
+     "number": [],
+     "sibling": []
+    }
+   },
+   "latencyMs": 7585,
+   "costUsd": 0.008778,
+   "cached": false,
+   "text": "# Resumen para el voluntario: Mateo\n\n**Edad:** 5 años\n**Diagnóstico:** Autismo\n\n---\n\n## ⚠️ LO MÁS IMPORTANTE\n\n### 1. Alergia grave al maní (cacahuate)\n- Mateo ha tenido que ir a urgencias por una reacción alérgica.\n- **No le dé ningún alimento ni merienda sin confirmar antes que no contiene maní** (revise etiquetas y pregunte a la coordinadora).\n- Su **EpiPen está en la mochila azul**. Sepa dónde está antes de que empiece la clase y manténgala siempre cerca.\n- Si sospecha una reacción (urticaria, hinchazón, dificultad para respirar, vómito), **avise de inmediato a la coordinadora y llame al 911**. Siga el protocolo de emergencia de la iglesia.\n\n### 2. Recogida: solo personas autorizadas\n- **Solo pueden recogerlo:**\n  - **Daniela** (su mamá)\n  - **Carmen** (su abuela)\n- **Su papá NO está autorizado a recogerlo.** Existe una orden judicial.\n- Si alguien más intenta recogerlo, **no lo entregue**. Avise a la coordinadora o a un líder de inmediato.\n- Pida identificación si no reconoce a la persona.\n\n---\n\n## Cómo ayudar a Mateo a sentirse bien\n\n**Le gusta:**\n- Los trenes\n- Los rompecabezas\n\nTener a mano trenes o rompecabezas puede ayudarle a sentirse cómodo, a participar y a calmarse.\n\n**Sensibilidad a los ruidos fuertes:**\n- Los ruidos fuertes lo asustan.\n- **Señal de alerta:** si se tapa los oídos.\n- **Qué hacer:** llévelo con calma a un lugar tranquilo, hable en voz baja y ofrézcale un tren o rompecabezas.\n\n---\n\n## Consejos generales\n- Use un tono de voz tranquilo y frases cortas y claras.\n- Avísele con anticipación cuando vaya a haber cambios en la actividad.\n- Ante cualquier duda, consulte a la coordinadora o a Daniela.\n\n---\n\n**Contacto de la mamá (Daniela):** _______________________\n**Coordinadora de turno:** _______________________\n\n*Gracias por cuidar de Mateo. 💙*"
+  }
+ ]
+}

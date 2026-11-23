@@ -1,26 +1,28 @@
-// Validates the Halfdoor eval story set. Plain Node, no deps.
-//   node validate.mjs          -> "60 stories OK" or the list of failures
-//   node validate.mjs --stats  -> same, plus counts by trap type / kind
+// Validates the Halfdoor eval story set.
+//   pnpm eval:validate            -> "60 stories OK" or the list of failures
+//   pnpm eval:validate --stats    -> same, plus counts by trap type / kind
 // Regexes are compiled with the `iu` flags (they must also compile with `i`).
 import { readFileSync, readdirSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
+import type { KeyFact, Trap } from './types';
 
-const DIR = join(dirname(fileURLToPath(import.meta.url)), 'stories');
+const DIR = join(process.cwd(), 'eval', 'stories');
 const TAGS = new Set(['noise_sensitive', 'crowds_hard', 'transitions_hard', 'needs_breaks', 'needs_visual_schedule', 'nonverbal_or_aac', 'touch_sensitive', 'sensory_seeking', 'mobility_aid', 'bathroom_help', 'food_allergy', 'medical_plan', 'pickup_restriction', 'elopement_risk', 'spanish_home']);
 const KINDS = new Set(['allergy', 'medical', 'medication', 'pickup', 'wandering', 'other_safety']);
 // Trap ids are "<type>.<slug>"; the type is one of the brief's trap types.
 const TRAP_TYPES = ['outgrown', 'negated_pickup', 'only_may', 'number', 'doesnt_need', 'double_negation', 'sibling', 'cancelled_med'];
 const FLAGS = 'iu';
 
-const errors = [];
-const err = (id, msg) => errors.push(`${id}: ${msg}`);
-const compile = (id, src, where) => {
+type Loose = { id?: unknown; lang?: unknown; text?: unknown; facts?: unknown; traps?: unknown; tags?: unknown };
+
+const errors: string[] = [];
+const err = (id: string, msg: string) => errors.push(`${id}: ${msg}`);
+const compile = (id: string, src: string, where: string): RegExp | null => {
   try {
     new RegExp(src, 'i');
     return new RegExp(src, FLAGS);
   } catch (e) {
-    err(id, `${where}: bad regex ${JSON.stringify(src)} (${e.message})`);
+    err(id, `${where}: bad regex ${JSON.stringify(src)} (${(e as Error).message})`);
     return null;
   }
 };
@@ -34,39 +36,52 @@ const found = new Set(files.map((f) => f.replace(/\.json$/, '')));
 for (const id of expected) if (!found.has(id)) err(id, 'missing file');
 for (const id of found) if (!expected.includes(id)) err(id, 'unexpected file');
 
-const stats = { stories: 0, en: 0, es: 0, noSafety: 0, withTraps: 0, facts: 0, limiter: 0, traps: 0, byTrap: Object.fromEntries(TRAP_TYPES.map((t) => [t, 0])), byKind: {} };
+const stats = {
+  stories: 0,
+  en: 0,
+  es: 0,
+  noSafety: 0,
+  withTraps: 0,
+  facts: 0,
+  limiter: 0,
+  traps: 0,
+  byTrap: Object.fromEntries(TRAP_TYPES.map((t) => [t, 0])) as Record<string, number>,
+  byKind: {} as Record<string, number>,
+};
 
 for (const f of files) {
   const id = f.replace(/\.json$/, '');
-  let s;
+  let s: Loose;
   try {
-    s = JSON.parse(readFileSync(join(DIR, f), 'utf8'));
+    s = JSON.parse(readFileSync(join(DIR, f), 'utf8')) as Loose;
   } catch (e) {
-    err(id, `invalid JSON (${e.message})`);
+    err(id, `invalid JSON (${(e as Error).message})`);
     continue;
   }
   stats.stories++;
   const keys = Object.keys(s).sort().join(',');
   if (keys !== 'facts,id,lang,tags,text,traps') err(id, `keys must be exactly id,lang,text,facts,traps,tags (got ${keys})`);
-  if (s.id !== id) err(id, `id "${s.id}" does not match filename`);
-  if (s.lang !== id.slice(0, 2)) err(id, `lang "${s.lang}" does not match prefix`);
-  else stats[s.lang]++;
-  if (typeof s.text !== 'string' || s.text.length < 60 || s.text.length > 900) err(id, `text length ${s.text?.length} outside 60..900`);
+  if (s.id !== id) err(id, `id "${String(s.id)}" does not match filename`);
+  if (s.lang !== id.slice(0, 2)) err(id, `lang "${String(s.lang)}" does not match prefix`);
+  else stats[s.lang as 'en' | 'es']++;
+  if (typeof s.text !== 'string' || s.text.length < 60 || s.text.length > 900) err(id, `text length ${typeof s.text === 'string' ? s.text.length : 'n/a'} outside 60..900`);
   if (!Array.isArray(s.tags) || s.tags.some((t) => !TAGS.has(t))) err(id, `bad tags ${JSON.stringify(s.tags)}`);
   else if (new Set(s.tags).size !== s.tags.length) err(id, 'duplicate tags');
   if (!Array.isArray(s.facts) || !Array.isArray(s.traps)) {
     err(id, 'facts/traps must be arrays');
     continue;
   }
-  const text = s.text ?? '';
-  const ids = new Set();
+  const facts = s.facts as KeyFact[];
+  const traps = s.traps as Trap[];
+  const text = typeof s.text === 'string' ? s.text : '';
+  const ids = new Set<string>();
 
-  if (s.facts.length === 0) {
+  if (facts.length === 0) {
     stats.noSafety++;
-    if (s.traps.length) err(id, 'no-safety story must have no traps');
-  } else if (s.facts.length < 2 || s.facts.length > 5) err(id, `${s.facts.length} facts (need 2..5, or 0 for a no-safety story)`);
+    if (traps.length) err(id, 'no-safety story must have no traps');
+  } else if (facts.length < 2 || facts.length > 5) err(id, `${facts.length} facts (need 2..5, or 0 for a no-safety story)`);
 
-  for (const k of s.facts) {
+  for (const k of facts) {
     const kid = `${id}/${k.id}`;
     const fk = Object.keys(k).sort().join(',');
     if (fk !== 'id,kind,limiter,must') err(kid, `fact keys must be id,kind,must,limiter (got ${fk})`);
@@ -87,13 +102,13 @@ for (const f of files) {
         err(kid, `must[${gi}] must be a non-empty array of non-empty strings`);
         return;
       }
-      const res = group.map((src, ai) => compile(kid, src, `must[${gi}][${ai}]`)).filter(Boolean);
+      const res = group.map((src, ai) => compile(kid, src, `must[${gi}][${ai}]`)).filter((r): r is RegExp => r !== null);
       if (res.length === group.length && !res.some((r) => r.test(text))) err(kid, `must[${gi}] matches nothing in the story text: ${JSON.stringify(group)}`);
     });
   }
 
-  if (s.traps.length) stats.withTraps++;
-  for (const t of s.traps) {
+  if (traps.length) stats.withTraps++;
+  for (const t of traps) {
     const tid = `${id}/${t.id}`;
     const tk = Object.keys(t).sort().join(',');
     if (tk !== 'id,pattern,why') err(tid, `trap keys must be id,pattern,why (got ${tk})`);
@@ -105,7 +120,8 @@ for (const f of files) {
     if (typeof t.why !== 'string' || t.why.length < 10) err(tid, 'why missing/too short');
     stats.traps++;
     const re = compile(tid, t.pattern, 'pattern');
-    if (re && re.test(text)) err(tid, `trap fires on the story's own text (at "${text.match(re)[0].slice(0, 80)}")`);
+    const hit = re ? text.match(re) : null;
+    if (hit) err(tid, `trap fires on the story's own text (at "${hit[0].slice(0, 80)}")`);
   }
 }
 

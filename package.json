@@ -12,7 +12,10 @@
     "test:e2e": "playwright test",
     "typecheck": "next typegen && tsc --noEmit",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "tsx --env-file=.env.local scripts/migrate.ts"
+    "db:migrate": "tsx --env-file=.env.local scripts/migrate.ts",
+    "eval": "tsx --env-file-if-exists=.env.local eval/run.ts",
+    "eval:validate": "tsx eval/validate.ts",
+    "eval:render": "tsx eval/render.ts && tsx scripts/render-readme-numbers.ts"
   },
   "dependencies": {
     "@faith-tools/bible-sdk": "^0.12.1",
