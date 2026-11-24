@@ -7,7 +7,8 @@ import { usePathname } from 'next/navigation';
 import { cx } from '@/lib/cx';
 import type { MessageKey } from '@/lib/i18n';
 import { useT } from '@/lib/i18n/client';
-import type { Persona, PersonaKey } from '@/lib/demo/personas';
+import type { Persona } from '@/lib/demo/personas';
+import { STEPS, buddyFor, stepTarget, type StepDef } from '@/lib/demo/guideSteps';
 import { DEMO_STEP_FLAGS, type DemoFlags, type DemoState } from '@/lib/demo/flags';
 import { Banner } from '@/components/ui/Banner';
 import { Button } from '@/components/ui/Button';
@@ -43,27 +44,6 @@ const subscribe = (l: () => void) => {
   listeners.add(l);
   return () => listeners.delete(l);
 };
-
-// ---- steps
-type Who = PersonaKey | 'buddy';
-type PathCtx = { base: string; samId: string | null; buddyId: string | null; serviceId: string | null };
-type StepDef = { flag: keyof DemoFlags; who: Who; path: (c: PathCtx) => string };
-
-/** The station and the buddy's phone open on Sam's service (the one he is matched at), with Sam picked out. */
-const atService = (c: PathCtx, child = false) => {
-  const q = [c.serviceId && `service=${c.serviceId}`, child && c.samId && `child=${c.samId}`].filter(Boolean).join('&');
-  return q ? `?${q}` : '';
-};
-
-const STEPS: readonly StepDef[] = [
-  { flag: 'samCardApproved', who: 'jordan', path: () => '' },
-  { flag: 'samCardAcknowledged', who: 'hannah', path: (c) => `${c.base}/desk${c.samId ? `?child=${c.samId}` : ''}` },
-  { flag: 'samAssignedApproved', who: 'hannah', path: (c) => `${c.base}/desk/sunday` },
-  { flag: 'samCheckedIn', who: 'hannah', path: (c) => `${c.base}/station${atService(c, true)}` },
-  { flag: 'samCardOpenedByBuddy', who: 'buddy', path: (c) => `${c.base}/buddy/${c.buddyId}${atService(c, true)}` },
-  { flag: 'samCheckedOut', who: 'hannah', path: (c) => `${c.base}/station${atService(c, true)}` },
-  { flag: 'samNoteApproved', who: 'hannah', path: (c) => `${c.base}/desk/notes` },
-];
 
 type Props = {
   slug: string;
@@ -117,21 +97,14 @@ export function DemoGuide({ slug, personas, current, samId }: Props) {
   const base = `/c/${encodeURIComponent(slug)}`;
   const byKey = new Map(personas.map((p) => [p.key, p]));
   const buddyId = state?.samBuddyId ?? null;
-  // Always as the buddy themself: a role-bar persona for the same person may stand for another role (Tom is the
-  // room leader there, `id:leader`), and the phone opens only for the buddy.
-  const buddy = buddyId ? { value: buddyId, name: personas.find((p) => p.personId === buddyId)?.name ?? state?.samBuddyName ?? '' } : null;
+  const buddy = buddyFor(buddyId, personas, state?.samBuddyName);
   const doneCount = DEMO_STEP_FLAGS.filter(done).length;
   const next = state ? STEPS.findIndex((s) => !done(s.flag)) : -1;
   const progress = state ? t('guide.progress', { done: doneCount, total: STEPS.length }) : t('guide.checking');
   const jordan = byKey.get('jordan');
 
   const serviceId = state?.samServiceId ?? null;
-  const target = (s: StepDef): { value: string; name: string; href: string } | null => {
-    if (s.who === 'buddy') return buddy ? { ...buddy, href: s.path({ base, samId, buddyId, serviceId }) } : null;
-    const p = byKey.get(s.who);
-    if (!p) return null;
-    return { value: p.value, name: p.name, href: s.who === 'jordan' ? p.href : s.path({ base, samId, buddyId: null, serviceId }) };
-  };
+  const target = (s: StepDef) => stepTarget(s, { base, samId, buddyId, serviceId }, byKey, buddy);
 
   // Hiding or showing the guide unmounts the control that was clicked; keep keyboard focus on its counterpart.
   const toggle = (hide: boolean) => {
