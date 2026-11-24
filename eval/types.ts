@@ -1,5 +1,5 @@
-// Eval answer-key types. In the repo, `Tag` comes from the Task 3 card module
-// (TAGS const); it is copied here as a string union so this folder stands alone.
+// Eval answer-key types. In the app, `Tag` comes from the card schema (the TAGS const in src/lib/card/schema.ts);
+// it is copied here as a string union so this folder stands alone.
 export type Tag =
   | 'noise_sensitive'
   | 'crowds_hard'

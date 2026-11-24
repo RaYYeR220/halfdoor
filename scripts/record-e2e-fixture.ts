@@ -37,7 +37,7 @@ const STORY = [
 /** What the e2e's buddy logs: a good moment during worship. */
 const MOMENT = { step: 'Worship', kind: 'good' as const, helped: [] as string[] };
 
-/** The lesson as the real call returns it for the sandbox's sample lesson (labels as seen live in task 17c). */
+/** The lesson as the real call returns it for the sandbox's sample lesson (labels as the live call returned them). */
 const LESSON_DRAFT: LessonDraft = {
   title: 'Advent, week 1: Waiting with hope',
   steps: [

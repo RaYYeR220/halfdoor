@@ -188,7 +188,7 @@ export type ModelCandidate = { model: string; flips: number; trapHits: number; p
 export const P50_LIMIT_MS = 8000;
 
 /**
- * Task 9 rule: 0 flips and 0 trap hits, then highest present-rate, then p50 < 8 s. The latency clause is
+ * Model-choice rule: 0 flips and 0 trap hits, then highest present-rate, then p50 < 8 s. The latency clause is
  * read as a requirement, not a tie-break (as a tie-break it would almost never apply): safety first
  * (fewest flips, then fewest traps), then models under the p50 limit, then present-rate, then faster.
  * `clean` = the winner has 0 flips and 0 traps; `fast` = its p50 is under the limit.

@@ -1,4 +1,5 @@
-// Stubs: Task 16 fills these with the real Planning Center calls. Safe no-ops until then.
+// Planning Center hook points, called where the live connection would act. The live connection is not built yet
+// (not part of the demo), so each is a safe no-op.
 
 /** Called after a parent approves a card in a `live`/`pco` church (writes the PCO note). */
 export async function onCardApproved(churchId: string, childId: string, approvedAt: Date): Promise<void> {
@@ -15,7 +16,7 @@ export async function refreshFromPco(serviceId: string): Promise<void> {
   void serviceId;
 }
 
-/** True when the buddy is already scheduled elsewhere in PCO Services for an overlapping time (Task 16). */
+/** True when the buddy is already scheduled elsewhere in PCO Services for an overlapping time (always false until the connection exists). */
 export async function isBusyInPco(churchId: string, buddyPcoPersonId: string | null, startsAt: Date, endsAt: Date): Promise<boolean> {
   void churchId; void buddyPcoPersonId; void startsAt; void endsAt;
   return false;

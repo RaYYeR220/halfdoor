@@ -8,7 +8,7 @@ export const PRICES: Record<string, { in: number; out: number }> = {
   'claude-sonnet-5-5': { in: 2, out: 10 },
 };
 
-/** Default enclave model; final value set by Task 9. */
+/** Default enclave model, chosen by the model sweep (eval/results/summary.md). */
 export const E2EE_MODEL = 'e2ee-deepseek-v4-flash';
 
 /** Models the browser routes accept. The Node eval path may use any priced e2ee model. */
