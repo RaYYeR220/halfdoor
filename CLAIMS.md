@@ -3,7 +3,7 @@
 Every public statement Halfdoor makes, with how to check it.
 
 - **REPRODUCIBLE**: a test or script in this repo reproduces it. `pnpm test` runs the unit tests, `pnpm test:e2e` the end-to-end test, `pnpm eval` the evaluation.
-- **VERIFIED-LIVE**: you can see it happen in the live demo at {{DEMO_URL}}/demo.
+- **VERIFIED-LIVE**: you can see it happen in the live demo at [halfdoor.vercel.app/demo](https://halfdoor.vercel.app/demo).
 - **MODELED**: a design, an estimate or an outside figure, not something we measured live.
 - **NOT-CLAIMED**: things we do not say, stated so no one reads them in.
 
@@ -86,7 +86,7 @@ Reproduce with `pnpm eval` (model calls are cached in `eval/.cache/`, so a re-ru
 | Statement | What it rests on |
 |---|---|
 | "1 in 3 parents of children with disabilities have left a church because their child wasn't included or welcomed." | An outside survey: Ault, Collins & Carter, 2013 (n = 416). Not measured by us. |
-| Check-ins from Planning Center open and close the card; buddies can be scheduled into Planning Center Services; a note on the child's People record says a card is on file. | The design and the hook points in [`src/lib/pco/hooks.ts`](src/lib/pco/hooks.ts). The Planning Center calls are in progress and no organisation is connected. |
+| Built for Planning Center: check-ins from Check-Ins would open and close the card, buddies would be scheduled into Services, and a note on the child's People record would say a card is on file. | The design, the Planning Center ids in the data model and the hook points in [`src/lib/pco/hooks.ts`](src/lib/pco/hooks.ts). The API calls are not written and the live connection is not part of this demo; a labelled simulated check-in station stands in. |
 | A card costs about <!-- eval:halfdoor-cost-per-story -->$0.0002<!-- /eval:halfdoor-cost-per-story --> in model calls. | Token usage in the evaluation at Venice list prices ([`src/lib/venice/prices.ts`](src/lib/venice/prices.ts)); real stories may be longer. |
 | The evaluation tells you how Halfdoor handles real parents' words. | Synthetic stories written for the evaluation, one sample per story and system. |
 
@@ -96,7 +96,7 @@ Reproduce with `pnpm eval` (model calls are cached in `eval/.cache/`, so a re-ru
 - **We don't verify the enclave's software measurement.** "We don't yet check the enclave's software measurement against a published list." We trust Intel and the enclave operators behind Venice.
 - **Not a check-in system.** The church's check-in system checks children in; the demo station is simulated ([MOCKS.md](MOCKS.md)).
 - **No real congregant data**, in the demo or the evaluation.
-- **Not connected to a live Planning Center organisation** yet.
+- **Not connected to Planning Center.** The live connection is not part of this demo; the shapes and hook points are in the code, and a labelled simulated check-in station stands in for Check-Ins.
 - **Not better than a plain AI summary at keeping safety facts.** It wasn't, on these stories.
 - **Not "the server never sees the card".** It sees the approved card when it is saved, then seals it.
 - **Not an exact measure of added sentences,** and Halfdoor's near-zero count is not an independent finding: the verifier removes what it can't point to.

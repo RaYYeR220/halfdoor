@@ -2,11 +2,11 @@
 
 Halfdoor gives the volunteer buddy at the kids' room door a card made from the parent's own words. The card opens only while the child is checked in and locks again at checkout. Below is one Sunday, start to finish, with what to look for at each step.
 
-Everything here runs live: the enclave calls, the lesson call, the database and the access rules. Two things are stand-ins: the church is fictional, and a **Simulated check-in station** plays the part Planning Center Check-Ins plays in a real church ([MOCKS.md](MOCKS.md)).
+Everything here runs live: the enclave calls, the lesson call, the database and the access rules. Two things are stand-ins: the church is fictional, and a **Simulated check-in station** plays the part of the church's check-in system ([MOCKS.md](MOCKS.md)). Halfdoor is built for Planning Center Check-Ins, but that live connection is not part of this demo.
 
 ## The path
 
-**0. Open {{DEMO_URL}}/demo.**
+**0. Open [halfdoor.vercel.app/demo](https://halfdoor.vercel.app/demo).**
 You get your own copy of **Fernbrook Community Church** for 24 hours and land on the Kids' desk as **Hannah**, the kids' director. The **Try a Sunday** guide is on the side (on a phone, it's the pill at the bottom). Each step's **Go** button switches to the right person and opens the right page.
 *Look for:* "Fictional church · sample data" on every page.
 
@@ -34,7 +34,7 @@ On **This Sunday**, open the **9:00** tab, click **Suggest buddies for 9:00**, r
 
 **4. Check Sam in** (Go).
 At the **Simulated check-in station**, click **Check in** next to Sam.
-*Look for:* the label saying that in a real church Planning Center Check-Ins does this; the pickup code.
+*Look for:* the **Simulated check-in station** label, which says that in a real church the church's check-in system does this; the pickup code.
 
 **5. The buddy opens Sam's card** (Go, as Sam's buddy).
 *Look for:*

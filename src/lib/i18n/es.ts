@@ -402,7 +402,7 @@ export const es: Record<MessageKey, string> = {
   'desk.sunday.approvedMany': '{count} asignaciones aprobadas',
   'desk.sunday.approveFailed': 'La aprobación no se guardó. Inténtelo de nuevo.',
   'desk.sunday.pco': 'Programar en Planning Center',
-  'desk.sunday.pcoTip': 'Conecte Planning Center',
+  'desk.sunday.pcoTip': 'La conexión con Planning Center no forma parte de esta demo',
   'desk.sunday.matches': 'Asignaciones',
   'desk.sunday.buddy': 'Compañero',
   'desk.sunday.with': 'con',
@@ -749,7 +749,7 @@ export const es: Record<MessageKey, string> = {
   'room.left': 'Salida de {name}',
 
   'station.label': 'Estación de registro simulada',
-  'station.labelBody': 'En una iglesia real, esto lo hace Planning Center Check-Ins. Aquí la reemplaza para que pueda probar un domingo completo.',
+  'station.labelBody': 'En una iglesia real, esto lo hace el sistema de registro de la iglesia (Halfdoor está hecho para Planning Center Check-Ins; esa conexión no forma parte de esta demo). Aquí la reemplaza para que pueda probar un domingo completo.',
   'station.title': 'Recepción',
   'station.lede': 'Registrar la entrada de un niño abre su tarjeta en el teléfono de su acompañante. La salida la vuelve a bloquear.',
   'station.services': 'Servicios de hoy',
@@ -767,8 +767,8 @@ export const es: Record<MessageKey, string> = {
   'station.conflict': 'Eso ya había cambiado. La lista está al día.',
   'station.failed': 'No se pudo llegar a la estación. Intente de nuevo.',
   'station.noServices': 'No hay servicios hoy.',
-  'station.realTitle': 'Los registros vienen de Planning Center',
-  'station.realBody': 'Esta iglesia registra a los niños con Planning Center Check-Ins. La estación simulada es solo para la iglesia de demostración.',
+  'station.realTitle': 'Los registros vienen del sistema de registro de la iglesia',
+  'station.realBody': 'La estación simulada es solo para las iglesias de demostración. Halfdoor está hecho para leer los registros de Planning Center Check-Ins; esa conexión no forma parte de esta demo.',
 
   'ui.dismiss': 'Cerrar',
   'ui.loading': 'Cargando',

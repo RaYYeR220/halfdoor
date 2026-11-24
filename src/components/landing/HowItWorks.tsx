@@ -110,7 +110,7 @@ export function HowItWorks() {
             </div>
             <div className="frag">
               <div className="fh">
-                <span><b>Planning Center Check-Ins</b> · Leo · <span className="code">K7RD</span></span>
+                <span><b>Check-in</b> · Leo · <span className="code">K7RD</span></span>
                 <span>Priya&apos;s phone</span>
               </div>
               <ol className="gate">

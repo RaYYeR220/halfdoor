@@ -12,7 +12,7 @@ Halfdoor hands the volunteer what the parent knows, in the parent's words, befor
 
 ## Try it in 2 minutes
 
-Open **{{DEMO_URL}}/demo**. No account. You get a private copy of **Fernbrook Community Church** (fictional, sample data) for 24 hours. The **Try a Sunday** guide walks through Sam's first Sunday; each **Go** button switches to the right person and page.
+Open **[halfdoor.vercel.app/demo](https://halfdoor.vercel.app/demo)**. No account. You get a private copy of **Fernbrook Community Church** (fictional, sample data) for 24 hours. The **Try a Sunday** guide walks through Sam's first Sunday; each **Go** button switches to the right person and page.
 
 1. **Jordan writes about Sam**, watches the enclave check pass, and approves the card.
 2. **Hannah reviews Sam's card**: the kids' director acknowledges it.
@@ -86,15 +86,15 @@ Details: [PRIVACY.md](PRIVACY.md).
 
 <sub>**Method.** One sample per story and system. Facts and wrong claims are scored automatically against the answer key, then every automatic miss and flag was read by hand ([`adjudication.json`](eval/results/adjudication.json)). "A sentence the parent never said" is a word-overlap rule; a card's title or a heading is not counted as a sentence (the rule was revised after the run to skip them and every output re-scored from the cache, no new model calls: [rule change](eval/results/summary.md#provenance-what-each-output-adds)). On a fresh hand-checked sample of short-card sentences, <!-- eval:grounding-precision -->86.7% (13 of 15)<!-- /eval:grounding-precision --> of flagged sentences really add something and <!-- eval:grounding-passed -->93.3% (14 of 15)<!-- /eval:grounding-passed --> of passed ones really are grounded; the rule errs both ways, so the counts are approximate. Outputs in another language than their story aren't scored for it. Halfdoor drafting median <!-- eval:halfdoor-p50 -->7.1 s<!-- /eval:halfdoor-p50 --> (model calls only), <!-- eval:halfdoor-cost-per-story -->$0.0002<!-- /eval:halfdoor-cost-per-story --> per card at Venice list prices. Everything: [`eval/results/summary.md`](eval/results/summary.md).</sub>
 
-## Planning Center integration
+## Built for Planning Center
 
-Halfdoor is designed to sit on Planning Center, not replace it:
+Halfdoor is designed to sit on Planning Center, not replace it. The live connection is **not part of this demo**; the Check-Ins, Services and People shapes and the hook points are in the code:
 
-- **Check-Ins** open and close the card. Check-Ins has no webhooks, so Halfdoor polls, only while a buddy phone or room view is open, about every 8 seconds per church.
-- **Services:** an approved match can be scheduled onto the plan's buddy team, without notifications; the matcher skips buddies scheduled elsewhere.
-- **People:** on approval, a note on the child's record says a card is on file, never what it says.
+- **Check-Ins** would open and close the card. Check-Ins has no webhooks, so the design polls, only while a buddy phone or room view is open, about every 8 seconds per church.
+- **Services:** an approved match would be scheduled onto the plan's buddy team, without notifications, and the matcher would skip buddies scheduled elsewhere.
+- **People:** on approval, a note on the child's record would say a card is on file, never what it says.
 
-**Status: in progress.** The data model carries Planning Center ids, and the hook points are wired where they belong: card approval, match approval, the check-in poll and the matcher's availability check ([`src/lib/pco/hooks.ts`](src/lib/pco/hooks.ts)). The API calls behind them are not finished, and no Planning Center organisation is connected to the live deploy. In the demo, a labelled **Simulated check-in station** stands in for Check-Ins ([MOCKS.md](MOCKS.md)).
+The data model carries Planning Center ids, and the hook points sit where they belong: card approval, match approval, the check-in poll and the matcher's availability check ([`src/lib/pco/hooks.ts`](src/lib/pco/hooks.ts)). The API calls behind them are not written, and no Planning Center organisation is connected. In the demo, a clearly labelled **Simulated check-in station** stands in for Check-Ins ([MOCKS.md](MOCKS.md)), and the desk's **Schedule in Planning Center** button stays inactive and says why.
 
 ## Architecture
 
@@ -114,7 +114,7 @@ src/lib/access/     access gate, access log, retention
 src/lib/solver/     buddy matching (Hungarian assignment over hard rules)
 src/lib/schedule/   lesson to picture schedule, social story, verse
 src/lib/note/       moments to the note home, with its verifier
-src/lib/pco/        Planning Center hook points
+src/lib/pco/        Planning Center hook points (no live connection yet)
 src/db/             schema, repositories, demo-church seed
 eval/               stories with answer keys, scorer, results
 tests/              unit and end-to-end tests
@@ -131,8 +131,9 @@ Node 22+ and pnpm 9. The app needs Postgres with a schema named `halfdoor` owned
 | `MASTER_KEY` | 32 random bytes, base64; wraps each church's data key |
 | `LINK_SECRET` | 16+ random bytes, base64url; signs links and cookies |
 | `APP_URL` | public URL of the app |
-| `PCO_APP_ID`, `PCO_SECRET`, `PCO_OAUTH_CLIENT_ID`, `PCO_OAUTH_CLIENT_SECRET`, `PCO_ALLOWED_ORG_IDS` | reserved for the Planning Center connection (not read yet) |
 | `NEXT_PUBLIC_REPO_URL` | optional; source link on the landing page |
+
+No Planning Center variables: the live Planning Center connection is not built yet.
 
 ```bash
 cp .env.example .env.local   # then fill it in
@@ -150,7 +151,7 @@ pnpm eval                    # the evaluation (paid model calls)
 
 - **The enclave check trusts Intel and the TEE operators behind Venice (Phala, NEAR AI).** In the app's words: "We don't yet check the enclave's software measurement against a published list." We check that the key is sealed in a genuine, non-debug Intel TDX report, not which software image runs there.
 - **The server sees the approved card when it is saved,** before sealing it. The raw story never reaches it in plain text.
-- **Planning Center sync is in progress.** Check-Ins has no webhooks, so it will be polled, not pushed.
+- **No live Planning Center connection.** Halfdoor is built for it (shapes and hook points in the code), but the demo runs on a labelled simulated check-in station. Check-Ins has no webhooks, so a live connection would poll, not push.
 - **Demo clock:** demo churches are created when you open them, so their pages shift displayed times to make the first service read 9:00 on a Sunday.
 - **The added-sentence measure is approximate** (<!-- eval:grounding-precision -->86.7% (13 of 15)<!-- /eval:grounding-precision --> precision on a hand-checked sample of short-card sentences, and it misses some added sentences too), and the stories are synthetic.
 - **Expired cards are deleted when the demo is opened,** not by a scheduled job yet.

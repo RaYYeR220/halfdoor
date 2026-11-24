@@ -401,7 +401,7 @@ export const en = {
   'desk.sunday.approvedMany': '{count} matches approved',
   'desk.sunday.approveFailed': 'The approval didn\'t go through. Try again.',
   'desk.sunday.pco': 'Schedule in Planning Center',
-  'desk.sunday.pcoTip': 'Connect Planning Center',
+  'desk.sunday.pcoTip': 'The Planning Center connection is not part of this demo',
   'desk.sunday.matches': 'Matches',
   'desk.sunday.buddy': 'Buddy',
   'desk.sunday.with': 'with',
@@ -748,7 +748,7 @@ export const en = {
   'room.left': '{name} checked out',
 
   'station.label': 'Simulated check-in station',
-  'station.labelBody': 'In a real church, Planning Center Check-Ins does this. Here it stands in so you can try a whole Sunday.',
+  'station.labelBody': "In a real church, the church's check-in system does this (Halfdoor is built for Planning Center Check-Ins; that connection is not part of this demo). Here it stands in so you can try a whole Sunday.",
   'station.title': 'Front desk',
   'station.lede': "Checking a child in opens their card on their buddy's phone. Checking out locks it again.",
   'station.services': 'Services today',
@@ -766,8 +766,8 @@ export const en = {
   'station.conflict': 'That had already changed. The list is up to date now.',
   'station.failed': "Couldn't reach the station. Try again.",
   'station.noServices': 'No services today.',
-  'station.realTitle': 'Check-ins come from Planning Center',
-  'station.realBody': 'This church checks children in with Planning Center Check-Ins. The simulated station is only for the demo church.',
+  'station.realTitle': "Check-ins come from the church's check-in system",
+  'station.realBody': 'The simulated station is only for demo churches. Halfdoor is built to read check-ins from Planning Center Check-Ins; that connection is not part of this demo.',
 
   'ui.dismiss': 'Dismiss',
   'ui.loading': 'Loading',

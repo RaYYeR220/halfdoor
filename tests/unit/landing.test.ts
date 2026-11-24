@@ -5,7 +5,9 @@ import { Faq } from '@/components/landing/Faq';
 import { Footer } from '@/components/landing/Footer';
 import { CARD_VALUES, LINES, MARIA } from '@/components/landing/heroField';
 import { Measured } from '@/components/landing/Measured';
+import { HowItWorks } from '@/components/landing/HowItWorks';
 import { Nav } from '@/components/landing/Nav';
+import { PlanningCenter } from '@/components/landing/PlanningCenter';
 import { Privacy } from '@/components/landing/Privacy';
 import { ENCLAVE_COPY, HONEST_LIMITS } from '@/lib/crypto/attestation';
 
@@ -48,6 +50,14 @@ describe('landing', () => {
     expect(text).toContain(HONEST_LIMITS);
     expect(text).toContain(ENCLAVE_COPY.pccsNote);
     expect(text).not.toMatch(/proven|no one can/i);
+  });
+
+  test('Planning Center is described as built for, not connected', () => {
+    const text = html(createElement(PlanningCenter));
+    expect(text).toContain('Built for Planning Center');
+    expect(text).toContain('The live connection is not part of this demo: a clearly labelled simulated check-in station stands in for Check-Ins.');
+    expect(text).not.toMatch(/Works with|open and close the card\.|can be scheduled into/);
+    expect(html(createElement(HowItWorks))).not.toContain('Planning Center Check-Ins');
   });
 
   test('FAQ names the models from the app constants', () => {

@@ -394,7 +394,7 @@ function HowItWorks({ service }: { service: string }) {
   );
 }
 
-/** Planning Center scheduling arrives with the PCO connection; until then the button says what it needs. */
+/** Planning Center scheduling needs the live connection, which is not part of the demo: the button stays inactive and says so. */
 function PcoButton() {
   const t = useT();
   const tip = useId();
