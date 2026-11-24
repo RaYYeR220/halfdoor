@@ -12,6 +12,8 @@ export type NoteOpts = {
   /** Injectable for tests; production default is enclaveChat. */
   chat?: EnclaveChat;
   onAttestation?: (a: AttestationSummary) => void;
+  /** Progress only: the quote binding passed and Intel's signature check is starting (fresh checks only). */
+  onBinding?: (a: AttestationSummary) => void;
   signal?: AbortSignal;
   node?: NodeAccess;
 };
@@ -57,7 +59,10 @@ export async function draftParentNote(
   const childName = opts.childName ?? '';
   const { system, user } = buildNotePrompt(moments, lang, childName);
   const call = (u: string) =>
-    chat({ model: opts.model ?? E2EE_MODEL, purpose: 'note', system, user: u, signal: opts.signal, onAttestation: opts.onAttestation, node: opts.node });
+    chat({
+      model: opts.model ?? E2EE_MODEL, purpose: 'note', system, user: u, signal: opts.signal,
+      onAttestation: opts.onAttestation, onBinding: opts.onBinding, node: opts.node,
+    });
 
   let res = await call(user);
   let parsed = parseNoteDraft(res.text);

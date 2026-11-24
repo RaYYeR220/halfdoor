@@ -77,6 +77,15 @@ describe('draftParentNote', () => {
     expect(note.sentences).toHaveLength(8);
     expect(note.dropped.map((d) => d.reason).sort()).toEqual(['invalid_shape', 'over_limit', 'too_long']);
   });
+  test('passes the enclave progress callbacks through to the chat', async () => {
+    const chat = reply(JSON.stringify({ sentences: [{ text: 'Craft went well.', evidence: ['m2'] }] }));
+    const onBinding = vi.fn();
+    const onAttestation = vi.fn();
+    await draftParentNote(MOMENTS, 'en', { chat, onBinding, onAttestation });
+    const opts = (chat as ReturnType<typeof vi.fn>).mock.calls[0][0];
+    expect(opts.onBinding).toBe(onBinding);
+    expect(opts.onAttestation).toBe(onAttestation);
+  });
   test('throws after two unusable replies', async () => {
     await expect(draftParentNote(MOMENTS, 'en', { chat: reply('nope') })).rejects.toThrow('usable note');
   });

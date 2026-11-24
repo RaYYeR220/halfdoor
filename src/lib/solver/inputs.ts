@@ -15,7 +15,7 @@ const SKILLS: readonly Skill[] = ['aac', 'medical', 'es'];
 
 const WEEK = 7 * 24 * 3600_000;
 /** A child counts as a regular of a service slot if they checked in at the same-labelled service in the last 5 weeks. */
-const ATTENDANCE_WINDOW = 5 * WEEK + 24 * 3600_000;
+export const ATTENDANCE_WINDOW = 5 * WEEK + 24 * 3600_000;
 export const NEW_FAMILY_NOTE = 'New family — confirm which service';
 
 export async function solveService(churchId: string, service: Service, includeChildIds: string[] = []) {
