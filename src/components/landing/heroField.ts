@@ -121,15 +121,27 @@ declare global {
   }
 }
 
-export function startHeroField(el: HeroElements): () => void {
+export type HeroHandle = {
+  stop: () => void;
+  /** Freeze the field on the unlocked key frame (true) or let it run again (false). */
+  setPaused: (paused: boolean) => void;
+};
+
+/**
+ * `onPaused` hears every change of the paused state, including the initial one (prefers-reduced-motion starts the
+ * field paused) and later changes of that OS setting while the page is open.
+ */
+export function startHeroField(el: HeroElements, onPaused: (paused: boolean) => void = () => {}): HeroHandle {
   const { stage, field: fieldC, fly: flyC, card, chip, live } = el;
   const fx = fieldC.getContext('2d');
   const gx = flyC.getContext('2d');
   const mctx = document.createElement('canvas').getContext('2d');
-  if (!fx || !gx || !mctx) return () => {};
+  if (!fx || !gx || !mctx) return { stop: () => {}, setPaused: () => {} };
   const lis = [...card.querySelectorAll<HTMLElement>('.lines li')];
   const vals = lis.map((li) => li.querySelector<HTMLElement>('.val')!);
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
+  // `reduced` = the field is still (the OS asks for less motion, or the visitor paused it): key frame, no motion.
+  let reduced = motionQuery.matches;
   const DEBUG = /[?&]debug\b/.test(location.search);
 
   // ---------- teardown bookkeeping: every timer, frame and listener is undone by stop()
@@ -791,8 +803,19 @@ export function startHeroField(el: HeroElements): () => void {
     }, reduced ? 0 : 1150);
   });
 
-  return function stop() {
+  function setPaused(paused: boolean) {
+    if (stopped || paused === reduced) return;
+    reduced = paused;
+    onPaused(paused);
+    if (ready) start(); // re-lays out: a still key frame, or the loop from the top
+  }
+  const onMotionPref = (e: MediaQueryListEvent) => setPaused(e.matches);
+  motionQuery.addEventListener('change', onMotionPref);
+  onPaused(reduced);
+
+  function stop() {
     stopped = true;
+    motionQuery.removeEventListener('change', onMotionPref);
     gen++;
     timers.forEach(clearTimeout); timers.clear();
     cancelAnimationFrame(raf);
@@ -801,5 +824,6 @@ export function startHeroField(el: HeroElements): () => void {
     removeEventListener('pointermove', onMove);
     stage.removeEventListener('pointerleave', onLeave);
     removeEventListener('resize', onResize);
-  };
+  }
+  return { stop, setPaused };
 }

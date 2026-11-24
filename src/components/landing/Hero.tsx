@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { CARD_VALUES, startHeroField } from './heroField';
-import { ArrowRight } from './icons';
+import { useEffect, useRef, useState } from 'react';
+import { en } from '@/lib/i18n/en';
+import { CARD_VALUES, startHeroField, type HeroHandle } from './heroField';
+import { ArrowRight, PauseMark, PlayMark } from './icons';
 import { Nav } from './Nav';
 
 const LABELS: [string, boolean][] = [
@@ -32,6 +33,8 @@ export function Hero({ repoUrl }: { repoUrl: string | null }) {
   const card = useRef<HTMLElement>(null);
   const chip = useRef<HTMLButtonElement>(null);
   const live = useRef<HTMLParagraphElement>(null);
+  const handle = useRef<HeroHandle | null>(null);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     const els = {
@@ -39,7 +42,12 @@ export function Hero({ repoUrl }: { repoUrl: string | null }) {
       ctas: ctas.current, proof: proof.current, hint: hint.current, card: card.current, chip: chip.current, live: live.current,
     };
     if (Object.values(els).some((e) => !e)) return;
-    return startHeroField(els as { [K in keyof typeof els]: NonNullable<(typeof els)[K]> });
+    const h = startHeroField(els as { [K in keyof typeof els]: NonNullable<(typeof els)[K]> }, setPaused);
+    handle.current = h;
+    return () => {
+      handle.current = null;
+      h.stop();
+    };
   }, []);
 
   return (
@@ -99,6 +107,16 @@ export function Hero({ repoUrl }: { repoUrl: string | null }) {
         </div>
       </main>
       <canvas className="hf-fly" ref={fly} aria-hidden="true" />
+      <button
+        className="motion-toggle"
+        type="button"
+        aria-pressed={paused}
+        aria-label={en['landing.motion.toggle']}
+        title={en['landing.motion.toggle']}
+        onClick={() => handle.current?.setPaused(!paused)}
+      >
+        {paused ? <PlayMark /> : <PauseMark />}
+      </button>
       <p className="sr" ref={live} aria-live="polite" />
     </div>
   );

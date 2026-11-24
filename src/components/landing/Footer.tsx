@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { en } from '@/lib/i18n/en';
 import { ArrowRight, BrandMark } from './icons';
 
@@ -7,10 +8,10 @@ export function Footer({ repoUrl }: { repoUrl: string | null }) {
     <footer className="foot">
       <div className="wrap">
         <div className="foot-top">
-          <a className="brand" href="#" aria-label="Halfdoor, back to top">
+          <Link className="brand" href="/" aria-label="Halfdoor home">
             <BrandMark />
             Halfdoor
-          </a>
+          </Link>
           <a className="btn btn-cta" href="/demo">
             Try the demo church <ArrowRight />
           </a>

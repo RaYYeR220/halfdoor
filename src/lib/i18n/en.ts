@@ -488,6 +488,7 @@ export const en = {
   'pack.sheet.minutes': '{n} min',
   'pack.sheet.story': 'My Sunday story',
   'pack.sheet.verse': 'Verse · {ref}',
+  'landing.motion.toggle': 'Pause or play the hero animation',
   'pack.sheet.arasaac': 'Pictograms: Sergio Palao. Origin: ARASAAC (https://arasaac.org). License: CC BY-NC-SA. Owner: Government of Aragón (Spain).',
   'desk.notes.title': 'Notes home',
   'desk.notes.lede': 'After the service, a short note to each family whose buddy logged moments. Every sentence rests on what was logged, and nothing goes home until you approve it.',

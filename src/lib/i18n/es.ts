@@ -489,6 +489,7 @@ export const es: Record<MessageKey, string> = {
   'pack.sheet.minutes': '{n} min',
   'pack.sheet.story': 'Mi historia del domingo',
   'pack.sheet.verse': 'Versículo · {ref}',
+  'landing.motion.toggle': 'Pausar o reanudar la animación de la portada',
   'pack.sheet.arasaac': 'Pictogramas: Sergio Palao. Procedencia: ARASAAC (https://arasaac.org). Licencia: CC BY-NC-SA. Propiedad: Gobierno de Aragón (España).',
   'desk.notes.title': 'Notas a casa',
   'desk.notes.lede': 'Después del servicio, una nota breve a cada familia cuyo compañero registró momentos. Cada frase se apoya en lo registrado, y nada llega a casa hasta que usted lo aprueba.',

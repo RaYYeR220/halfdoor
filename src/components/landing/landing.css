@@ -105,6 +105,13 @@ html:has(.lp) { scroll-behavior: smooth }
 .lp .lines li.on .lab { opacity: 1 }
 .lp .val { font: 400 14.5px/22px var(--face); color: transparent; transition: color .22s linear }
 .lp .card.legible .val { color: var(--ink) }
+.lp .motion-toggle {
+  appearance: none; position: absolute; right: 24px; top: 88px; z-index: 5; display: grid; place-items: center; width: 32px; height: 32px; padding: 0;
+  border-radius: 50%; cursor: pointer; border: 1px solid var(--hairline-2); background: var(--surface-2); color: var(--ink-muted); opacity: .8;
+  transition: border-color .3s, color .3s, opacity .3s;
+}
+.lp .motion-toggle:hover, .lp .motion-toggle:focus-visible { border-color: var(--hairline-3); color: var(--ink); opacity: 1 }
+.lp .motion-toggle svg { width: 12px; height: 12px }
 .lp .hint { margin: 12px 0 0; font-size: 13px; color: var(--ink-muted) }
 
 .lp .rise { animation: lp-rise .85s var(--ease) both, lp-reveal-failsafe 0s linear 2.4s forwards }
@@ -338,5 +345,5 @@ html.lp-io .lp .rv.in { opacity: 1; transform: none; transition: opacity .8s var
 @media (prefers-reduced-motion: reduce) {
   html:has(.lp) { scroll-behavior: auto }
   .lp .rise { animation: none }
-  .lp .hf-fly, .lp .val, .lp .chip, .lp .lab { transition: none }
+  .lp .hf-fly, .lp .val, .lp .chip, .lp .lab, .lp .motion-toggle { transition: none }
 }

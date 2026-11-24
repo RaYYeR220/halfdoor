@@ -26,3 +26,20 @@ export function LockMark() {
     </svg>
   );
 }
+
+export function PauseMark() {
+  return (
+    <svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+      <rect x="2.5" y="2" width="2.4" height="8" rx=".6" />
+      <rect x="7.1" y="2" width="2.4" height="8" rx=".6" />
+    </svg>
+  );
+}
+
+export function PlayMark() {
+  return (
+    <svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+      <path d="M3.2 1.8v8.4L10 6z" />
+    </svg>
+  );
+}
