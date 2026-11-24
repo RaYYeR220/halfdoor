@@ -119,8 +119,8 @@ function Line({
           'relative -mx-2.5 rounded-sharp transition-[background-color] duration-200 ease-out',
           "before:absolute before:top-2.5 before:bottom-2.5 before:left-0 before:w-[2px] before:rounded-pill before:bg-transparent before:transition-colors before:duration-200 before:content-['']",
           safety
-            ? 'has-[button:hover]:bg-surface/60 data-active:bg-surface/75 data-active:before:bg-danger-ink'
-            : 'has-[button:hover]:bg-ground/70 data-active:bg-accent-tint/45 data-active:before:bg-accent',
+            ? 'not-data-active:has-[button:hover]:bg-surface/60 data-active:bg-surface/75 data-active:before:bg-danger-ink'
+            : 'not-data-active:has-[button:hover]:bg-ground/70 data-active:bg-accent-tint/45 data-active:before:bg-accent',
         )}
       >
         <button

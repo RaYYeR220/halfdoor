@@ -10,10 +10,11 @@ import { createSandbox } from '@/db/sandbox';
 import { insertAccess, listAccessForChild } from '@/db/repo/access';
 import { getCardForChild } from '@/db/repo/cards';
 import { getChurch } from '@/db/repo/churches';
-import { listChildrenOf, listPeople } from '@/db/repo/people';
+import { insertHouseholdLinks, insertPeople, listChildrenOf, listPeople } from '@/db/repo/people';
 import { listServices } from '@/db/repo/services';
 import { WINDOW_MS } from '@/lib/access/gate';
 import type { Viewer } from '@/lib/auth/viewer';
+import { visibleAccessRows } from '@/lib/parent/accessLog';
 import { loadChildPage } from '@/lib/parent/server';
 import { deriveTimeline } from '@/lib/parent/timeline';
 import type { AccessRow } from '@/lib/parent/types';
@@ -130,6 +131,38 @@ describe('demo sandbox history and the parent page loader', () => {
     expect(data.tz).toBe('America/Chicago');
     const steps = deriveTimeline({ status: data.card!.status, parentApprovedAt: data.card!.parentApprovedAt, directorAckAt: data.card!.directorAckAt, match: data.match, access: data.access });
     expect(steps.map((s) => s.state)).toEqual(['done', 'done', 'done', 'done']);
+  });
+
+  it('opening the page logs the parent once per church day; a co-parent sees that row, the viewer never their own', async () => {
+    const w = await world();
+    const church = (await getChurch(w.churchId))!;
+    const maria = w.p('Maria').id;
+    const [leo] = await listChildrenOf(w.churchId, maria);
+    const [alex] = await insertPeople([{ churchId: w.churchId, role: 'parent', firstName: 'Alex' }]);
+    await insertHouseholdLinks([{ parentId: alex.id, childId: leo.id }]);
+    const parentRows = async () => (await listAccessForChild(leo.id)).filter((e) => e.reason === 'parent');
+
+    const t0 = new Date();
+    const first = await loadChildPage(church, leo, maria, t0);
+    expect(first.access.filter((r) => r.reason === 'parent')).toEqual([expect.objectContaining({ who: 'Maria', me: true, role: 'parent' })]);
+    expect(visibleAccessRows(first.access).some((r) => r.reason === 'parent')).toBe(false); // hidden from Maria herself
+    await loadChildPage(church, leo, maria, new Date(t0.getTime() + 60_000)); // a refresh, the language switch…
+    expect(await parentRows()).toHaveLength(1);
+    await loadChildPage(church, leo, maria, new Date(t0.getTime() + 26 * 3600_000)); // the next day
+    expect(await parentRows()).toHaveLength(2);
+
+    // Alex, the other parent, sees Maria's openings in plain words (and is logged too)
+    const forAlex = await loadChildPage(church, leo, alex.id, new Date(t0.getTime() + 27 * 3600_000));
+    const seen = visibleAccessRows(forAlex.access).filter((r) => r.reason === 'parent');
+    expect(seen.map((r) => [r.who, r.me])).toEqual([['Maria', false], ['Maria', false]]);
+    h.viewer = { churchId: w.churchId, personId: alex.id, role: 'parent', sandbox: true } satisfies Viewer;
+    const { body } = await get(leo.id);
+    expect(body.rows!.filter((r) => r.reason === 'parent').map((r) => [r.who, r.me])).toEqual([['Alex', true], ['Maria', false], ['Maria', false]]);
+
+    // no card, nothing to log
+    const [sam] = await listChildrenOf(w.churchId, w.p('Jordan').id);
+    await loadChildPage(church, sam, w.p('Jordan').id, t0);
+    expect(await listAccessForChild(sam.id)).toHaveLength(0);
   });
 
   it("Jordan's page: Sam, no card yet; the children list is the parent's own, in this church only", async () => {

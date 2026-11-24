@@ -181,6 +181,8 @@ export const es: Record<MessageKey, string> = {
   'parent.review.exact': 'Sus palabras exactas',
   'parent.review.exactLine': 'Palabra por palabra de lo que escribió',
   'parent.review.from': 'De sus palabras',
+  'parent.review.goToLine': 'Ir a la línea de la tarjeta',
+  'parent.review.goToLineNamed': 'Ir a la línea de la tarjeta: {line}',
   'parent.review.empty': 'Ninguna línea coincidió con sus palabras. Pruebe a agregar un poco más de detalle.',
   'parent.review.approve': 'Aprobar la tarjeta',
   'parent.review.approving': 'Aprobando…',

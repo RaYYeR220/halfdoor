@@ -9,6 +9,7 @@ import { cx } from '@/lib/cx';
 import type { Lang, MessageKey } from '@/lib/i18n';
 import { useT } from '@/lib/i18n/client';
 import type { DraftFailure } from '@/lib/parent/errors';
+import { formatNumber } from '@/lib/parent/format';
 import type { AccessRow } from '@/lib/parent/types';
 import { EnclaveStatus } from '@/components/enclave/EnclaveStatus';
 import { Banner } from '@/components/ui/Banner';
@@ -59,6 +60,7 @@ export function StoryEditor(p: Props) {
   const copy = p.lang === 'es' ? ENCLAVE_COPY_ES : ENCLAVE_COPY;
   const name = p.childName;
   const count = p.story.length;
+  const num = (n: number) => formatNumber(n, p.lang);
   const tooShort = p.story.trim().length < STORY_MIN;
   const tooLong = count > STORY_MAX;
 
@@ -114,7 +116,7 @@ export function StoryEditor(p: Props) {
               <EnclaveStatus value={p.failure.status} lang={p.lang} />
             ) : (
               <Banner tone="safety" role="alert" title={t('parent.error.title')}>
-                {t(p.failure.key, { min: STORY_MIN, max: STORY_MAX.toLocaleString('en-US') })}
+                {t(p.failure.key, { min: num(STORY_MIN), max: num(STORY_MAX) })}
               </Banner>
             )}
             <p className="text-15 text-ink-muted">{t('parent.error.kept')}</p>
@@ -224,9 +226,9 @@ export function StoryEditor(p: Props) {
             </div>
             <p id={`${id}-count`} className={cx('text-13 tabular', tooLong ? 'text-danger-ink' : 'text-ink-muted')}>
               <span aria-hidden>
-                {count.toLocaleString('en-US')} / {STORY_MAX.toLocaleString('en-US')}
+                {num(count)} / {num(STORY_MAX)}
               </span>
-              <span className="sr-only">{t('ui.counter', { count, max: STORY_MAX })}</span>
+              <span className="sr-only">{t('ui.counter', { count: num(count), max: num(STORY_MAX) })}</span>
             </p>
           </div>
 
@@ -236,10 +238,10 @@ export function StoryEditor(p: Props) {
             </Button>
             {tooShort && (
               <p className="text-15 text-ink-muted tabular">
-                {t('parent.write.minHint', { min: STORY_MIN, count: Math.max(1, STORY_MIN - p.story.trim().length) })}
+                {t('parent.write.minHint', { min: num(STORY_MIN), count: num(Math.max(1, STORY_MIN - p.story.trim().length)) })}
               </p>
             )}
-            {tooLong && <p className="text-15 text-danger-ink">{t('parent.write.tooLong', { max: STORY_MAX.toLocaleString('en-US') })}</p>}
+            {tooLong && <p className="text-15 text-danger-ink">{t('parent.write.tooLong', { max: num(STORY_MAX) })}</p>}
           </div>
 
           <div className="mt-8 border-t border-hairline pt-5">

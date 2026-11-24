@@ -110,11 +110,12 @@ export function CardReview({
   };
 
   const counts = { lines: card.items.length, left: card.dropped.length, questions: card.safetyPrompts.length };
+  const lineText = (id: string) => card.items.find((i) => i.id === id)?.text ?? '';
 
   return (
     <div>
       <header className="max-w-[760px]">
-        <h1 ref={headingRef} tabIndex={-1} className="text-32 font-medium text-balance text-ink outline-none">
+        <h1 id={`${uid}-title`} ref={headingRef} tabIndex={-1} className="text-32 font-medium text-balance text-ink outline-none">
           {t('parent.review.title', { name: childName })}
         </h1>
         <p className="mt-3 text-17 text-ink-2 text-pretty">{t('parent.review.lede')}</p>
@@ -141,6 +142,7 @@ export function CardReview({
             onDecline={onDeclinePrompt}
             onPreview={(id) => onPreview(id)}
             idPrefix={uid}
+            fallbackFocusId={`${uid}-title`}
           />
 
           <Card
@@ -218,7 +220,7 @@ export function CardReview({
               id={`${uid}-story`}
               className="overflow-y-auto overscroll-contain px-4 pb-5 sm:px-[22px] lg:max-h-[calc(100dvh-var(--shell-h)-15rem)]"
             >
-              <StoryText story={story} sources={sources} active={active} onPick={onPick} lang={cardLang} />
+              <StoryText story={story} sources={sources} active={active} onPick={onPick} lineText={lineText} lang={cardLang} />
             </div>
           </Card>
           <div className="mt-4">

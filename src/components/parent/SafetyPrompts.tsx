@@ -14,20 +14,25 @@ type Props = {
   onDecline: (id: string) => void;
   onPreview: (markId: string | null) => void;
   idPrefix: string;
+  /** Focused when no prompt and no Safety section is left to take focus (the review heading). */
+  fallbackFocusId: string;
 };
 
-export function SafetyPrompts({ prompts, lang, onAccept, onDecline, onPreview, idPrefix }: Props) {
+export function SafetyPrompts({ prompts, lang, onAccept, onDecline, onPreview, idPrefix, fallbackFocusId }: Props) {
   const t = useT();
   if (prompts.length === 0) return null;
 
-  // The prompt that was answered leaves the list; keep keyboard focus on the next one, or on the Safety section.
+  // The prompt that was answered leaves the list; keep keyboard focus on the next one, else on the Safety section,
+  // else (declined the last one and the card has no safety lines) on the review heading.
   const settle = (index: number, after: (id: string) => void, id: string) => {
     after(id);
     requestAnimationFrame(() => {
       const next = prompts[index + 1] ?? prompts[index - 1];
-      const target = next ? document.getElementById(`${idPrefix}-prompt-${next.id}-add`) : document.getElementById(`${idPrefix}-sec-safety`);
+      const target = next
+        ? document.getElementById(`${idPrefix}-prompt-${next.id}-add`)
+        : (document.getElementById(`${idPrefix}-sec-safety`) ?? document.getElementById(fallbackFocusId));
       if (target) {
-        if (!next) target.setAttribute('tabindex', '-1');
+        if (!next && !target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
         target.focus();
       }
     });

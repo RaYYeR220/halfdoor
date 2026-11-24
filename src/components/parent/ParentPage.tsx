@@ -3,7 +3,7 @@
 // parent's own words (C) → approved, with who opened it and notes from church (D), or sent back with a
 // question (E). The server decides D/E from the stored card; A–C live here, in this browser only.
 import Link from 'next/link';
-import { useCallback, useRef, useState, useSyncExternalStore, useTransition } from 'react';
+import { useCallback, useEffect, useState, useSyncExternalStore, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { draftCard, translateCard } from '@/lib/card/pipeline';
 import type { CardItem, VerifiedCard } from '@/lib/card/schema';
@@ -12,6 +12,7 @@ import type { AttestationSummary } from '@/lib/crypto/attestation';
 import { cx } from '@/lib/cx';
 import { useLang } from '@/lib/i18n/client';
 import { describeDraftError, isAbort, type DraftFailure } from '@/lib/parent/errors';
+import { approvalLanded, runTracker, serverViewOf, type Run } from '@/lib/parent/flow';
 import { clearStory, readStory, subscribeStory, writeStory } from '@/lib/parent/storyStore';
 import type { ChildPageData, ChildRef } from '@/lib/parent/types';
 import { E2EE_MODEL } from '@/lib/venice/prices';
@@ -79,76 +80,79 @@ export function ParentPage({ data, family, base }: Props) {
   );
 
   // ---- which state the page is in
-  const serverView: 'write' | 'approved' | 'returned' =
-    !card || card.status === 'draft' || card.status === 'archived' ? 'write' : card.status === 'returned' ? 'returned' : 'approved';
+  const serverView = serverViewOf(card);
   const [flow, setFlow] = useState<Flow | null>(null);
-  /** The approval PUT went through in this browser; the page waits for the server's approved card to show D. */
-  const [approvedHere, setApprovedHere] = useState(false);
-  const view = flow && !(approvedHere && serverView === 'approved') ? flow.kind : serverView;
+  /** The version the approval PUT returned; D shows once the server's card has reached it (no stale flash). */
+  const [approvedVersion, setApprovedVersion] = useState<number | null>(null);
+  const landed = approvalLanded({ view: serverView, version: card?.version ?? null }, approvedVersion);
+  // Once the approved card is on the page, the finished review is dropped, so a later refresh (say the card comes
+  // back with a question) shows the server's state, not this stale review.
+  if (landed && flow) setFlow(null);
+  const view = flow && !landed ? flow.kind : serverView;
   /** Bumped by every state change the parent caused; the new state's heading takes focus once per bump. */
   const [focusToken, setFocusToken] = useState(0);
   const bump = () => setFocusToken((n) => n + 1);
-  const work = useRef<AbortController | null>(null);
+  /** Enclave work (draft, translation): one run at a time, aborted on unmount and when the child changes. */
+  const [runs] = useState(runTracker);
+  useEffect(() => () => runs.abort(), [runs]);
 
-  const patchReview = useCallback((patch: Partial<ReviewState> | ((r: ReviewState) => Partial<ReviewState>)) => {
+  const patchReview = (patch: Partial<ReviewState> | ((r: ReviewState) => Partial<ReviewState>)) => {
     setFlow((f) => (f?.kind === 'review' ? { kind: 'review', review: { ...f.review, ...(typeof patch === 'function' ? patch(f.review) : patch) } } : f));
-  }, []);
+  };
 
-  const translate = useCallback(
-    (source: VerifiedCard, signal: AbortSignal) => {
-      patchReview({ translation: { status: 'running', byId: null } });
-      translateCard(source, { model: E2EE_MODEL, childName: name, signal })
-        .then((out) => {
-          const byId: Record<string, CardItem['translation']> = {};
-          for (const i of out.items) byId[i.id] = i.translation && i.translation.text.length <= MAX_TEXT ? i.translation : null;
-          patchReview({ translation: { status: 'done', byId } });
-        })
-        .catch((e) => {
-          if (!signal.aborted && !isAbort(e)) patchReview({ translation: { status: 'failed', byId: null } });
-        });
-    },
-    [name, patchReview],
-  );
+  const translate = (source: VerifiedCard, run: Run) => {
+    patchReview({ translation: { status: 'running', byId: null } });
+    translateCard(source, { model: E2EE_MODEL, childName: name, signal: run.signal })
+      .then((out) => {
+        if (!run.live()) return;
+        const byId: Record<string, CardItem['translation']> = {};
+        for (const i of out.items) byId[i.id] = i.translation && i.translation.text.length <= MAX_TEXT ? i.translation : null;
+        patchReview({ translation: { status: 'done', byId } });
+      })
+      .catch((e) => {
+        if (run.live() && !isAbort(e)) patchReview({ translation: { status: 'failed', byId: null } });
+      });
+  };
 
   const makeCard = async () => {
     const text = story;
-    work.current?.abort();
-    const ac = new AbortController();
-    work.current = ac;
-    const patch = (p: Partial<DraftProgressState>) =>
-      setFlow((f) => (f?.kind === 'drafting' ? { kind: 'drafting', progress: { ...f.progress, ...p } } : f));
+    const run = runs.start();
+    // Callbacks of a stopped or replaced run never touch the page.
+    const patch = (p: Partial<DraftProgressState>) => {
+      if (run.live()) setFlow((f) => (f?.kind === 'drafting' ? { kind: 'drafting', progress: { ...f.progress, ...p } } : f));
+    };
     setFlow({ kind: 'drafting', progress: { binding: null, attestation: null, result: null, startedAt: Date.now() } });
     bump();
     try {
       const { card: drafted, attestation } = await draftCard(text, name, {
         model: E2EE_MODEL,
-        signal: ac.signal,
+        signal: run.signal,
         onBinding: (b) => patch({ binding: b }),
         onAttestation: (a) => patch({ attestation: a }),
       });
       patch({ result: { kept: drafted.items.length, dropped: drafted.dropped.length } });
       // A beat on the finished check list (real numbers), then the card.
-      await sleep(900, ac.signal);
-      if (ac.signal.aborted) return;
+      await sleep(900, run.signal);
+      if (!run.live()) return;
       setFlow({ kind: 'review', review: newReview(text, drafted, attestation) });
       bump();
-      if (drafted.lang === 'es') translate(drafted, ac.signal);
+      if (drafted.lang === 'es') translate(drafted, run);
     } catch (e) {
-      if (ac.signal.aborted || isAbort(e)) return;
+      if (!run.live() || isAbort(e)) return;
       setFlow({ kind: 'write', failure: describeDraftError(e) });
       bump();
     }
   };
 
   const stop = () => {
-    work.current?.abort();
+    runs.abort();
     setFlow({ kind: 'write' });
     bump();
   };
 
   const editWords = () => {
-    work.current?.abort();
-    setApprovedHere(false);
+    runs.abort();
+    setApprovedVersion(null);
     setFlow({ kind: 'write' });
     bump();
   };
@@ -166,8 +170,9 @@ export function ParentPage({ data, family, base }: Props) {
       patchReview({ approving: false, approveError: true });
       return;
     }
-    work.current?.abort();
-    setApprovedHere(true);
+    const saved = (await res.json().catch(() => null)) as { version?: unknown } | null;
+    runs.abort();
+    setApprovedVersion(typeof saved?.version === 'number' ? saved.version : (card?.version ?? 0) + 1);
     bump();
     startTransition(() => router.refresh());
   };
@@ -177,7 +182,7 @@ export function ParentPage({ data, family, base }: Props) {
       clearStory(child.id);
       setTyped('');
     }
-    setApprovedHere(false);
+    setApprovedVersion(null);
     setFlow(null);
     bump();
     toast(t('parent.delete.done', { name }), { tone: 'ok' });
@@ -231,17 +236,9 @@ export function ParentPage({ data, family, base }: Props) {
           onSpanishCopy={(on) => {
             patchReview({ spanishCopy: on });
             const r = flow.review;
-            if (on && r.translation.status !== 'done' && r.translation.status !== 'running') {
-              const ac = work.current && !work.current.signal.aborted ? work.current : new AbortController();
-              work.current = ac;
-              translate(r.card, ac.signal);
-            }
+            if (on && r.translation.status !== 'done' && r.translation.status !== 'running') translate(r.card, runs.start());
           }}
-          onRetryTranslation={() => {
-            const ac = work.current && !work.current.signal.aborted ? work.current : new AbortController();
-            work.current = ac;
-            translate(flow.review.card, ac.signal);
-          }}
+          onRetryTranslation={() => translate(flow.review.card, runs.start())}
           onApprove={() => approve(flow.review)}
           onEdit={editWords}
           focusToken={focusToken}
@@ -253,7 +250,7 @@ export function ParentPage({ data, family, base }: Props) {
         <CardApproved
           data={data}
           card={card}
-          justApproved={approvedHere}
+          justApproved={approvedVersion !== null}
           savedOnDevice={savedOnDevice}
           onClearSaved={() => {
             clearStory(child.id);

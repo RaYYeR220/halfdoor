@@ -180,6 +180,8 @@ export const en = {
   'parent.review.exact': 'Your exact words',
   'parent.review.exactLine': 'Word for word from what you wrote',
   'parent.review.from': 'From your words',
+  'parent.review.goToLine': 'Go to the card line',
+  'parent.review.goToLineNamed': 'Go to the card line: {line}',
   'parent.review.empty': 'No line could be matched to your words. Try adding a little more detail.',
   'parent.review.approve': 'Approve card',
   'parent.review.approving': 'Approving…',

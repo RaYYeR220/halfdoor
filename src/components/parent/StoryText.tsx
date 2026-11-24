@@ -3,6 +3,7 @@
 // marked run opens the card line it feeds (keyboard users reach the same link from the card's line buttons).
 import { useMemo } from 'react';
 import { cx } from '@/lib/cx';
+import { useT } from '@/lib/i18n/client';
 import { buildSegments, lineIdsOf, type MarkSource } from '@/lib/parent/highlight';
 
 type Props = {
@@ -11,11 +12,14 @@ type Props = {
   /** Line or prompt id whose words are lit. */
   active: string | null;
   onPick: (lineId: string) => void;
+  /** The card line's text, for the keyboard button's name. */
+  lineText: (lineId: string) => string;
   lang?: string;
   className?: string;
 };
 
-export function StoryText({ story, sources, active, onPick, lang, className }: Props) {
+export function StoryText({ story, sources, active, onPick, lineText, lang, className }: Props) {
+  const t = useT();
   const segments = useMemo(() => buildSegments(story.length, sources), [story.length, sources]);
   return (
     <p lang={lang} className={cx('text-17 leading-[1.8] whitespace-pre-wrap text-ink-2 text-pretty', className)}>
@@ -49,6 +53,20 @@ export function StoryText({ story, sources, active, onPick, lang, className }: P
             )}
           >
             {text}
+            {lines.length > 0 && (
+              // Keyboard path from the words to their line: hidden until focused, then a small pill in the text.
+              <button
+                type="button"
+                aria-label={t('parent.review.goToLineNamed', { line: lineText(lines[0]) })}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onPick(lines[0]);
+                }}
+                className="sr-only focus-visible:not-sr-only focus-visible:ml-1.5 focus-visible:inline-flex focus-visible:h-7 focus-visible:items-center focus-visible:rounded-pill focus-visible:bg-ink focus-visible:px-2.5 focus-visible:align-middle focus-visible:text-13 focus-visible:font-medium focus-visible:text-surface focus-visible:no-underline"
+              >
+                {t('parent.review.goToLine')}
+              </button>
+            )}
           </mark>
         );
       })}

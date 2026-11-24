@@ -16,6 +16,11 @@ function fmt(lang: Lang, tz: string, opts: Intl.DateTimeFormatOptions): Intl.Dat
   }
 }
 
+/** A count in the UI language's digits and grouping ("6,000" in English). */
+export function formatNumber(n: number, lang: Lang): string {
+  return new Intl.NumberFormat(LOCALE[lang]).format(n);
+}
+
 /** Calendar day in the zone, as a UTC midnight timestamp (for day differences). */
 function dayStamp(d: Date, tz: string): number {
   const p = fmt('en', tz, { year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(d);

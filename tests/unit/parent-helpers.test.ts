@@ -10,7 +10,10 @@ import { accessLine, visibleAccessRows } from '@/lib/parent/accessLog';
 import { describeDraftError } from '@/lib/parent/errors';
 import { buildSegments, lineIdsOf, markSources, promptMarkId } from '@/lib/parent/highlight';
 import { plural } from '@/lib/parent/plural';
-import { pickMatch, toAccessRows } from '@/lib/parent/server';
+import { pickMatch, toAccessRows, viewedToday } from '@/lib/parent/server';
+import { approvalLanded, runTracker, serverViewOf } from '@/lib/parent/flow';
+import { formatNumber } from '@/lib/parent/format';
+import { startOfZonedDay } from '@/lib/time/zoned';
 import { deriveTimeline, type TimelineInput } from '@/lib/parent/timeline';
 import type { AccessRow } from '@/lib/parent/types';
 import { BudgetError, EnclaveError } from '@/lib/venice/enclaveClient';
@@ -228,6 +231,70 @@ describe('demo clock: sandbox times read like their service labels, on a Sunday'
     expect(demoClockShift([], now, tz)).toBe(0);
     expect(demoClockShift([{ label: 'Kids Church', startsAt: now }], now, tz)).toBe(0);
     expect(demoClockShift([{ label: '9:00 service', startsAt: new Date(now.getTime() - 7 * 86_400_000) }], now, tz)).toBe(0);
+  });
+});
+
+describe('page state: approval landing and enclave runs', () => {
+  it('server view from the stored card', () => {
+    expect(serverViewOf(null)).toBe('write');
+    expect(serverViewOf({ status: 'draft' })).toBe('write');
+    expect(serverViewOf({ status: 'archived' })).toBe('write');
+    expect(serverViewOf({ status: 'parent_approved' })).toBe('approved');
+    expect(serverViewOf({ status: 'acknowledged' })).toBe('approved');
+    expect(serverViewOf({ status: 'returned' })).toBe('returned');
+  });
+
+  it('a re-approval lands only when the server shows the new version (no flash of the old card)', () => {
+    // version 3 approved before; the parent edits and approves again, the PUT answers version 4
+    expect(approvalLanded({ view: 'approved', version: 3 }, 4)).toBe(false);
+    expect(approvalLanded({ view: 'approved', version: 4 }, 4)).toBe(true);
+    expect(approvalLanded({ view: 'approved', version: 5 }, 4)).toBe(true);
+    // first approval: nothing on the server yet, then version 1
+    expect(approvalLanded({ view: 'write', version: null }, 1)).toBe(false);
+    expect(approvalLanded({ view: 'approved', version: 1 }, 1)).toBe(true);
+    // returned card re-approved: still returned until the refresh arrives
+    expect(approvalLanded({ view: 'returned', version: 2 }, 3)).toBe(false);
+    expect(approvalLanded({ view: 'approved', version: 9 }, null)).toBe(false);
+  });
+
+  it('runs: a new run or an abort silences the old one and aborts its signal', () => {
+    const runs = runTracker();
+    const first = runs.start();
+    expect(first.live()).toBe(true);
+    expect(runs.current()?.live()).toBe(true);
+    const second = runs.start();
+    expect(first.signal.aborted).toBe(true);
+    expect(first.live()).toBe(false); // a late callback of the first draft is ignored
+    expect(second.live()).toBe(true);
+    runs.abort(); // unmount, child switch, Stop, Edit my words
+    expect(second.signal.aborted).toBe(true);
+    expect(second.live()).toBe(false);
+    expect(runs.current()).toBeNull();
+  });
+});
+
+describe('numbers and days in the church time zone', () => {
+  it('formats counts in the UI language', () => {
+    expect(formatNumber(6000, 'en')).toBe('6,000');
+    expect(formatNumber(6000, 'es')).toBe(new Intl.NumberFormat('es-419').format(6000));
+    expect(formatNumber(1234567, 'es')).toBe(new Intl.NumberFormat('es-419').format(1234567));
+  });
+
+  it('start of the day is local midnight, across a DST change too', () => {
+    expect(startOfZonedDay(new Date('2026-11-24T00:30:00Z'), 'America/Chicago').toISOString()).toBe('2026-11-23T06:00:00.000Z');
+    expect(startOfZonedDay(new Date('2026-07-01T12:00:00Z'), 'America/Chicago').toISOString()).toBe('2026-07-01T05:00:00.000Z');
+    expect(startOfZonedDay(new Date('2026-11-24T00:30:00Z'), 'Europe/Madrid').toISOString()).toBe('2026-11-23T23:00:00.000Z');
+  });
+
+  it('a parent view is logged once per viewer per church day', () => {
+    const tz = 'America/Chicago';
+    const now = new Date('2026-11-22T20:00:00Z'); // 2 PM in Chicago
+    const row = (viewerId: string, at: string, reason: AccessRow['reason'] = 'parent') => ({ viewerId, reason, openedAt: new Date(at) });
+    expect(viewedToday([], 'me', now, tz)).toBe(false);
+    expect(viewedToday([row('me', '2026-11-22T06:30:00Z')], 'me', now, tz)).toBe(true); // 00:30 today
+    expect(viewedToday([row('me', '2026-11-22T05:30:00Z')], 'me', now, tz)).toBe(false); // 23:30 yesterday
+    expect(viewedToday([row('other', '2026-11-22T15:00:00Z')], 'me', now, tz)).toBe(false);
+    expect(viewedToday([row('me', '2026-11-22T15:00:00Z', 'deleted')], 'me', now, tz)).toBe(false);
   });
 });
 

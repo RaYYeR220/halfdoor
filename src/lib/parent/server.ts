@@ -1,6 +1,6 @@
 // SERVER-ONLY. Everything the parent page shows for one child, read tenant-scoped and one query at a time
 // (the pooler's server pool is small). The raw story is never stored, so it is never read here.
-import type { AccessEntry } from '@/db/repo/access';
+import { insertAccess, type AccessEntry } from '@/db/repo/access';
 import { listAssignmentsForChild } from '@/db/repo/assignments';
 import { getCardForChild } from '@/db/repo/cards';
 import type { Church } from '@/db/repo/churches';
@@ -11,6 +11,7 @@ import { readAccessLog } from '@/lib/access/log';
 import { buildCardView } from '@/lib/card/view';
 import { demoClockShift } from '@/lib/demo/clock';
 import { openJson } from '@/lib/crypto/atrest';
+import { startOfZonedDay } from '@/lib/time/zoned';
 import type { AccessRow, ChildPageData, MatchInfo, NoteView } from './types';
 
 const REASONS = new Set<AccessRow['reason']>(['checked_in', 'director', 'parent', 'room_safety', 'deleted']);
@@ -57,10 +58,26 @@ export function pickMatch(
   };
 }
 
+/** Whether this viewer's opening of the card is already logged today (church time zone). */
+export function viewedToday(entries: readonly Pick<AccessEntry, 'viewerId' | 'reason' | 'openedAt'>[], viewerId: string, now: Date, tz: string): boolean {
+  const since = startOfZonedDay(now, tz).getTime();
+  return entries.some((e) => e.viewerId === viewerId && e.reason === 'parent' && e.openedAt.getTime() >= since);
+}
+
+/**
+ * Reads the child's card for a parent the caller has already matched to the child (listChildrenOf). Opening the
+ * page counts as opening the card, logged at most once per parent per day: a co-parent sees it in their log, the
+ * viewer's own rows are hidden from the viewer.
+ */
 export async function loadChildPage(church: Church, child: Person, viewerId: string, now: Date): Promise<ChildPageData> {
   const row = await getCardForChild(church.id, child.id);
   const card = row ? buildCardView(row, child.firstName, church.wrappedDek, 'parent', 'full') : null;
   const entries = (await readAccessLog(church.id, child.id, now)) ?? [];
+  if (row && !viewedToday(entries, viewerId, now, church.tz)) {
+    entries.push(await insertAccess({
+      cardId: row.id, childId: child.id, serviceId: null, viewerId, role: 'parent', reason: 'parent', openedAt: now, closedAt: now,
+    }));
+  }
   const people = await listPeople(church.id);
   const services = await listServices(church.id);
   const assignments = await listAssignmentsForChild(child.id);
