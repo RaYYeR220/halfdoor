@@ -1,6 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import { verifyCard } from '@/lib/card/verify';
 import { newWrappedDek, sealJson } from '@/lib/crypto/atrest';
+import { testFixtureMode } from '@/lib/testing/fixtureMode';
 import { deleteChurch, insertChurch, insertSandboxChurchLimited, listExpiredSandboxes } from './repo/churches';
 import { insertAccessRows, type NewAccessEntry } from './repo/access';
 import { insertAssignments } from './repo/assignments';
@@ -36,7 +37,11 @@ export async function createSandbox(opts: { creatorHash?: string } & BuildOpts =
 
 export const DEMO_LIMITS = { perHash: 5, perHashWindowMs: 3600_000, perDay: 300 } as const;
 
-/** Rate-limited creation: the counts and the church insert happen under one lock. Null = over the limit. */
+/**
+ * Rate-limited creation: the counts and the church insert happen under one lock. Null = over the limit.
+ * The end-to-end test seam (never in production, see lib/testing/fixtureMode) lifts the per-connection limit so
+ * repeated runs from one machine keep working; the daily cap always holds.
+ */
 export async function createSandboxReserved(
   creatorHash: string,
   now: Date = new Date(),
@@ -45,7 +50,7 @@ export async function createSandboxReserved(
   return build((values) =>
     insertSandboxChurchLimited(values, {
       creatorHash,
-      perHash: DEMO_LIMITS.perHash,
+      perHash: testFixtureMode() ? Number.POSITIVE_INFINITY : DEMO_LIMITS.perHash,
       hashSince: new Date(now.getTime() - DEMO_LIMITS.perHashWindowMs),
       perDay: DEMO_LIMITS.perDay,
       daySince: dayStart,

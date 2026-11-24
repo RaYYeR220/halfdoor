@@ -23,8 +23,11 @@ export type QuoteSummary = {
   mrtd: string;
   mrtdShort: string;
   tdAttributes: string;
-  /** Intel signature chain. enclaveChat only ever encrypts after 'verified'; 'pending' = binding checked, signature not yet. */
-  signature: 'pending' | 'verified' | 'unverified';
+  /**
+   * Intel signature chain. enclaveChat only ever encrypts after 'verified'; 'pending' = binding checked, signature not yet.
+   * 'fixture' = the end-to-end test seam's recorded outputs (lib/venice/fixtureChat): nothing was checked or sent.
+   */
+  signature: 'pending' | 'verified' | 'unverified' | 'fixture';
   /** Where the signature check ran: 'browser' = this tab; 'node' = a server/eval process, NOT the user's browser. */
   signatureCheckedIn?: CheckedIn;
   signatureCheckedAt?: string;
@@ -149,6 +152,8 @@ export type EnclaveCopy = {
   signatureNotVerified: (reason: string) => string;
   /** Shown when enclaveChat throws EnclaveError('quote_unverified'). */
   unverifiedNothingSent: string;
+  /** The end-to-end test seam replayed recorded outputs: no enclave, nothing sent. */
+  fixture: string;
   measurement: (mrtdShort: string) => string;
   pccsNote: string;
   limits: string;
@@ -174,6 +179,7 @@ export const ENCLAVE_COPY: EnclaveCopy = {
     `Intel signature checked with saved Intel data from ${date} (live data was unreachable). Platform status: ${tcb}.`,
   signatureNotVerified: (reason) => `Intel's signature on that report could not be verified (${reason}), so nothing was sent.`,
   unverifiedNothingSent: "We couldn't verify the enclave right now — nothing was sent. Try again in a minute.",
+  fixture: 'Test fixture — not a real enclave. These are recorded answers for automated tests: no enclave was checked and nothing was sent.',
   measurement: (short) => `Enclave software measurement (MRTD): ${short}. Shown for reference; not yet checked against a published list.`,
   pccsNote:
     "To check Intel's signature, your browser fetches public Intel data from Phala's PCCS server, which sees your IP address. No child data is sent to it.",
@@ -200,6 +206,7 @@ export const ENCLAVE_COPY_ES: EnclaveCopy = {
     `La firma de Intel se comprobó con datos de Intel guardados del ${date} (no se pudo acceder a los datos en directo). Estado de la plataforma: ${tcb}.`,
   signatureNotVerified: (reason) => `No se pudo verificar la firma de Intel en ese informe (${reason}), así que no se envió nada.`,
   unverifiedNothingSent: 'No pudimos verificar el enclave en este momento; no se envió nada. Inténtelo de nuevo en un minuto.',
+  fixture: 'Datos de prueba: no es un enclave real. Son respuestas grabadas para pruebas automáticas: no se comprobó ningún enclave y no se envió nada.',
   measurement: (short) =>
     `Medición del software del enclave (MRTD): ${short}. Se muestra como referencia; todavía no se compara con una lista publicada.`,
   pccsNote:
@@ -215,6 +222,7 @@ export const ENCLAVE_COPY_ES: EnclaveCopy = {
 export function signatureText(s: AttestationSummary, lang: 'en' | 'es' = 'en'): string {
   const c = lang === 'es' ? ENCLAVE_COPY_ES : ENCLAVE_COPY;
   const q = s.quote;
+  if (q.signature === 'fixture') return c.fixture;
   if (q.signature === 'pending') return c.signaturePending;
   if (q.signature === 'unverified') return c.signatureNotVerified(q.reason ?? q.reasonCode ?? 'unknown');
   const tcb = q.tcbStatus ?? 'unknown';

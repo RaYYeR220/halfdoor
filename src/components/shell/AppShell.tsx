@@ -7,7 +7,10 @@ import type { ReactNode } from 'react';
 import type { Lang } from '@/lib/i18n';
 import { LangProvider, useT } from '@/lib/i18n/client';
 import type { Persona } from '@/lib/demo/personas';
+import type { EnclaveReplay } from '@/lib/venice/fixtureChat';
+import { EnclaveFixtureProvider } from '@/components/enclave/EnclaveFixture';
 import { Hairline } from '@/components/ui/Hairline';
+import { Pill } from '@/components/ui/Pill';
 import { ToastProvider } from '@/components/ui/Toast';
 import { ChurchBadge } from './ChurchBadge';
 import { DemoGuide } from './DemoGuide';
@@ -27,20 +30,27 @@ type Props = {
   viewer?: ViewerBadge | null;
   /** Present only for a sandbox the browser owns. */
   guide?: ShellGuide | null;
+  /**
+   * Recorded model outputs from the server's end-to-end test seam (lib/testing/fixtureMode): null in production and
+   * in every normal run. When present, enclave calls replay them and the top bar says so.
+   */
+  testFixture?: EnclaveReplay | null;
   children: ReactNode;
 };
 
-export function AppShell({ lang, ...rest }: Props) {
+export function AppShell({ lang, testFixture = null, ...rest }: Props) {
   return (
     <LangProvider preferred={lang}>
       <ToastProvider>
-        <Frame {...rest} />
+        <EnclaveFixtureProvider replay={testFixture}>
+          <Frame {...rest} testFixture={!!testFixture} />
+        </EnclaveFixtureProvider>
       </ToastProvider>
     </LangProvider>
   );
 }
 
-function Frame({ churchName, sandbox, personas, current, viewer, guide, children }: Omit<Props, 'lang'>) {
+function Frame({ churchName, sandbox, personas, current, viewer, guide, testFixture, children }: Omit<Props, 'lang' | 'testFixture'> & { testFixture: boolean }) {
   const t = useT();
   return (
     <div className="flex min-h-dvh flex-col">
@@ -56,6 +66,11 @@ function Frame({ churchName, sandbox, personas, current, viewer, guide, children
           <Hairline vertical />
         </span>
         <ChurchBadge name={churchName} sandbox={sandbox} className="order-last w-full md:order-none md:w-auto md:flex-1" />
+        {testFixture && (
+          <Pill tone="danger" size="sm" data-testid="test-fixture-mode">
+            {t('shell.testFixture')}
+          </Pill>
+        )}
         <div className="ml-auto flex items-center gap-2 md:ml-0 md:gap-3">
           <LangSwitch />
           <RoleBar personas={personas} current={current} viewer={viewer} />

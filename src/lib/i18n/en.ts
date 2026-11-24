@@ -5,6 +5,7 @@ export const en = {
   'shell.home': 'Halfdoor home',
   'shell.fictional': 'Fictional church · sample data',
   'shell.loading': 'Loading…',
+  'shell.testFixture': 'Test fixtures · no real AI calls',
 
   'role.viewingAs': 'Viewing as',
   'role.switch': 'Switch person, now {name}',
@@ -87,6 +88,7 @@ export const en = {
   'enclave.measurement': 'Software measurement',
   'enclave.more': 'What this means',
   'enclave.limits': "What we don't check yet",
+  'enclave.fixture': 'Test fixture — not a real enclave',
 
   'card.section.loves': 'Loves',
   'card.section.communicates': 'Communicates',
@@ -459,6 +461,7 @@ export const en = {
   'desk.pack.doneVerse': '{ref}, word for word from the BSB',
   'desk.pack.doneNoVerse': 'no verse named',
   'desk.pack.doneReplaced': 'replaced the lesson at {services}',
+  'desk.pack.fixture': 'Test fixture — not a real model call',
   'desk.pack.previewTitle': 'Picture schedule',
   'desk.pack.previewFor': 'Show the schedule for',
   'desk.pack.stepsCount': '{count} steps',

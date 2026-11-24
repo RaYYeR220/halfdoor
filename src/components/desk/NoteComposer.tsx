@@ -14,7 +14,9 @@ import { draftParentNote } from '@/lib/note/pipeline';
 import type { MomentView } from '@/lib/note/schema';
 import { describeDraftError, isAbort } from '@/lib/parent/errors';
 import { timeLabel } from '@/lib/parent/format';
+import { isFixture } from '@/lib/venice/fixtureChat';
 import { E2EE_MODEL } from '@/lib/venice/prices';
+import { useEnclaveChat } from '@/components/enclave/EnclaveFixture';
 import { EnclaveStatus, type EnclaveFailure } from '@/components/enclave/EnclaveStatus';
 import { Banner } from '@/components/ui/Banner';
 import { Button } from '@/components/ui/Button';
@@ -61,6 +63,7 @@ export function NoteComposer({ service, child, clock, onSaved }: Props) {
   const t = useT();
   const uid = useId();
   const ctx = useDeskTime(clock);
+  const chat = useEnclaveChat();
   const [context, setContext] = useState<Context | 'error' | null>(null);
   const [sentences, setSentences] = useState<Sentence[] | null>(null);
   const [saved, setSaved] = useState<Saved | null>(child.note);
@@ -131,6 +134,7 @@ export function NoteComposer({ service, child, clock, onSaved }: Props) {
           model: E2EE_MODEL,
           childName: name,
           signal: ctrl.signal,
+          chat,
           onBinding: (b) => !ctrl.signal.aborted && setDraft((d) => (d.kind === 'drafting' ? { ...d, binding: b } : d)),
           onAttestation: (a) => {
             if (ctrl.signal.aborted) return;
@@ -362,23 +366,26 @@ function DraftSteps({ draft, onStop }: { draft: Extract<Draft, { kind: 'drafting
   const t = useT();
   const seconds = useElapsed(draft.startedAt);
   const summary = draft.attestation ?? draft.binding;
+  const fixture = isFixture(summary);
   const steps: { key: string; state: 'todo' | 'active' | 'done'; title: string; detail: string | null }[] = [
     {
       key: 'sealed',
       state: summary ? 'done' : 'active',
       title: t('desk.note.step.sealed'),
-      detail: summary ? `${t('parent.draft.sealedIn')} · ${summary.provider}` : t('parent.draft.asking'),
+      detail: fixture ? t('enclave.fixture') : summary ? `${t('parent.draft.sealedIn')} · ${summary.provider}` : t('parent.draft.asking'),
     },
     {
       key: 'signed',
       state: draft.attestation ? 'done' : draft.binding ? 'active' : 'todo',
       title: t('parent.draft.signature'),
       detail: draft.attestation
-        ? draft.attestation.quote.signatureSource === 'snapshot'
-          ? t('enclave.sigSaved', { date: (draft.attestation.quote.snapshotCapturedAt ?? '').slice(0, 10) || '—' })
-          : draft.attestation.reused
-            ? `${t('enclave.sigLive')} · ${t('enclave.reused', { minutes: Math.max(1, Math.round(draft.attestation.ageMs / 60_000)) })}`
-            : t('enclave.sigLive')
+        ? fixture
+          ? t('enclave.fixture')
+          : draft.attestation.quote.signatureSource === 'snapshot'
+            ? t('enclave.sigSaved', { date: (draft.attestation.quote.snapshotCapturedAt ?? '').slice(0, 10) || '—' })
+            : draft.attestation.reused
+              ? `${t('enclave.sigLive')} · ${t('enclave.reused', { minutes: Math.max(1, Math.round(draft.attestation.ageMs / 60_000)) })}`
+              : t('enclave.sigLive')
         : null,
     },
     {

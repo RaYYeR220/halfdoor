@@ -9,6 +9,7 @@ import { useT } from '@/lib/i18n/client';
 import { timeLabel } from '@/lib/parent/format';
 import { Banner } from '@/components/ui/Banner';
 import { Button } from '@/components/ui/Button';
+import { Pill } from '@/components/ui/Pill';
 import { Spinner } from '@/components/ui/Spinner';
 import { Textarea } from '@/components/ui/Textarea';
 import { DeskHead, useDeskTime } from './DeskFrame';
@@ -31,7 +32,7 @@ type Making =
   | { kind: 'confirm'; titles: string[]; services: string[] }
   | { kind: 'running' }
   | { kind: 'error'; keys: MessageKey[] }
-  | { kind: 'done'; title: string; steps: number; minutes: number; verse: string | null; replaced: string[] };
+  | { kind: 'done'; title: string; steps: number; minutes: number; verse: string | null; replaced: string[]; fixture: boolean };
 
 type Linked = Record<string, { id: string; title: string } | null>;
 
@@ -127,6 +128,7 @@ export function PackDesk({ services, clock, packChildren, initialText, churchNam
       minutes: lesson?.totalMinutes ?? 0,
       verse,
       replaced: services.filter((s) => replaced.includes(s.id)).map(short),
+      fixture: body?.fixture === true,
     });
     setVersion((v) => v + 1);
     if (!ids.includes(previewId)) setPreviewId(ids[0]);
@@ -259,6 +261,13 @@ export function PackDesk({ services, clock, packChildren, initialText, churchNam
                 making.verse ? t('desk.pack.doneVerse', { ref: making.verse }) : t('desk.pack.doneNoVerse'),
                 making.replaced.length ? t('desk.pack.doneReplaced', { services: making.replaced.join(', ') }) : null,
               ].filter(Boolean).join(' · ')}
+              {making.fixture && (
+                <span className="mt-2 block">
+                  <Pill tone="danger" size="sm" data-testid="lesson-fixture-chip">
+                    {t('desk.pack.fixture')}
+                  </Pill>
+                </span>
+              )}
             </Banner>
           )}
         </div>

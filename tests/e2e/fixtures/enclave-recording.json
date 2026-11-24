@@ -1,0 +1,104 @@
+{
+  "provenance": {
+    "recordedAt": "2026-11-24T04:01:04.672Z",
+    "how": "scripts/record-e2e-fixture.ts: real e2ee calls through the browser pipelines (Node variant); decrypted model text only",
+    "model": "e2ee-deepseek-v4-flash",
+    "provider": "near-ai",
+    "hardware": "intel-tdx",
+    "mrtdShort": "e107136c99ae1745…",
+    "intelSignature": "verified",
+    "signatureCheckedIn": "node",
+    "tcbStatus": "UpToDate",
+    "usage": {
+      "card": {
+        "prompt_tokens": 395,
+        "completion_tokens": 357
+      },
+      "translate": {
+        "prompt_tokens": 251,
+        "completion_tokens": 200
+      },
+      "note": {
+        "prompt_tokens": 207,
+        "completion_tokens": 49
+      }
+    },
+    "lesson": "hand-written to the LessonDraft shape for the sandbox sample lesson; no model call"
+  },
+  "card": {
+    "childName": "Sam",
+    "story": "Sam is 6 and in 1st grade. Sam loves building with blocks and anything about the ocean, especially octopuses. Big, loud groups are hard, and Sam may freeze and stop talking. A heads-up before each change helps, and so does holding the small stuffed octopus from home. When Sam starts rocking or covers both ears, a quiet corner helps. Sam is allergic to tree nuts and has an EpiPen in the front pocket of the backpack. Only me (Jordan) or Aunt Lena may pick Sam up.",
+    "text": "{\"items\":[{\"section\":\"loves\",\"text\":\"Building with blocks and ocean topics, especially octopuses.\",\"quotes\":[\"building with blocks\",\"anything about the ocean, especially octopuses\"]},{\"section\":\"hard\",\"text\":\"Big, loud groups are hard; the child may freeze and stop talking.\",\"quotes\":[\"Big, loud groups are hard\",\"may freeze and stop talking\"]},{\"section\":\"helps\",\"text\":\"Give a heads-up before each change.\",\"quotes\":[\"A heads-up before each change helps\"]},{\"section\":\"helps\",\"text\":\"The small stuffed octopus from home helps.\",\"quotes\":[\"the small stuffed octopus from home\"]},{\"section\":\"signs\",\"text\":\"Rocking or covering both ears means a quiet corner helps.\",\"quotes\":[\"starts rocking or covers both ears\",\"a quiet corner helps\"]},{\"section\":\"safety\",\"text\":\"Allergic to tree nuts; EpiPen is in the front pocket of the backpack.\",\"quotes\":[\"allergic to tree nuts\",\"EpiPen in the front pocket of the backpack\"]},{\"section\":\"safety\",\"text\":\"Only Jordan or Aunt Lena may pick the child up.\",\"quotes\":[\"Only me (Jordan) or Aunt Lena may pick the child up\"]}],\"tags\":[{\"tag\":\"noise_sensitive\",\"item\":1},{\"tag\":\"crowds_hard\",\"item\":1},{\"tag\":\"transitions_hard\",\"item\":2},{\"tag\":\"sensory_seeking\",\"item\":4},{\"tag\":\"needs_breaks\",\"item\":4},{\"tag\":\"food_allergy\",\"item\":5},{\"tag\":\"medical_plan\",\"item\":5},{\"tag\":\"pickup_restriction\",\"item\":6}]}"
+  },
+  "translate": {
+    "text": "{\"translations\":[{\"id\":\"{{item:0}}\",\"text\":\"Construir con bloques y temas del océano, especialmente los pulpos.\"},{\"id\":\"{{item:1}}\",\"text\":\"Los grupos grandes y ruidosos son difíciles; [CHILD] puede quedarse paralizado y dejar de hablar.\"},{\"id\":\"{{item:2}}\",\"text\":\"Avisa antes de cada cambio.\"},{\"id\":\"{{item:3}}\",\"text\":\"El pequeño pulpo de peluche de casa ayuda.\"},{\"id\":\"{{item:4}}\",\"text\":\"Mecerse o taparse ambas orejas significa que un rincón tranquilo ayuda.\"},{\"id\":\"{{item:5}}\",\"text\":\"[CHILD] es alérgico a los frutos secos y tiene un EpiPen en el bolsillo delantero de la mochila.\"},{\"id\":\"{{item:6}}\",\"text\":\"Solo yo (Jordan) o la tía Lena pueden recoger a [CHILD].\"}]}"
+  },
+  "note": {
+    "lang": "en",
+    "moments": [
+      {
+        "step": "Worship",
+        "kind": "good",
+        "helped": []
+      }
+    ],
+    "text": "{\"sentences\":[{\"text\":\"During worship this morning, the child had a good moment.\",\"evidence\":[\"{{moment:0}}\"]}]}"
+  },
+  "lesson": {
+    "draft": {
+      "title": "Advent, week 1: Waiting with hope",
+      "steps": [
+        {
+          "key": "arrive",
+          "label": "Arrive and settle on rug",
+          "labelEs": "Llegar y sentarse en la alfombra",
+          "segment": "arrive",
+          "sensoryLoad": "low",
+          "minutes": 5
+        },
+        {
+          "key": "worship",
+          "label": "Sing with the band",
+          "labelEs": "Cantar con la banda",
+          "segment": "worship",
+          "sensoryLoad": "high",
+          "minutes": 15
+        },
+        {
+          "key": "bible_story",
+          "label": "Bible story and talk",
+          "labelEs": "Historia bíblica y charla",
+          "segment": "story",
+          "sensoryLoad": "med",
+          "minutes": 15
+        },
+        {
+          "key": "snack",
+          "label": "Snack at the tables",
+          "labelEs": "Merienda en las mesas",
+          "segment": "snack",
+          "sensoryLoad": "med",
+          "minutes": 10
+        },
+        {
+          "key": "craft",
+          "label": "Make a hope star",
+          "labelEs": "Hacer una estrella de esperanza",
+          "segment": "craft",
+          "sensoryLoad": "med",
+          "minutes": 15
+        },
+        {
+          "key": "pickup",
+          "label": "Tidy up and wait",
+          "labelEs": "Ordenar y esperar",
+          "segment": "pickup",
+          "sensoryLoad": "low",
+          "minutes": 5
+        }
+      ],
+      "bigIdeaQuote": "Waiting is easier when we know someone good is coming.",
+      "verseRef": "Isaiah 9:6"
+    }
+  }
+}

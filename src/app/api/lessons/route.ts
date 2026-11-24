@@ -4,6 +4,7 @@ import { getServiceInChurch, setServicesLesson } from '@/db/repo/services';
 import { UUID, fail, readJson, requireViewer } from '@/lib/access/api';
 import { getVerse } from '@/lib/schedule/bible';
 import { LessonDraftError, MAX_LESSON_CHARS, MIN_LESSON_CHARS, lessonToDraft, verifyLesson } from '@/lib/schedule/lesson';
+import { testFixtureMode } from '@/lib/testing/fixtureMode';
 
 const MAX_SERVICES = 12;
 
@@ -44,7 +45,8 @@ export async function POST(req: Request) {
     verseRef: lesson.verseRef, verseText: verse?.text ?? null, steps: lesson.steps,
   });
   await setServicesLesson(viewer.churchId, ids, row.id);
-  return NextResponse.json({ id: row.id, lesson, verse, replaced });
+  // `fixture`: the draft was the e2e test seam's recording, not a model call (the desk says so).
+  return NextResponse.json({ id: row.id, lesson, verse, replaced, ...(testFixtureMode() ? { fixture: true } : {}) });
 }
 
 /** The lesson linked to a service (director desk). */

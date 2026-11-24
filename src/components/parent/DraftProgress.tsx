@@ -7,6 +7,7 @@ import { cx } from '@/lib/cx';
 import type { Lang } from '@/lib/i18n';
 import { useT } from '@/lib/i18n/client';
 import { plural } from '@/lib/parent/plural';
+import { isFixture } from '@/lib/venice/fixtureChat';
 import { EnclaveStatus } from '@/components/enclave/EnclaveStatus';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
@@ -39,10 +40,13 @@ export function DraftProgress({ childName, progress, onStop, focusToken, lang }:
   const checking: StepState = result ? 'done' : 'todo';
 
   const summary = att ?? binding;
+  const fixture = isFixture(summary);
   const sigDetail = att
-    ? att.quote.signatureSource === 'snapshot'
-      ? t('enclave.sigSaved', { date: (att.quote.snapshotCapturedAt ?? '').slice(0, 10) || '—' })
-      : t('enclave.sigLive')
+    ? fixture
+      ? t('enclave.fixture')
+      : att.quote.signatureSource === 'snapshot'
+        ? t('enclave.sigSaved', { date: (att.quote.snapshotCapturedAt ?? '').slice(0, 10) || '—' })
+        : t('enclave.sigLive')
     : null;
 
   const steps: { key: string; state: StepState; title: string; detail: string | null }[] = [
@@ -50,7 +54,7 @@ export function DraftProgress({ childName, progress, onStop, focusToken, lang }:
       key: 'sealed',
       state: sealed,
       title: t('parent.draft.sealed'),
-      detail: summary ? `${t('parent.draft.sealedIn')} · ${summary.provider}` : t('parent.draft.asking'),
+      detail: fixture ? t('enclave.fixture') : summary ? `${t('parent.draft.sealedIn')} · ${summary.provider}` : t('parent.draft.asking'),
     },
     {
       key: 'signed',

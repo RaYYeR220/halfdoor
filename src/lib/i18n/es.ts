@@ -6,6 +6,7 @@ export const es: Record<MessageKey, string> = {
   'shell.home': 'Inicio de Halfdoor',
   'shell.fictional': 'Iglesia ficticia · datos de ejemplo',
   'shell.loading': 'Cargando…',
+  'shell.testFixture': 'Datos de prueba · sin llamadas reales a la IA',
 
   'role.viewingAs': 'Viendo como',
   'role.switch': 'Cambiar de persona, ahora {name}',
@@ -88,6 +89,7 @@ export const es: Record<MessageKey, string> = {
   'enclave.measurement': 'Medición del software',
   'enclave.more': 'Qué significa esto',
   'enclave.limits': 'Lo que todavía no comprobamos',
+  'enclave.fixture': 'Datos de prueba: no es un enclave real',
 
   'card.section.loves': 'Le encanta',
   'card.section.communicates': 'Se comunica',
@@ -460,6 +462,7 @@ export const es: Record<MessageKey, string> = {
   'desk.pack.doneVerse': '{ref}, palabra por palabra de la BSB',
   'desk.pack.doneNoVerse': 'sin versículo',
   'desk.pack.doneReplaced': 'reemplazó la lección de las {services}',
+  'desk.pack.fixture': 'Datos de prueba: no es una llamada real al modelo',
   'desk.pack.previewTitle': 'Horario con pictogramas',
   'desk.pack.previewFor': 'Mostrar el horario de',
   'desk.pack.stepsCount': '{count} pasos',

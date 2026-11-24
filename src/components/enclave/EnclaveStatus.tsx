@@ -45,6 +45,21 @@ export function EnclaveStatus({ value, lang = 'en', className }: Props) {
     );
   }
 
+  // The end-to-end test seam (never in production): recorded answers, no enclave. Said plainly, never as "Checked".
+  if (value.quote.signature === 'fixture') {
+    return (
+      <Frame
+        className={className}
+        lang={lang}
+        pill={<Pill tone="danger" icon={<Icon name="alert" size={12} />} data-testid="enclave-fixture-chip">{t(lang, 'enclave.fixture')}</Pill>}
+      >
+        <p role="status" className="text-15 text-danger-ink text-pretty">
+          {copy.fixture}
+        </p>
+      </Frame>
+    );
+  }
+
   const s = value;
   const q = s.quote;
   const sig = q.signature;
@@ -122,7 +137,7 @@ function Frame({ pill, children, className, lang }: { pill: ReactNode; children:
       aria-label={t(lang, 'enclave.title')}
       className={cx('rounded-sharp border border-hairline-strong bg-surface px-4 pt-3.5 pb-3 sm:px-5', className)}
     >
-      <div className="mb-2 flex min-h-8 items-center justify-between gap-3 border-b border-hairline pb-3">
+      <div className="mb-2 flex min-h-8 flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-hairline pb-3">
         <p className="text-15 font-medium text-ink">{t(lang, 'enclave.title')}</p>
         {pill}
       </div>

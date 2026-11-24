@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getViewer } from '@/lib/auth/viewer';
+import { testFixtureMode } from '@/lib/testing/fixtureMode';
 import { estimateUsd, reserveBudget } from '@/lib/venice/budget';
 import { CAPS } from '@/lib/venice/prices';
 import {
@@ -11,6 +12,8 @@ const upstreamError = () => NextResponse.json({ error: 'upstream' }, { status: 5
 export async function POST(req: Request) {
   const viewer = await getViewer();
   if (!viewer) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  // The end-to-end test seam replays recorded outputs in the browser; while it is on, nothing reaches Venice.
+  if (testFixtureMode()) return NextResponse.json({ error: 'test_fixture_mode' }, { status: 409 });
 
   const raw = await req.json().catch(() => null);
   const parsed = ChatBody.safeParse(raw);

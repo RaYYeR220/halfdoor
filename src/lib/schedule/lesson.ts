@@ -2,6 +2,7 @@
 import { z } from 'zod';
 import { estimatePlainUsd, finalizeAiCall, reserveBudget, type BudgetReason } from '@/lib/venice/budget';
 import { claudeJson, LESSON_MODEL } from '@/lib/venice/claude';
+import { lessonRecording } from '@/lib/testing/fixtureMode';
 import { locateQuote, type Span } from '@/lib/text/locate';
 import { SEGMENTS, SENSORY_LOADS, type Step } from './segments';
 
@@ -93,6 +94,10 @@ function parseDraft(content: string): LessonDraft | null {
 export async function lessonToDraft(lessonText: string, o: LessonCallOptions): Promise<LessonDraft> {
   if (lessonText.length > MAX_LESSON_CHARS) throw new LessonDraftError('too_long');
   if (lessonText.trim().length < MIN_LESSON_CHARS) throw new LessonDraftError('too_short');
+  // The end-to-end test seam (never in production, see lib/testing/fixtureMode): the recorded draft, no model call,
+  // nothing reserved or spent. It still goes through verifyLesson like a real draft.
+  const recorded = lessonRecording();
+  if (recorded !== null) return LessonDraft.parse(recorded);
   const apiKey = o.apiKey ?? process.env.VENICE_API_KEY;
   if (!apiKey) throw new LessonDraftError('no_key');
   const user = `Lesson text:\n"""\n${lessonText}\n"""`;

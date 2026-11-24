@@ -7,6 +7,7 @@ import { COOKIE_AS, COOKIE_SANDBOX, getViewer } from '@/lib/auth/viewer';
 import { verifyValue } from '@/lib/auth/tokens';
 import { buildPersonas } from '@/lib/demo/personas';
 import { LANG_COOKIE, resolveLang } from '@/lib/i18n';
+import { enclaveReplay } from '@/lib/testing/fixtureMode';
 import { AppShell, AppShellFallback, type ShellGuide } from '@/components/shell/AppShell';
 import type { ViewerBadge } from '@/components/shell/RoleBar';
 
@@ -49,6 +50,7 @@ async function ChurchShell({ children, params }: { children: ReactNode; params: 
       current={jar.get(COOKIE_AS)?.value ?? null}
       viewer={badge}
       guide={guide}
+      testFixture={enclaveReplay()}
     >
       {children}
     </AppShell>

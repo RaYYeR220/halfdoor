@@ -16,6 +16,7 @@ import { approvalLanded, runTracker, serverViewOf, type Run } from '@/lib/parent
 import { clearStory, readStory, subscribeStory, writeStory } from '@/lib/parent/storyStore';
 import type { ChildPageData, ChildRef } from '@/lib/parent/types';
 import { E2EE_MODEL } from '@/lib/venice/prices';
+import { useEnclaveChat } from '@/components/enclave/EnclaveFixture';
 import { useToast } from '@/components/ui/Toast';
 import { CardApproved } from './CardApproved';
 import { CardReview, type ReviewState, type SupportLevel } from './CardReview';
@@ -63,6 +64,7 @@ export function ParentPage({ data, family, base }: Props) {
   const { lang, t } = useLang();
   const router = useRouter();
   const toast = useToast();
+  const chat = useEnclaveChat();
   const [, startTransition] = useTransition();
   const { child, card } = data;
   const name = child.firstName;
@@ -102,7 +104,7 @@ export function ParentPage({ data, family, base }: Props) {
 
   const translate = (source: VerifiedCard, run: Run) => {
     patchReview({ translation: { status: 'running', byId: null } });
-    translateCard(source, { model: E2EE_MODEL, childName: name, signal: run.signal })
+    translateCard(source, { model: E2EE_MODEL, childName: name, signal: run.signal, chat })
       .then((out) => {
         if (!run.live()) return;
         const byId: Record<string, CardItem['translation']> = {};
@@ -127,6 +129,7 @@ export function ParentPage({ data, family, base }: Props) {
       const { card: drafted, attestation } = await draftCard(text, name, {
         model: E2EE_MODEL,
         signal: run.signal,
+        chat,
         onBinding: (b) => patch({ binding: b }),
         onAttestation: (a) => patch({ attestation: a }),
       });

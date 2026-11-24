@@ -1,11 +1,14 @@
 import { NextResponse } from 'next/server';
 import { getViewer } from '@/lib/auth/viewer';
+import { testFixtureMode } from '@/lib/testing/fixtureMode';
 import { fetchAttestationWithRetry } from '@/lib/venice/request';
 import { VENICE_BASE, modelId, nonceHex } from '@/lib/venice/teeProxy';
 
 export async function GET(req: Request) {
   const viewer = await getViewer();
   if (!viewer) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  // The end-to-end test seam replays recorded outputs in the browser; while it is on, nothing reaches Venice.
+  if (testFixtureMode()) return NextResponse.json({ error: 'test_fixture_mode' }, { status: 409 });
 
   const sp = new URL(req.url).searchParams;
   const model = modelId.safeParse(sp.get('model'));
