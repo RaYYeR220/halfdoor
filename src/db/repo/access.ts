@@ -14,6 +14,11 @@ export async function insertAccess(values: NewAccessEntry): Promise<AccessEntry>
   return row;
 }
 
+/** Several rows in one statement (sandbox history). */
+export async function insertAccessRows(rows: NewAccessEntry[]): Promise<void> {
+  if (rows.length > 0) await getDb().insert(cardAccessLog).values(rows);
+}
+
 export async function updateAccess(id: string, patch: Partial<NewAccessEntry>): Promise<void> {
   await getDb().update(cardAccessLog).set(patch).where(eq(cardAccessLog.id, id));
 }

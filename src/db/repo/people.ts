@@ -32,6 +32,15 @@ export async function insertHouseholdLinks(rows: { parentId: string; childId: st
   await getDb().insert(householdLinks).values(rows);
 }
 
+/** Tenant-scoped: the children of this church linked to the parent, in name order. */
+export async function listChildrenOf(churchId: string, parentId: string): Promise<Person[]> {
+  const rows = await getDb().select({ p: people }).from(householdLinks)
+    .innerJoin(people, eq(people.id, householdLinks.childId))
+    .where(and(eq(householdLinks.parentId, parentId), eq(people.churchId, churchId), eq(people.role, 'child')))
+    .orderBy(people.firstName);
+  return rows.map((r) => r.p);
+}
+
 export async function listHouseholdLinks(childIds: string[]): Promise<{ parentId: string; childId: string }[]> {
   if (childIds.length === 0) return [];
   return getDb().select().from(householdLinks).where(inArray(householdLinks.childId, childIds));

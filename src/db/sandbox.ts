@@ -2,6 +2,7 @@ import { randomBytes } from 'node:crypto';
 import { verifyCard } from '@/lib/card/verify';
 import { newWrappedDek, sealJson } from '@/lib/crypto/atrest';
 import { deleteChurch, insertChurch, insertSandboxChurchLimited, listExpiredSandboxes } from './repo/churches';
+import { insertAccessRows, type NewAccessEntry } from './repo/access';
 import { insertAssignments } from './repo/assignments';
 import { insertBlockouts } from './repo/blockouts';
 import { insertCard } from './repo/cards';
@@ -20,9 +21,17 @@ const SANDBOX_TTL = DAY;
 const RETENTION = 365 * DAY;
 const PAST_WEEKS = 5;
 
+type BuildOpts = {
+  /**
+   * Past Sundays' card openings (buddies while the child was checked in, the director's review), so a parent's
+   * access log has a history. On for the public demo; unit tests start from an empty log unless they ask for it.
+   */
+  accessHistory?: boolean;
+};
+
 /** Copy the Fernbrook fixture into a fresh church with its own DEK. Times are relative to now. */
-export async function createSandbox(opts: { creatorHash?: string } = {}): Promise<{ churchId: string; slug: string }> {
-  return (await build((values) => insertChurch({ ...values, creatorHash: opts.creatorHash ?? null })))!;
+export async function createSandbox(opts: { creatorHash?: string } & BuildOpts = {}): Promise<{ churchId: string; slug: string }> {
+  return (await build((values) => insertChurch({ ...values, creatorHash: opts.creatorHash ?? null }), opts))!;
 }
 
 export const DEMO_LIMITS = { perHash: 5, perHashWindowMs: 3600_000, perDay: 300 } as const;
@@ -41,11 +50,13 @@ export async function createSandboxReserved(
       perDay: DEMO_LIMITS.perDay,
       daySince: dayStart,
     }),
+    { accessHistory: true },
   );
 }
 
 async function build(
   insert: (values: Parameters<typeof insertChurch>[0]) => Promise<Awaited<ReturnType<typeof insertChurch>> | null>,
+  opts: BuildOpts = {},
 ): Promise<{ churchId: string; slug: string } | null> {
   const T = Date.now();
   const at = (offsetMs: number) => new Date(T + offsetMs);
@@ -58,7 +69,7 @@ async function build(
   });
   if (!church) return null;
   try {
-    await seed(church.id, wrappedDek, T);
+    await seed(church.id, wrappedDek, T, opts);
   } catch (err) {
     await deleteChurch(church.id);
     throw err;
@@ -66,7 +77,7 @@ async function build(
   return { churchId: church.id, slug };
 }
 
-async function seed(churchId: string, wrappedDek: string, T: number): Promise<void> {
+async function seed(churchId: string, wrappedDek: string, T: number, opts: BuildOpts): Promise<void> {
   const at = (offsetMs: number) => new Date(T + offsetMs);
 
   const rows: NewPerson[] = PEOPLE.map((p) => ({
@@ -87,11 +98,16 @@ async function seed(churchId: string, wrappedDek: string, T: number): Promise<vo
   await insertHouseholdLinks(HOUSEHOLDS.map(([parent, child]) => ({ parentId: id[parent], childId: id[child] })));
 
   const leoItemIds: string[] = [];
+  const cardIds: Record<string, string> = {};
+  const ackAt: Record<string, Date> = {};
   for (const [key, seedCard] of Object.entries(CARDS)) {
     const verified = verifyCard(seedCard.story, seedCard.draft);
     if (key === 'leo') leoItemIds.push(...verified.items.map((i) => i.id));
-    const approved = seedCard.status === 'acknowledged' ? at(-2 * DAY) : at(-DAY);
-    await insertCard({
+    // Acknowledged cards date from before the past Sundays they were used on; Malik's waits for review since yesterday.
+    const acknowledged = seedCard.status === 'acknowledged';
+    const approved = acknowledged ? at(-(PAST_WEEKS * 7 + 3) * DAY) : at(-DAY);
+    if (acknowledged) ackAt[key] = at(-(PAST_WEEKS * 7 + 2) * DAY);
+    const card = await insertCard({
       churchId,
       childId: id[key],
       status: seedCard.status,
@@ -100,9 +116,10 @@ async function seed(churchId: string, wrappedDek: string, T: number): Promise<vo
       itemsEnc: sealJson(wrappedDek, verified.items),
       tags: verified.tags,
       parentApprovedAt: approved,
-      directorAckAt: seedCard.status === 'acknowledged' ? at(-DAY) : null,
+      directorAckAt: ackAt[key] ?? null,
       retainUntil: at(RETENTION),
     });
+    cardIds[key] = card.id;
   }
 
   const lessonBase = {
@@ -145,14 +162,31 @@ async function seed(churchId: string, wrappedDek: string, T: number): Promise<vo
     ...pastElevens.map((s) => attended(s, id.ivy)),
   ]);
 
-  await insertAssignments([
+  const pastPairs = [
     // Ivy's 11:00 buddy: Priya on the 3 most recent Sundays, Dana before that.
-    ...pastElevens.map((s, k) => ({ serviceId: s.id, childId: id.ivy, buddyId: k < 3 ? id.priya : id.dana, status: 'approved' as const })),
+    ...pastElevens.map((s, k) => ({ service: s, child: 'ivy', buddy: k < 3 ? 'priya' : 'dana' })),
     ...pastServices.flatMap((s) => [
-      { serviceId: s.id, childId: id.leo, buddyId: id.priya, status: 'approved' as const },
-      { serviceId: s.id, childId: id.ana, buddyId: id.marco, status: 'approved' as const },
+      { service: s, child: 'leo', buddy: 'priya' },
+      { service: s, child: 'ana', buddy: 'marco' },
     ]),
-  ]);
+  ];
+  await insertAssignments(pastPairs.map((x) => ({ serviceId: x.service.id, childId: id[x.child], buddyId: id[x.buddy], status: 'approved' as const })));
+
+  if (opts.accessHistory) {
+    // What the access gate would have logged: the director reading each card before acknowledging it, and each
+    // buddy opening their child's card a minute after check-in, closed at checkout (the service end).
+    const rows: NewAccessEntry[] = Object.entries(ackAt).map(([key, ack]) => {
+      const read = new Date(ack.getTime() - 6 * MIN);
+      return { cardId: cardIds[key], childId: id[key], viewerId: id.hannah, role: 'director', reason: 'director', openedAt: read, closedAt: read };
+    });
+    for (const x of [...pastPairs].sort((a, b) => a.service.startsAt.getTime() - b.service.startsAt.getTime())) {
+      rows.push({
+        cardId: cardIds[x.child], childId: id[x.child], serviceId: x.service.id, viewerId: id[x.buddy], role: 'buddy', reason: 'checked_in',
+        openedAt: new Date(x.service.startsAt.getTime() + 4 * MIN), closedAt: x.service.endsAt,
+      });
+    }
+    await insertAccessRows(rows);
+  }
 
   // Leo: hard at worship in 4 of 5 past Sundays; the fifth goes well with the headphones.
   const headphones = leoItemIds[2] ? [leoItemIds[2]] : [];
