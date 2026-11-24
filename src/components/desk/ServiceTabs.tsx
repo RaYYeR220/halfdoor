@@ -2,23 +2,25 @@
 // Tabs for today's services (9:00 · 11:00), with their real times. Arrow keys, Home and End move between them.
 import { useRef, type KeyboardEvent, type ReactNode } from 'react';
 import { cx } from '@/lib/cx';
-import type { DeskService } from '@/lib/desk/types';
 
-type Props = {
-  services: DeskService[];
+/** Any service with an id and a label: the desk's, or the live pages' (room view, station). */
+type Tabbable = { id: string; label: string };
+
+type Props<S extends Tabbable> = {
+  services: S[];
   selected: string;
   onSelect: (id: string) => void;
   /** Prefix for tab / panel ids: tab `${idBase}-tab-<id>`, panel `${idBase}-panel-<id>`. */
   idBase: string;
   label: string;
-  meta: (s: DeskService) => ReactNode;
-  aside?: (s: DeskService) => ReactNode;
+  meta: (s: S) => ReactNode;
+  aside?: (s: S) => ReactNode;
 };
 
 export const tabId = (base: string, id: string) => `${base}-tab-${id}`;
 export const panelId = (base: string, id: string) => `${base}-panel-${id}`;
 
-export function ServiceTabs({ services, selected, onSelect, idBase, label, meta, aside }: Props) {
+export function ServiceTabs<S extends Tabbable>({ services, selected, onSelect, idBase, label, meta, aside }: Props<S>) {
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
   const onKey = (e: KeyboardEvent, i: number) => {
     const n = services.length;

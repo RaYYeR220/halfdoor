@@ -194,6 +194,22 @@
 @utility animate-rise {
   animation: hd-rise 200ms var(--ease) both;
 }
+/* The locked silhouette settling back in after a checkout (the lock, 280ms; the card itself is already wiped). */
+@keyframes hd-relock {
+  from { filter: blur(6px); opacity: 0.4; }
+  to { filter: blur(0); opacity: 1; }
+}
+@utility animate-relock {
+  animation: hd-relock 280ms var(--ease) both;
+}
+/* The live dot: one soft ring each time a check lands. */
+@keyframes hd-beat {
+  from { opacity: 0.55; transform: scale(1); }
+  to { opacity: 0; transform: scale(2.6); }
+}
+@utility animate-beat {
+  animation: hd-beat 900ms var(--ease) both;
+}
 /* The desk's side drawer slides a short way in from the right. */
 @keyframes hd-drawer {
   from { opacity: 0; transform: translateX(28px); }
