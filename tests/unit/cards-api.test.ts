@@ -98,13 +98,17 @@ describe('GET /api/cards/:childId: the buddy gate', () => {
     h.viewer = w.as('Priya', 'buddy');
     expect((await (await getCard(leo, `?service=${w.service.id}`)).json()).locked).toBe(false);
     const hb = await (await beat(w)).json();
-    expect(hb.checkins).toEqual([{ childId: leo, securityCode: expect.stringMatching(/^[A-HJ-NP-Z2-9]{4}$/), in: true }]);
+    expect(hb.checkins).toEqual([{
+      childId: leo, securityCode: expect.stringMatching(/^[A-HJ-NP-Z2-9]{4}$/), in: true, checkedInAt: expect.any(String), checkedOutAt: null,
+    }]);
+    expect(hb.viewerId).toBe(w.p('Priya').id);
     expect((await listAccessForChild(leo))[0].closedAt).toBeNull();
     h.viewer = w.as('Hannah', 'director');
     await station(w, 'Leo', 'out');
     h.viewer = w.as('Priya', 'buddy');
     const after = await (await beat(w)).json();
     expect(after.checkins[0].in).toBe(false);
+    expect(Date.parse(after.checkins[0].checkedOutAt)).toBeGreaterThanOrEqual(Date.parse(after.checkins[0].checkedInAt));
     expect((await listAccessForChild(leo))[0].closedAt).not.toBeNull();
   });
 

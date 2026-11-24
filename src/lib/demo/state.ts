@@ -38,8 +38,13 @@ export async function readDemoState(churchId: string, now: Date = new Date()): P
   const approvedToday = assignments
     .filter((a) => todayIds.has(a.serviceId) && (a.status === 'approved' || a.status === 'scheduled_in_pco'))
     .sort((a, b) => today.findIndex((s) => s.id === a.serviceId) - today.findIndex((s) => s.id === b.serviceId));
-  const buddyId = approvedToday[0]?.buddyId ?? null;
   const samCheckins = checkins.filter((c) => c.childId === sam.id && todayIds.has(c.serviceId));
+  // The guide's buddy step must open the phone that will actually unlock: the buddy matched at the service Sam is
+  // (or was last) checked in at; before any check-in, the first service he is matched at.
+  const lastCheckin = [...samCheckins].sort((a, b) => b.checkedInAt.getTime() - a.checkedInAt.getTime())[0];
+  const atCheckin = lastCheckin ? approvedToday.find((a) => a.serviceId === lastCheckin.serviceId) : undefined;
+  const match = atCheckin ?? approvedToday[0];
+  const buddyId = match?.buddyId ?? null;
 
   return {
     samCardApproved: card?.status === 'parent_approved' || card?.status === 'acknowledged',
@@ -51,5 +56,6 @@ export async function readDemoState(churchId: string, now: Date = new Date()): P
     samNoteApproved: notes.some((n) => n.status === 'approved'),
     samBuddyId: buddyId,
     samBuddyName: people.find((p) => p.id === buddyId)?.firstName ?? null,
+    samServiceId: match?.serviceId ?? lastCheckin?.serviceId ?? null,
   };
 }

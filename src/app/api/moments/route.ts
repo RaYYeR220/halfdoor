@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getChurch } from '@/db/repo/churches';
 import { listLessons } from '@/db/repo/lessons';
-import { insertMoments } from '@/db/repo/moments';
+import { insertMoments, listMoments } from '@/db/repo/moments';
 import { getServiceInChurch } from '@/db/repo/services';
 import { UUID, childInChurch, fail, readJson, requireViewer } from '@/lib/access/api';
 import { evaluateGate } from '@/lib/access/read';
@@ -9,6 +9,32 @@ import type { CardItem } from '@/lib/card/schema';
 import { openJson, sealJson } from '@/lib/crypto/atrest';
 import { MAX_MOMENT_NOTE_CHARS, MOMENT_KINDS, type MomentKind } from '@/lib/note/schema';
 import { stepsFor } from '@/lib/note/server';
+
+/**
+ * Buddy: the moments they logged with this child at this service, under the same gate as the card (assigned,
+ * checked in, inside the window). The phone lists them under the logger and drops them at checkout.
+ */
+export async function GET(req: Request) {
+  const viewer = await requireViewer(['buddy']);
+  if (viewer instanceof NextResponse) return viewer;
+  const url = new URL(req.url);
+  const serviceId = url.searchParams.get('service') ?? '';
+  const childId = url.searchParams.get('child') ?? '';
+  if (!UUID.test(serviceId) || !UUID.test(childId)) return fail('not_found', 404);
+  if (!(await childInChurch(viewer, childId))) return fail('not_found', 404);
+  const ev = await evaluateGate(viewer, childId, serviceId, 'full', new Date());
+  if (!ev) return fail('not_found', 404);
+  if (!ev.result.allowed) return NextResponse.json({ error: 'forbidden', reason: ev.result.reason }, { status: 403 });
+  const church = await getChurch(viewer.churchId);
+  if (!church) return fail('not_found', 404);
+  const rows = (await listMoments(serviceId)).filter((m) => m.childId === childId && m.buddyId === viewer.personId);
+  return NextResponse.json({
+    moments: rows.map((m) => ({
+      id: m.id, stepKey: m.stepKey ?? 'other', kind: m.kind, helpedItemIds: m.helpedItemIds ?? [],
+      note: m.noteEnc ? openJson<string>(church.wrappedDek, m.noteEnc) : null, at: m.at.toISOString(),
+    })),
+  }, { headers: { 'Cache-Control': 'no-store' } });
+}
 
 export async function POST(req: Request) {
   const viewer = await requireViewer(['buddy']);

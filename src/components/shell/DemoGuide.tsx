@@ -46,15 +46,22 @@ const subscribe = (l: () => void) => {
 
 // ---- steps
 type Who = PersonaKey | 'buddy';
-type StepDef = { flag: keyof DemoFlags; who: Who; path: (c: { base: string; samId: string | null; buddyId: string | null }) => string };
+type PathCtx = { base: string; samId: string | null; buddyId: string | null; serviceId: string | null };
+type StepDef = { flag: keyof DemoFlags; who: Who; path: (c: PathCtx) => string };
+
+/** The station and the buddy's phone open on Sam's service (the one he is matched at), with Sam picked out. */
+const atService = (c: PathCtx, child = false) => {
+  const q = [c.serviceId && `service=${c.serviceId}`, child && c.samId && `child=${c.samId}`].filter(Boolean).join('&');
+  return q ? `?${q}` : '';
+};
 
 const STEPS: readonly StepDef[] = [
   { flag: 'samCardApproved', who: 'jordan', path: () => '' },
   { flag: 'samCardAcknowledged', who: 'hannah', path: (c) => `${c.base}/desk${c.samId ? `?child=${c.samId}` : ''}` },
   { flag: 'samAssignedApproved', who: 'hannah', path: (c) => `${c.base}/desk/sunday` },
-  { flag: 'samCheckedIn', who: 'hannah', path: (c) => `${c.base}/station` },
-  { flag: 'samCardOpenedByBuddy', who: 'buddy', path: (c) => `${c.base}/buddy/${c.buddyId}` },
-  { flag: 'samCheckedOut', who: 'hannah', path: (c) => `${c.base}/station` },
+  { flag: 'samCheckedIn', who: 'hannah', path: (c) => `${c.base}/station${atService(c, true)}` },
+  { flag: 'samCardOpenedByBuddy', who: 'buddy', path: (c) => `${c.base}/buddy/${c.buddyId}${atService(c, true)}` },
+  { flag: 'samCheckedOut', who: 'hannah', path: (c) => `${c.base}/station${atService(c, true)}` },
   { flag: 'samNoteApproved', who: 'hannah', path: (c) => `${c.base}/desk/notes` },
 ];
 
@@ -115,11 +122,12 @@ export function DemoGuide({ slug, personas, current, samId }: Props) {
   const progress = state ? t('guide.progress', { done: doneCount, total: STEPS.length }) : t('guide.checking');
   const jordan = byKey.get('jordan');
 
+  const serviceId = state?.samServiceId ?? null;
   const target = (s: StepDef): { value: string; name: string; href: string } | null => {
-    if (s.who === 'buddy') return buddy ? { ...buddy, href: s.path({ base, samId, buddyId }) } : null;
+    if (s.who === 'buddy') return buddy ? { ...buddy, href: s.path({ base, samId, buddyId, serviceId }) } : null;
     const p = byKey.get(s.who);
     if (!p) return null;
-    return { value: p.value, name: p.name, href: s.who === 'jordan' ? p.href : s.path({ base, samId, buddyId: null }) };
+    return { value: p.value, name: p.name, href: s.who === 'jordan' ? p.href : s.path({ base, samId, buddyId: null, serviceId }) };
   };
 
   // Hiding or showing the guide unmounts the control that was clicked; keep keyboard focus on its counterpart.

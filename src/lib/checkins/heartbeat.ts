@@ -7,7 +7,9 @@ import { isActiveAssignmentFor } from '@/lib/access/gate';
 import { closeStaleAccess } from '@/lib/access/read';
 import type { Viewer } from '@/lib/auth/viewer';
 import { refreshFromPco } from '@/lib/pco/hooks';
-import type { CheckinStatus } from './types';
+import type { Heartbeat } from './types';
+
+export type { Heartbeat } from './types';
 
 export const PCO_REFRESH_MS = 8_000;
 const lastRefresh = new Map<string, number>();
@@ -18,7 +20,7 @@ export function resetHeartbeatThrottle(): void {
 }
 
 /** null = service is not in the viewer's church. */
-export async function heartbeat(viewer: Viewer, serviceId: string, now: Date): Promise<{ now: string; checkins: CheckinStatus[] } | null> {
+export async function heartbeat(viewer: Viewer, serviceId: string, now: Date): Promise<Heartbeat | null> {
   const service = await getServiceInChurch(viewer.churchId, serviceId);
   if (!service) return null;
   const church = await getChurch(viewer.churchId);
@@ -47,6 +49,13 @@ export async function heartbeat(viewer: Viewer, serviceId: string, now: Date): P
   for (const r of [...rows].sort((a, b) => a.checkedInAt.getTime() - b.checkedInAt.getTime())) latest.set(r.childId, r);
   return {
     now: now.toISOString(),
-    checkins: [...latest.values()].map((r) => ({ childId: r.childId, securityCode: r.securityCode, in: r.checkedOutAt === null })),
+    viewerId: viewer.personId,
+    checkins: [...latest.values()].map((r) => ({
+      childId: r.childId,
+      securityCode: r.securityCode,
+      in: r.checkedOutAt === null,
+      checkedInAt: r.checkedInAt.toISOString(),
+      checkedOutAt: r.checkedOutAt?.toISOString() ?? null,
+    })),
   };
 }

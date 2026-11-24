@@ -52,6 +52,7 @@ describe('readDemoState', () => {
     expect(await readDemoState(w.churchId)).toEqual({
       samCardApproved: false, samCardAcknowledged: false, samAssignedApproved: false, samCheckedIn: false,
       samCardOpenedByBuddy: false, samCheckedOut: false, samNoteApproved: false, samBuddyId: null, samBuddyName: null,
+      samServiceId: null,
     });
   });
 
@@ -102,6 +103,27 @@ describe('readDemoState', () => {
     expect((await readDemoState(w.churchId)).samNoteApproved).toBe(false);
     await updateNote(note.id, { status: 'approved', approvedAt: new Date() });
     expect(flagsOf(await readDemoState(w.churchId))).toEqual(DEMO_STEP_FLAGS);
+  });
+
+  it('step 5 names the buddy matched at the service Sam is checked in at, and that service', async () => {
+    const w = await world();
+    const sam = w.p('Sam').id;
+    const now = Date.now();
+    const eleven = (await listServices(w.churchId)).find((s) => s.startsAt.getTime() > now && s.startsAt.getTime() < now + 3 * 3600_000)!;
+    await insertAssignments([
+      { serviceId: w.nine.id, childId: sam, buddyId: w.p('Grace').id, status: 'approved' },
+      { serviceId: eleven.id, childId: sam, buddyId: w.p('Marco').id, status: 'approved' },
+    ]);
+    // Before any check-in: the first service he is matched at.
+    let s = await readDemoState(w.churchId);
+    expect(s).toMatchObject({ samBuddyId: w.p('Grace').id, samServiceId: w.nine.id });
+    // Checked in at the 11:00: that service's buddy, whose phone will actually unlock.
+    expect((await stationAction(w.churchId, eleven.id, sam, 'in', new Date())).ok).toBe(true);
+    s = await readDemoState(w.churchId);
+    expect(s).toMatchObject({ samBuddyId: w.p('Marco').id, samBuddyName: 'Marco', samServiceId: eleven.id });
+    // Still Marco after checkout (step 6 opens the station on the same service).
+    await stationAction(w.churchId, eleven.id, sam, 'out', new Date());
+    expect(await readDemoState(w.churchId)).toMatchObject({ samBuddyId: w.p('Marco').id, samServiceId: eleven.id });
   });
 
   it('past Sundays do not count as today', async () => {

@@ -14,6 +14,8 @@ export type DemoState = DemoFlags & {
   /** The buddy approved for Sam today (the guide's step 5 switches to them); null until step 3. */
   samBuddyId: string | null;
   samBuddyName: string | null;
+  /** The service the station and buddy steps open on: where Sam is matched (and checked in). null until step 3. */
+  samServiceId: string | null;
 };
 
 export const DEMO_STEP_FLAGS: readonly (keyof DemoFlags)[] = [
@@ -23,5 +25,5 @@ export const DEMO_STEP_FLAGS: readonly (keyof DemoFlags)[] = [
 
 export const EMPTY_DEMO_STATE: DemoState = {
   samCardApproved: false, samCardAcknowledged: false, samAssignedApproved: false, samCheckedIn: false,
-  samCardOpenedByBuddy: false, samCheckedOut: false, samNoteApproved: false, samBuddyId: null, samBuddyName: null,
+  samCardOpenedByBuddy: false, samCheckedOut: false, samNoteApproved: false, samBuddyId: null, samBuddyName: null, samServiceId: null,
 };
