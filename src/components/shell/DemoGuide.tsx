@@ -117,7 +117,9 @@ export function DemoGuide({ slug, personas, current, samId }: Props) {
   const base = `/c/${encodeURIComponent(slug)}`;
   const byKey = new Map(personas.map((p) => [p.key, p]));
   const buddyId = state?.samBuddyId ?? null;
-  const buddy = buddyId ? (personas.find((p) => p.personId === buddyId) ?? { value: buddyId, name: state?.samBuddyName ?? '' }) : null;
+  // Always as the buddy themself: a role-bar persona for the same person may stand for another role (Tom is the
+  // room leader there, `id:leader`), and the phone opens only for the buddy.
+  const buddy = buddyId ? { value: buddyId, name: personas.find((p) => p.personId === buddyId)?.name ?? state?.samBuddyName ?? '' } : null;
   const doneCount = DEMO_STEP_FLAGS.filter(done).length;
   const next = state ? STEPS.findIndex((s) => !done(s.flag)) : -1;
   const progress = state ? t('guide.progress', { done: doneCount, total: STEPS.length }) : t('guide.checking');
