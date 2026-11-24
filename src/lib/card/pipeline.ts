@@ -1,6 +1,7 @@
 // Browser-side card pipeline: redact -> enclave -> parse -> verify -> restore the name for display.
 import type { AttestationSummary } from '@/lib/crypto/attestation';
 import { enclaveChat, type EnclaveChat, type NodeAccess } from '@/lib/venice/enclaveClient';
+import { extractJson } from '@/lib/text/json';
 import { detectLang } from '@/lib/text/lang';
 import { limiterTokens } from '@/lib/text/polarity';
 import { sentenceContaining, stripListMarker } from '@/lib/text/sentences';
@@ -29,13 +30,6 @@ export type PipelineOpts = {
   chat?: EnclaveChat;
   node?: NodeAccess;
 };
-
-function extractJson(text: string): unknown {
-  const t = text.trim().replace(/^```(?:json)?/i, '').replace(/```$/, '').trim();
-  const a = t.indexOf('{');
-  const b = t.lastIndexOf('}');
-  return JSON.parse(a >= 0 && b > a ? t.slice(a, b + 1) : t);
-}
 
 type ParsedDraft = { draft: DraftCard; invalid: DroppedItem[] };
 

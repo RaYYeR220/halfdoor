@@ -7,15 +7,21 @@ import { zonedParts, zonedTime } from '@/lib/time/zoned';
 
 const HOUR = 3600_000;
 const DAY = 24 * HOUR;
-/** "Today" in a sandbox: its services start 5 min before and 115 min after it was made, its past ones whole weeks back. */
-const TODAY_SPAN = 36 * HOUR;
+/**
+ * "Today" in a sandbox: its two services start 5 min before and 115 min after it was made, and it lives 24 h. Its
+ * past Sundays are whole weeks back, so +/-36 h holds today's services and nothing else.
+ */
+export const SANDBOX_TODAY_SPAN_MS = 36 * HOUR;
+
+/** Whether a sandbox service is one of "today's" (see SANDBOX_TODAY_SPAN_MS). */
+export const isSandboxToday = (startsAt: Date, now: Date) => Math.abs(startsAt.getTime() - now.getTime()) <= SANDBOX_TODAY_SPAN_MS;
 
 type Svc = { label: string; startsAt: Date };
 
 /** Milliseconds to add to every time a sandbox page shows (0 when no labelled service is near `now`). */
 export function demoClockShift(services: readonly Svc[], now: Date, tz: string): number {
   const today = services
-    .filter((s) => Math.abs(s.startsAt.getTime() - now.getTime()) <= TODAY_SPAN && /^\d{1,2}:\d{2}/.test(s.label))
+    .filter((s) => isSandboxToday(s.startsAt, now) && /^\d{1,2}:\d{2}/.test(s.label))
     .sort((a, b) => a.startsAt.getTime() - b.startsAt.getTime())[0];
   if (!today) return 0;
   const [, hh, mm] = /^(\d{1,2}):(\d{2})/.exec(today.label)!;

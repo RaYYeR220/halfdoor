@@ -1,5 +1,6 @@
 // Browser-side (director) note pipeline: redact -> enclave -> parse -> verify -> restore the name.
 import type { AttestationSummary } from '@/lib/crypto/attestation';
+import { extractJson } from '@/lib/text/json';
 import { enclaveChat, type EnclaveChat, type NodeAccess } from '@/lib/venice/enclaveClient';
 import { E2EE_MODEL } from '@/lib/venice/prices';
 import { buildNotePrompt, restoreName } from './prompts';
@@ -17,13 +18,6 @@ export type NoteOpts = {
   signal?: AbortSignal;
   node?: NodeAccess;
 };
-
-function extractJson(text: string): unknown {
-  const t = text.trim().replace(/^```(?:json)?/i, '').replace(/```$/, '').trim();
-  const a = t.indexOf('{');
-  const b = t.lastIndexOf('}');
-  return JSON.parse(a >= 0 && b > a ? t.slice(a, b + 1) : t);
-}
 
 type Discarded = { text: string; reason: DropReason };
 

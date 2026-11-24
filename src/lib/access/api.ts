@@ -3,8 +3,9 @@ import { NextResponse } from 'next/server';
 import { getPersonInChurch, listHouseholdLinks, type Person } from '@/db/repo/people';
 import type { Role } from '@/lib/auth/tokens';
 import { getViewer, type Viewer } from '@/lib/auth/viewer';
+import { UUID } from '@/lib/ids';
 
-export const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+export { UUID };
 
 export const fail = (error: string, status: number) => NextResponse.json({ error }, { status });
 

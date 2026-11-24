@@ -10,7 +10,7 @@ import { listMoments } from '@/db/repo/moments';
 import { listNotes } from '@/db/repo/notes';
 import { listHouseholdLinks, listPeople, type Person } from '@/db/repo/people';
 import { listServices, type Service } from '@/db/repo/services';
-import { demoClockShift } from '@/lib/demo/clock';
+import { demoClockShift, isSandboxToday } from '@/lib/demo/clock';
 import { ATTENDANCE_WINDOW } from '@/lib/solver/inputs';
 import { startOfZonedDay } from '@/lib/time/zoned';
 import { CAPS } from '@/lib/venice/prices';
@@ -21,8 +21,6 @@ import type {
 
 const HOUR = 3600_000;
 const DAY = 24 * HOUR;
-/** A sandbox's "today": its two services start 5 min before and 115 min after it was made; past Sundays are whole weeks back. */
-const SANDBOX_TODAY = 36 * HOUR;
 
 /**
  * The services the desk plans for. A sandbox: its two services around now. A real church: the first day, from
@@ -30,7 +28,7 @@ const SANDBOX_TODAY = 36 * HOUR;
  */
 export function upcomingServices(church: Pick<Church, 'mode' | 'tz'>, services: readonly Service[], now: Date): Service[] {
   const sorted = [...services].sort((a, b) => a.startsAt.getTime() - b.startsAt.getTime());
-  if (church.mode === 'sandbox') return sorted.filter((s) => Math.abs(s.startsAt.getTime() - now.getTime()) <= SANDBOX_TODAY);
+  if (church.mode === 'sandbox') return sorted.filter((s) => isSandboxToday(s.startsAt, now));
   const from = startOfZonedDay(now, church.tz).getTime();
   const first = sorted.find((s) => s.endsAt.getTime() >= now.getTime() && s.startsAt.getTime() >= from && s.startsAt.getTime() < from + 8 * DAY);
   if (!first) return [];

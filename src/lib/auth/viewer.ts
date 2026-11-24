@@ -3,6 +3,7 @@
 import { cookies } from 'next/headers';
 import { getChurch } from '@/db/repo/churches';
 import { getPersonInChurch } from '@/db/repo/people';
+import { UUID } from '@/lib/ids';
 import { verifyLink, verifyValue, type Role } from './tokens';
 
 export type Viewer = { churchId: string; personId: string; role: Role; sandbox: boolean };
@@ -12,7 +13,6 @@ export const COOKIE_AS = 'hd_as';
 export const COOKIE_LINK = 'hd_link';
 export const SANDBOX_COOKIE_MAX_AGE = 24 * 3600;
 
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /** Person roles a viewer role may be played by. Children are never viewers. */
 const PLAYED_BY: Record<Role, readonly string[]> = {

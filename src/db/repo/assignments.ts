@@ -13,10 +13,6 @@ export async function insertAssignments(rows: NewAssignment[]): Promise<Assignme
   return getDb().insert(assignments).values(rows).returning();
 }
 
-export async function updateAssignment(id: string, patch: Partial<NewAssignment>): Promise<void> {
-  await getDb().update(assignments).set(patch).where(eq(assignments.id, id));
-}
-
 /** Callers resolve the service through its church first; (service, child) is unique. */
 export async function getAssignmentFor(serviceId: string, childId: string): Promise<Assignment | undefined> {
   const [row] = await getDb().select().from(assignments).where(and(eq(assignments.serviceId, serviceId), eq(assignments.childId, childId)));

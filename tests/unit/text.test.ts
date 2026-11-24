@@ -84,3 +84,19 @@ describe('text edge cases', () => {
     expect(polarityConsistent('Ella no puede comer nueces', 'She cannot eat nuts at all', 'es')).toBe(true);
   });
 });
+
+describe('shared helpers', () => {
+  test('extractJson reads the object out of fences and chatter; throws on non-JSON', async () => {
+    const { extractJson } = await import('@/lib/text/json');
+    expect(extractJson('```json\n{"a":1}\n```')).toEqual({ a: 1 });
+    expect(extractJson('Here you go: {"items":[]} hope it helps')).toEqual({ items: [] });
+    expect(() => extractJson('no json here')).toThrow();
+  });
+  test("a sandbox's today is +/-36 h around now", async () => {
+    const { isSandboxToday, SANDBOX_TODAY_SPAN_MS } = await import('@/lib/demo/clock');
+    const now = new Date('2026-11-24T12:00:00Z');
+    expect(isSandboxToday(new Date(now.getTime() + SANDBOX_TODAY_SPAN_MS), now)).toBe(true);
+    expect(isSandboxToday(new Date(now.getTime() - SANDBOX_TODAY_SPAN_MS - 1), now)).toBe(false);
+    expect(isSandboxToday(new Date(now.getTime() - 7 * 24 * 3600_000), now)).toBe(false);
+  });
+});

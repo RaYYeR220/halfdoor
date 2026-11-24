@@ -5,11 +5,6 @@ import { lessons } from '../schema';
 export type Lesson = typeof lessons.$inferSelect;
 export type NewLesson = typeof lessons.$inferInsert;
 
-export async function getLesson(id: string): Promise<Lesson | undefined> {
-  const [row] = await getDb().select().from(lessons).where(eq(lessons.id, id));
-  return row;
-}
-
 export async function listLessons(churchId: string): Promise<Lesson[]> {
   return getDb().select().from(lessons).where(eq(lessons.churchId, churchId)).orderBy(lessons.serviceDate);
 }

@@ -19,10 +19,6 @@ export async function insertAccessRows(rows: NewAccessEntry[]): Promise<void> {
   if (rows.length > 0) await getDb().insert(cardAccessLog).values(rows);
 }
 
-export async function updateAccess(id: string, patch: Partial<NewAccessEntry>): Promise<void> {
-  await getDb().update(cardAccessLog).set(patch).where(eq(cardAccessLog.id, id));
-}
-
 export type OpenAccess = { id: string; childId: string | null; serviceId: string | null };
 
 /** The viewer's still-open entries (no join: a deleted card must not hide them). */

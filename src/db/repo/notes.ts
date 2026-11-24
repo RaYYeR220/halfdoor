@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { getDb } from '../client';
 import { parentNotes } from '../schema';
 
@@ -20,12 +20,6 @@ export async function updateNote(id: string, patch: Partial<NewParentNote>): Pro
 
 export async function listNotesForChild(childId: string): Promise<ParentNote[]> {
   return getDb().select().from(parentNotes).where(eq(parentNotes.childId, childId));
-}
-
-/** One note per (service, child). */
-export async function getNoteFor(serviceId: string, childId: string): Promise<ParentNote | undefined> {
-  const [row] = await getDb().select().from(parentNotes).where(and(eq(parentNotes.serviceId, serviceId), eq(parentNotes.childId, childId)));
-  return row;
 }
 
 /** Atomic: one note per (service, child), concurrent saves land on the same row. */

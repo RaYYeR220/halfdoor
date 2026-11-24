@@ -1,6 +1,6 @@
 // Pure helpers for the live pages (buddy phone, room view): what a heartbeat means for each child, which lesson step
 // is on now, which of today's services to open. No I/O and no React; `now` is always passed in.
-import { WINDOW_MS } from '@/lib/access/gate';
+import { WINDOW_MS, inWindow } from '@/lib/access/gate';
 import type { CheckinStatus } from '@/lib/checkins/types';
 
 /** Where a child stands at the service, from the heartbeat's newest row for them. `session` = that check-in's start. */
@@ -115,7 +115,7 @@ export function pickService<S extends { id: string; startsAt: string; endsAt: st
   if (asked) return asked;
   const t = now.getTime();
   const sorted = [...services].sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt));
-  const open = sorted.filter((s) => t >= Date.parse(s.startsAt) - WINDOW_MS && t <= Date.parse(s.endsAt) + WINDOW_MS);
+  const open = sorted.filter((s) => inWindow({ startsAt: new Date(s.startsAt), endsAt: new Date(s.endsAt) }, now));
   return (
     open.find((s) => t >= Date.parse(s.startsAt) && t <= Date.parse(s.endsAt)) ??
     open.find((s) => Date.parse(s.startsAt) > t) ??

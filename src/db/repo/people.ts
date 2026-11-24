@@ -5,11 +5,6 @@ import { householdLinks, people } from '../schema';
 export type Person = typeof people.$inferSelect;
 export type NewPerson = typeof people.$inferInsert;
 
-export async function getPerson(id: string): Promise<Person | undefined> {
-  const [row] = await getDb().select().from(people).where(eq(people.id, id));
-  return row;
-}
-
 /** Tenant-scoped lookup: the person must belong to the church. */
 export async function getPersonInChurch(churchId: string, id: string): Promise<Person | undefined> {
   const [row] = await getDb().select().from(people).where(and(eq(people.churchId, churchId), eq(people.id, id)));

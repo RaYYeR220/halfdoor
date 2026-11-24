@@ -4,11 +4,12 @@ import { PGlite } from '@electric-sql/pglite';
 import { drizzle } from 'drizzle-orm/pglite';
 import { migrate } from 'drizzle-orm/pglite/migrator';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { setDbForTests, type Db } from '@/db/client';
+import { eq } from 'drizzle-orm';
+import { getDb, setDbForTests, type Db } from '@/db/client';
 import * as schema from '@/db/schema';
 import { PURGE_BATCH, createSandbox, purgeExpiredSandboxes } from '@/db/sandbox';
 import { CARDS } from '@/db/seed/fernbrook';
-import { getCard, listCards } from '@/db/repo/cards';
+import { listCards } from '@/db/repo/cards';
 import { getChurch, getChurchBySlug } from '@/db/repo/churches';
 import { listPeople, listHouseholdLinks } from '@/db/repo/people';
 import { listServices } from '@/db/repo/services';
@@ -25,6 +26,12 @@ beforeAll(async () => {
   await migrate(db, { migrationsFolder: resolve(__dirname, '../../drizzle') });
   setDbForTests(db as unknown as Db);
 });
+
+/** A child's card, unscoped (test-only: the app reads cards through the church-scoped getCardForChild). */
+async function getCard(childId: string) {
+  const [row] = await getDb().select().from(schema.cards).where(eq(schema.cards.childId, childId));
+  return row;
+}
 
 async function leoOf(churchId: string) {
   const people = await listPeople(churchId);
