@@ -344,3 +344,15 @@ describe('readEnclaveStream', () => {
     expect((await readEnclaveStream(res.body!, k.privateKey)).text).toBe('abcd');
   });
 });
+
+describe('the verifier test seam', () => {
+  test('refuses to swap the Intel signature verifier in production', () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    try {
+      expect(() => __setQuoteVerifierForTests(async () => VERIFIED)).toThrow(/cannot be replaced in production/);
+      expect(() => __setQuoteVerifierForTests(null)).toThrow();
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+});

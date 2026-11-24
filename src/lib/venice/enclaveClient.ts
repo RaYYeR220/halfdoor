@@ -120,8 +120,12 @@ const browserAttestations = new Map<string, Shared>();
 
 /** Signature check used by enclaveChat. Swappable only through the test seam below, never per call. */
 let quoteVerifier: (quote: Uint8Array) => Promise<QuoteSignatureResult> = verifyQuoteSignature;
-/** Tests only: replace the Intel signature verifier (null restores the real one). */
+/**
+ * Tests only: replace the Intel signature verifier (null restores the real one). Refused in production: `next build`
+ * inlines NODE_ENV, so a production bundle keeps only the throw and the verifier can never be swapped there.
+ */
 export function __setQuoteVerifierForTests(fn: ((quote: Uint8Array) => Promise<QuoteSignatureResult>) | null): void {
+  if (process.env.NODE_ENV === 'production') throw new Error('the quote verifier cannot be replaced in production');
   quoteVerifier = fn ?? verifyQuoteSignature;
 }
 
