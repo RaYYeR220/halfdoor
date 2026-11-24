@@ -148,6 +148,7 @@ export const en = {
   'parent.error.budgetDaily': "The demo has reached today's limit. Please try again tomorrow.",
   'parent.error.network': "We couldn't reach Halfdoor. Check your connection and try again.",
   'parent.error.noAnswer': "The enclave didn't answer. Try again in a minute.",
+  'parent.error.busy': 'Too many enclave checks from here in the last minute. Nothing was sent. Wait a minute, then try again.',
   'parent.error.unsealed': "The enclave's answer didn't arrive sealed, so it wasn't used. Try again.",
   'parent.error.unusable': "We couldn't make a card from that answer. Try again, or add a little more detail.",
   'parent.error.length': 'Write between {min} and {max} characters.',

@@ -189,6 +189,8 @@ describe('describeDraftError: codes only, never text from the error', () => {
     const unverified = new EnclaveError('quote_unverified', { quote: { reasonCode: 'verification_failed', reason: 'Leo has peanuts' } } as never);
     expect(describeDraftError(unverified)).toEqual({ kind: 'enclave', status: { error: 'signature', reason: 'verification_failed' } });
     expect(describeDraftError(new EnclaveError('attestation_request_failed_502'))).toEqual({ kind: 'enclave', status: { error: 'unavailable' } });
+    // Halfdoor's own per-minute limit on enclave checks: a plain wait-and-retry message, not an enclave failure.
+    expect(describeDraftError(new EnclaveError('attestation_request_failed_429'))).toEqual({ kind: 'message', key: 'parent.error.busy' });
     expect(describeDraftError(new AttestationError('quote_binding_failed', 'nonce'))).toEqual({ kind: 'enclave', status: { error: 'binding' } });
     expect(describeDraftError(new AttestationError('not_verified'))).toEqual({ kind: 'enclave', status: { error: 'unavailable' } });
     expect(describeDraftError(new EnclaveError('request_failed_500'))).toEqual({ kind: 'message', key: 'parent.error.noAnswer' });

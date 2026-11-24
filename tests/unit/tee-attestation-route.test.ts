@@ -5,6 +5,8 @@ vi.mock('@/lib/auth/viewer', () => ({
 }));
 
 import { GET } from '@/app/api/tee/attestation/route';
+import { getViewer } from '@/lib/auth/viewer';
+import { ATTEST_LIMIT, attestationLimiter, ipKey, rateLimiter } from '@/lib/venice/attestRate';
 import { ATTESTATION_RETRY_DELAYS_MS, fetchAttestationWithRetry, retryDelayMs } from '@/lib/venice/request';
 import { E2EE_MODEL } from '@/lib/venice/prices';
 
@@ -72,6 +74,7 @@ describe('GET /api/tee/attestation', () => {
   const url = `http://h/api/tee/attestation?model=${E2EE_MODEL}&nonce=${'ab'.repeat(32)}`;
   beforeEach(() => {
     process.env.VENICE_API_KEY = 'test-key';
+    attestationLimiter.reset();
     vi.useFakeTimers();
   });
   afterEach(() => {
@@ -97,5 +100,45 @@ describe('GET /api/tee/attestation', () => {
     const res = await p;
     expect(res.status).toBe(502);
     expect(f).toHaveBeenCalledTimes(4);
+  });
+});
+
+describe('attestation rate limit', () => {
+  const url = `http://h/api/tee/attestation?model=${E2EE_MODEL}&nonce=${'ab'.repeat(32)}`;
+  const from = (ip: string) => new Request(url, { headers: { 'x-forwarded-for': ip } });
+  beforeEach(() => {
+    process.env.VENICE_API_KEY = 'test-key';
+    attestationLimiter.reset();
+    vi.stubGlobal('fetch', vi.fn(async () => Response.json({ verified: true })));
+  });
+  afterEach(() => vi.unstubAllGlobals());
+
+  test('the 21st check from one church in a minute gets 429 attestation_rate with Retry-After, and nothing reaches Venice', async () => {
+    for (let i = 0; i < ATTEST_LIMIT; i++) expect((await GET(from(`10.0.0.${i}`))).status).toBe(200);
+    const res = await GET(from('10.0.1.1'));
+    expect(res.status).toBe(429);
+    expect(await res.json()).toEqual({ error: 'rate_limited', reason: 'attestation_rate' });
+    expect(Number(res.headers.get('retry-after'))).toBeGreaterThan(0);
+    expect(fetch).toHaveBeenCalledTimes(ATTEST_LIMIT);
+  });
+
+  test('one client is limited across churches too', async () => {
+    for (let i = 0; i < ATTEST_LIMIT; i++) {
+      vi.mocked(getViewer).mockResolvedValueOnce({ churchId: `c${i}`, personId: 'p', role: 'parent', sandbox: true });
+      expect((await GET(from('10.9.9.9'))).status).toBe(200);
+    }
+    vi.mocked(getViewer).mockResolvedValueOnce({ churchId: 'fresh', personId: 'p', role: 'parent', sandbox: true });
+    expect((await GET(from('10.9.9.9'))).status).toBe(429);
+  });
+
+  test('buckets: fixed one-minute windows, a refused request counts against nothing, the IP is hashed', () => {
+    const r = rateLimiter(2, 60_000);
+    expect(r.take(['a', 'b'], 0)).toEqual({ ok: true });
+    expect(r.take(['a'], 1_000)).toEqual({ ok: true });
+    expect(r.take(['a', 'b'], 2_000)).toEqual({ ok: false, retryAfterMs: 58_000 });
+    expect(r.take(['b'], 3_000)).toEqual({ ok: true }); // the refused request did not count for b
+    expect(r.take(['a'], 60_000)).toEqual({ ok: true }); // a new window
+    expect(ipKey('203.0.113.7')).toMatch(/^ip:[0-9a-f]{32}$/);
+    expect(ipKey('203.0.113.7')).not.toContain('203');
   });
 });

@@ -149,6 +149,7 @@ export const es: Record<MessageKey, string> = {
   'parent.error.budgetDaily': 'La demostración llegó al límite de hoy. Vuelva a intentarlo mañana.',
   'parent.error.network': 'No pudimos conectar con Halfdoor. Revise su conexión e inténtelo de nuevo.',
   'parent.error.noAnswer': 'El enclave no respondió. Inténtelo de nuevo en un minuto.',
+  'parent.error.busy': 'Demasiadas comprobaciones del enclave desde aquí en el último minuto. No se envió nada. Espere un minuto y vuelva a intentarlo.',
   'parent.error.unsealed': 'La respuesta del enclave no llegó sellada, así que no se usó. Inténtelo de nuevo.',
   'parent.error.unusable': 'No pudimos hacer una tarjeta con esa respuesta. Inténtelo de nuevo o agregue un poco más de detalle.',
   'parent.error.length': 'Escriba entre {min} y {max} caracteres.',

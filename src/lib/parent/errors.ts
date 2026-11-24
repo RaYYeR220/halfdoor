@@ -20,6 +20,8 @@ export function describeDraftError(e: unknown): DraftFailure {
       const q = e.attestation?.quote;
       return { kind: 'enclave', status: { error: 'signature', reason: q?.reasonCode ?? 'unknown' } };
     }
+    // 429 is Halfdoor's own per-minute limit on enclave checks (Venice's are retried server-side): wait and retry.
+    if (e.code === 'attestation_request_failed_429') return { kind: 'message', key: 'parent.error.busy' };
     if (e.code.startsWith('attestation_request_failed')) return { kind: 'enclave', status: { error: 'unavailable' } };
     if (e.code === 'plaintext_in_e2ee_stream') return { kind: 'message', key: 'parent.error.unsealed' };
     return { kind: 'message', key: 'parent.error.noAnswer' };
