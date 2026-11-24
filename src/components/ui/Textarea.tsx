@@ -1,7 +1,8 @@
-import type { TextareaHTMLAttributes } from 'react';
+import type { Ref, TextareaHTMLAttributes } from 'react';
 import { cx } from '@/lib/cx';
 
 type Props = TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  ref?: Ref<HTMLTextAreaElement>;
   /** Character counter under the box: visible "count / max", read as `label` (e.g. t('ui.counter', …)). */
   counter?: { count: number; max: number; label: string };
 };

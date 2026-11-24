@@ -46,7 +46,7 @@ function Frame({ churchName, sandbox, personas, current, viewer, guide, children
     <div className="flex min-h-dvh flex-col">
       <a
         href="#content"
-        className="sr-only z-50 rounded-pill bg-ink px-4 py-2.5 text-15 font-medium text-surface focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
+        className="sr-only z-50 rounded-pill print:hidden bg-ink px-4 py-2.5 text-15 font-medium text-surface focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
       >
         {t('shell.skip')}
       </a>
@@ -63,7 +63,7 @@ function Frame({ churchName, sandbox, personas, current, viewer, guide, children
       </TopBar>
 
       <div className="flex flex-1 items-stretch">
-        <main id="content" tabIndex={-1} className="min-w-0 flex-1 px-4 pt-6 pb-28 outline-none md:px-8 md:pt-8 lg:pb-16">
+        <main id="content" tabIndex={-1} className="min-w-0 flex-1 px-4 pt-6 pb-28 outline-none md:px-8 md:pt-8 lg:pb-16 print:p-0">
           {children}
         </main>
         {guide && <DemoGuide slug={guide.slug} personas={personas} current={current} samId={guide.samId} />}
@@ -74,7 +74,7 @@ function Frame({ churchName, sandbox, personas, current, viewer, guide, children
 
 function TopBar({ children }: { children: ReactNode }) {
   return (
-    <header className="relative z-40 border-b border-hairline bg-ground md:sticky md:top-0 md:h-[var(--shell-h)] md:bg-ground/90 md:backdrop-blur-md">
+    <header className="relative z-40 border-b border-hairline bg-ground print:hidden md:sticky md:top-0 md:h-[var(--shell-h)] md:bg-ground/90 md:backdrop-blur-md">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-3 px-4 pt-2.5 pb-3 md:h-full md:flex-nowrap md:gap-x-5 md:px-6 md:py-0">
         {children}
       </div>

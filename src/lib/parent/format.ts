@@ -50,12 +50,18 @@ export function dayLabel(date: Date, ctx: WhenCtx, inline = false): string {
   return fmt(ctx.lang, ctx.tz, { weekday: 'short', month: 'short', day: 'numeric', ...(sameYear ? {} : { year: 'numeric' }) }).format(d);
 }
 
+/**
+ * ICU versions space times differently (Node: thin spaces around the dash and a narrow no-break space before "AM";
+ * Chrome: plain spaces), which breaks hydration. One spelling everywhere: plain spaces, as the browser writes them.
+ */
+const tidy = (s: string) => s.replace(/[\u2009\u200a\u202f\u00a0]/g, ' ');
+
 /** "9:02 AM", or a range "9:02 – 10:14 AM" when `end` is given and later. */
 export function timeLabel(start: Date, end: Date | null, ctx: Pick<WhenCtx, 'lang' | 'tz' | 'shiftMs'>): string {
   const f = fmt(ctx.lang, ctx.tz, { hour: 'numeric', minute: '2-digit' });
   const a = shifted(start, ctx.shiftMs);
-  if (!end || end.getTime() <= start.getTime()) return f.format(a);
-  return f.formatRange(a, shifted(end, ctx.shiftMs));
+  if (!end || end.getTime() <= start.getTime()) return tidy(f.format(a));
+  return tidy(f.formatRange(a, shifted(end, ctx.shiftMs)));
 }
 
 /** Day and time together: "Today 9:02 – 10:14 AM". A range that crosses midnight keeps only the start. */

@@ -1,36 +1,33 @@
-// PLACEHOLDER content inside the real shell. The director desk arrives in Task 17b.
+// Director desk: Children. Every child and where their card is; a row opens the card drawer (?child=<id>).
+// Request-time reads sit behind the page's own Suspense, so client navigations between desk views stay instant.
 import { Suspense } from 'react';
-import { requireViewer } from '@/lib/auth/page-viewer';
-import { Card } from '@/components/ui/Card';
-import { Section } from '@/components/ui/Section';
+import { redirect } from 'next/navigation';
+import { sortChildren } from '@/lib/desk/helpers';
+import { LEGACY_VIEWS, deskViewer } from '@/lib/desk/page';
+import { loadChildren, loadClock } from '@/lib/desk/server';
+import { ChildrenDesk } from '@/components/desk/ChildrenDesk';
+import { DeskFallback, NotForYou } from '@/components/desk/DeskFrame';
 
-const VIEWS = ['Children', 'This Sunday', 'Sunday pack', 'Notes', 'Patterns', 'AI ledger'];
-
-// Request-time reads sit behind the page's own Suspense, so client navigations between pages stay instant.
-export default function DeskPage({ params }: PageProps<'/c/[slug]/desk'>) {
+export default function DeskPage({ params, searchParams }: PageProps<'/c/[slug]/desk'>) {
   return (
-    <Suspense>
-      <Desk params={params} />
+    <Suspense fallback={<DeskFallback />}>
+      <Children params={params} searchParams={searchParams} />
     </Suspense>
   );
 }
 
-async function Desk({ params }: { params: Promise<{ slug: string }> }) {
+async function Children({
+  params, searchParams,
+}: { params: Promise<{ slug: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const { slug } = await params;
-  const { church } = await requireViewer(slug);
-  return (
-    <div className="mx-auto max-w-[1040px]">
-      <Section level={1} title="Kids' desk" description={`${church.name} · the kids' team's view of this Sunday.`}>
-        <Card title={<b>Desk views</b>}>
-          <ul className="flex flex-wrap gap-2">
-            {VIEWS.map((v) => (
-              <li key={v} className="rounded-pill border border-hairline-strong px-3 py-1 text-15 text-ink-2">
-                {v}
-              </li>
-            ))}
-          </ul>
-        </Card>
-      </Section>
-    </div>
-  );
+  const sp = await searchParams;
+  const view = sp.view;
+  // The first demo guide linked ?view=sunday etc.; those views are pages of their own now.
+  if (typeof view === 'string' && LEGACY_VIEWS[view]) redirect(`/c/${encodeURIComponent(slug)}/desk/${LEGACY_VIEWS[view]}`);
+  const ctx = await deskViewer(slug);
+  if (!ctx) return <NotForYou />;
+  const { church } = ctx;
+  const rows = sortChildren(await loadChildren(church.id));
+  const child = typeof sp.child === 'string' && rows.some((r) => r.id === sp.child) ? sp.child : null;
+  return <ChildrenDesk rows={rows} clock={await loadClock(church, new Date())} initialChild={child} />;
 }

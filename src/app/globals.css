@@ -194,6 +194,28 @@
 @utility animate-rise {
   animation: hd-rise 200ms var(--ease) both;
 }
+/* The desk's side drawer slides a short way in from the right. */
+@keyframes hd-drawer {
+  from { opacity: 0; transform: translateX(28px); }
+  to { opacity: 1; transform: none; }
+}
+@utility animate-drawer {
+  animation: hd-drawer 240ms var(--ease) both;
+}
+
+/*
+ * Print: only what a page marks for paper (the Sunday pack's child pages). The app's chrome carries print:hidden;
+ * pages print on white with even margins.
+ */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+  html,
+  body {
+    background: #fff;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *,

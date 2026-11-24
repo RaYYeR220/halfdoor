@@ -50,12 +50,12 @@ type StepDef = { flag: keyof DemoFlags; who: Who; path: (c: { base: string; samI
 
 const STEPS: readonly StepDef[] = [
   { flag: 'samCardApproved', who: 'jordan', path: () => '' },
-  { flag: 'samCardAcknowledged', who: 'hannah', path: (c) => `${c.base}/desk?view=children${c.samId ? `&child=${c.samId}` : ''}` },
-  { flag: 'samAssignedApproved', who: 'hannah', path: (c) => `${c.base}/desk?view=sunday` },
+  { flag: 'samCardAcknowledged', who: 'hannah', path: (c) => `${c.base}/desk${c.samId ? `?child=${c.samId}` : ''}` },
+  { flag: 'samAssignedApproved', who: 'hannah', path: (c) => `${c.base}/desk/sunday` },
   { flag: 'samCheckedIn', who: 'hannah', path: (c) => `${c.base}/station` },
   { flag: 'samCardOpenedByBuddy', who: 'buddy', path: (c) => `${c.base}/buddy/${c.buddyId}` },
   { flag: 'samCheckedOut', who: 'hannah', path: (c) => `${c.base}/station` },
-  { flag: 'samNoteApproved', who: 'hannah', path: (c) => `${c.base}/desk?view=notes` },
+  { flag: 'samNoteApproved', who: 'hannah', path: (c) => `${c.base}/desk/notes` },
 ];
 
 type Props = {
@@ -142,7 +142,7 @@ export function DemoGuide({ slug, personas, current, samId }: Props) {
         type="button"
         aria-expanded={false}
         onClick={() => toggle(false)}
-        className="fixed right-4 bottom-4 z-30 flex h-11 items-center gap-2.5 rounded-pill border border-hairline-strong bg-surface pr-4 pl-3 text-15 font-medium text-ink transition-[border-color] duration-200 ease-out hover:border-hairline-emphasis lg:right-6 lg:bottom-6"
+        className="fixed right-4 bottom-4 z-30 flex h-11 items-center gap-2.5 rounded-pill border border-hairline-strong bg-surface pr-4 pl-3 text-15 font-medium text-ink transition-[border-color] duration-200 ease-out hover:border-hairline-emphasis lg:right-6 lg:bottom-6 print:hidden"
       >
         <ProgressRing done={doneCount} total={STEPS.length} />
         <span>{t('guide.title')}</span>
@@ -158,7 +158,7 @@ export function DemoGuide({ slug, personas, current, samId }: Props) {
       id={panelId}
       aria-labelledby={`${panelId}-title`}
       className={cx(
-        'fixed inset-x-0 bottom-0 z-30 flex max-h-[min(76dvh,680px)] flex-col border-t border-hairline-strong bg-surface',
+        'fixed inset-x-0 bottom-0 z-30 flex max-h-[min(76dvh,680px)] flex-col border-t border-hairline-strong bg-surface print:hidden',
         'lg:sticky lg:inset-x-auto lg:top-[var(--shell-h)] lg:self-start lg:bottom-auto lg:z-10 lg:h-[calc(100dvh-var(--shell-h))] lg:max-h-none lg:w-[var(--guide-w)] lg:shrink-0 lg:border-t-0 lg:border-l lg:border-hairline',
       )}
     >

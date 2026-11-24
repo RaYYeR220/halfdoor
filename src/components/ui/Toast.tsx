@@ -32,7 +32,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       <div
         role="status"
         aria-live="polite"
-        className="pointer-events-none fixed inset-x-4 bottom-20 z-50 flex justify-center lg:inset-x-auto lg:bottom-6 lg:left-6 lg:justify-start"
+        className="pointer-events-none fixed inset-x-4 bottom-20 z-50 flex print:hidden justify-center lg:inset-x-auto lg:bottom-6 lg:left-6 lg:justify-start"
       >
         {item && <ToastView key={item.id} item={item} onDismiss={() => setItem(null)} />}
       </div>

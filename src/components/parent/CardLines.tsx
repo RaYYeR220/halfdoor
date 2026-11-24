@@ -35,11 +35,18 @@ type Props = {
   idPrefix: string;
   /** Nothing follows the lines inside their Card: a closing Safety band runs to the Card's bottom edge. */
   flush?: boolean;
+  /** Whose words the quotes are, as the reader sees it: 'parent' ("your words") or 'team' (the director's desk). */
+  voice?: 'parent' | 'team';
 };
+
+const VOICE = {
+  parent: { exact: 'parent.review.exact', exactLine: 'parent.review.exactLine', from: 'parent.review.from' },
+  team: { exact: 'desk.card.exact', exactLine: 'desk.card.exactLine', from: 'desk.card.from' },
+} as const satisfies Record<'parent' | 'team', Record<string, MessageKey>>;
 
 export const lineDomId = (prefix: string, id: string) => `${prefix}-line-${id}`;
 
-export function CardLines({ items, cardLang, active, open, onPreview, onToggle, translations, idPrefix, flush = true }: Props) {
+export function CardLines({ items, cardLang, active, open, onPreview, onToggle, translations, idPrefix, flush = true, voice = 'parent' }: Props) {
   const t = useT();
   const groups = SECTIONS.map((s) => ({ section: s, lines: items.filter((i) => i.section === s) })).filter((g) => g.lines.length > 0);
   const lang = cardLang === 'en' || cardLang === 'es' ? cardLang : undefined;
@@ -66,7 +73,7 @@ export function CardLines({ items, cardLang, active, open, onPreview, onToggle, 
               </h3>
               {safety && (
                 <Pill tone="accent" size="sm" className="bg-surface">
-                  {t('parent.review.exact')}
+                  {t(VOICE[voice].exact)}
                 </Pill>
               )}
             </div>
@@ -83,6 +90,7 @@ export function CardLines({ items, cardLang, active, open, onPreview, onToggle, 
                   onToggle={onToggle}
                   translations={translations}
                   domId={lineDomId(idPrefix, item.id)}
+                  voice={voice}
                 />
               ))}
             </ul>
@@ -94,7 +102,7 @@ export function CardLines({ items, cardLang, active, open, onPreview, onToggle, 
 }
 
 function Line({
-  item, lang, safety, active, open, onPreview, onToggle, translations, domId,
+  item, lang, safety, active, open, onPreview, onToggle, translations, domId, voice,
 }: {
   item: CardItem;
   lang?: string;
@@ -105,6 +113,7 @@ function Line({
   onToggle: (id: string) => void;
   translations?: boolean;
   domId: string;
+  voice: 'parent' | 'team';
 }) {
   const t = useT();
   const quoteId = `${domId}-quote`;
@@ -152,7 +161,7 @@ function Line({
           </p>
         )}
         <div id={quoteId} hidden={!open} className="animate-rise px-2.5 pb-3">
-          <p className="text-13 font-medium text-ink-muted">{verbatim ? t('parent.review.exactLine') : t('parent.review.from')}</p>
+          <p className="text-13 font-medium text-ink-muted">{verbatim ? t(VOICE[voice].exactLine) : t(VOICE[voice].from)}</p>
           {item.quotes.map((q, k) => (
             <p key={k} lang={lang} className="mt-1 text-15 text-ink-2 text-pretty">
               “{q.text.trim()}”
