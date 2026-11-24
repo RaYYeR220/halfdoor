@@ -1,0 +1,342 @@
+/*
+ * The landing (/). Ported 1:1 from the approved prototype (final-1B-3Bcolors); every selector is scoped under .lp so
+ * nothing leaks into the app. Colours are the app tokens from globals.css; the aliases below keep the prototype's names.
+ * This file is unlayered on purpose: it sits above Tailwind's base layer, like the prototype's own stylesheet did.
+ */
+
+/* The app's metric-matched fallback (globals.css), minus symbols: General Sans has no arrows or ticks, and the
+   prototype (and the hero canvas) draw those from system-ui, so "→" and "✓" must come from there too. */
+@font-face {
+  font-family: "Halfdoor Landing Fallback";
+  src: local("Arial"), local("ArialMT");
+  size-adjust: 101.11%;
+  ascent-override: 99.89%;
+  descent-override: 23.74%;
+  line-gap-override: 9.89%;
+  unicode-range: U+0000-218F;
+}
+
+.lp {
+  --hairline-2: var(--hairline-strong);
+  --hairline-3: var(--hairline-emphasis);
+  --accent-deep: var(--rose);   /* rose that carries text: letters in flight, 6.0:1 on ground */
+  --accent-pool: #f3e6ea;       /* the faint pool that appears behind the card at check-in */
+  --cta: var(--accent);
+  --cta-hover: var(--accent-hover);
+  --on-cta: var(--on-accent);
+  --face: "General Sans", "Halfdoor Landing Fallback", system-ui, sans-serif;
+  --r-s: 12px; --r-m: 16px; --r-l: 20px;
+
+  background: var(--ground); color: var(--ink); font: 400 18px/1.6 var(--face); text-rendering: auto; overflow-x: clip;
+}
+html:has(.lp) { scroll-behavior: smooth }
+.lp *, .lp *::before, .lp *::after { box-sizing: border-box }
+.lp a { color: inherit; text-decoration: none }
+.lp a:focus-visible, .lp button:focus-visible, .lp summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 6px }
+.lp .wrap { position: relative; z-index: 2; width: min(1240px, calc(100% - 64px)); margin: 0 auto }
+.lp .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap }
+
+/* ───────── hero ───────── */
+.lp .stage { position: relative; min-height: 100vh; overflow: hidden; isolation: isolate }
+.lp .stage::before { content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none; background: radial-gradient(70% 62% at 50% 42%, var(--surface-2) 0%, var(--ground) 62%, var(--ground-edge) 100%) }
+.lp .stage::after {
+  content: ""; position: absolute; inset: 0; z-index: 6; pointer-events: none; opacity: .06; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .8 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+.lp canvas { position: absolute; left: 0; top: 0; display: block; pointer-events: none }
+.lp .hf-field { z-index: -1; opacity: 0; transition: opacity 1.2s var(--ease) }
+.lp .hf-field.on { opacity: 1 }
+.lp .hf-fly { z-index: 4; transition: filter .6s var(--ease), opacity .5s var(--ease) }
+.lp .hf-fly.locked { filter: blur(3px); opacity: .3 }
+.lp .hf-fly.hide { opacity: 0; transition: opacity .22s linear }
+
+.lp .nav { display: flex; align-items: center; height: 76px; gap: 40px }
+.lp .brand { display: flex; align-items: center; gap: 10px; font: 500 21px/1 var(--face); letter-spacing: -.03em }
+.lp .brand svg { width: 16px; height: 16px; display: block }
+.lp .nav nav { display: flex; gap: 28px; margin-left: auto; font-size: 15px; color: var(--ink-muted) }
+.lp .nav nav a:hover { color: var(--ink) }
+.lp .btn { display: inline-flex; align-items: center; gap: 10px; height: 46px; padding: 0 20px; border-radius: 999px; font: 500 16px/1 var(--face); white-space: nowrap; transition: background .2s, border-color .2s, color .2s }
+.lp .btn-quiet { height: 38px; padding: 0 16px; font-size: 15px; border: 1px solid var(--hairline-2); color: var(--ink) }
+.lp .btn-quiet:hover { border-color: var(--hairline-3) }
+.lp .btn-cta { background: var(--cta); color: var(--on-cta) }
+.lp .btn-cta:hover { background: var(--cta-hover) }
+.lp .btn-cta svg { width: 14px; height: 14px }
+.lp .btn-line { border: 1px solid var(--hairline-2); background: #ffffff80 }
+.lp .btn-line:hover { border-color: var(--hairline-3) }
+
+.lp .hero { text-align: center; padding-top: 20px; padding-bottom: 36px }
+.lp h1 { margin: 0 auto; max-width: 1120px; font: 500 96px/.96 var(--face); letter-spacing: -.045em; text-wrap: balance }
+.lp .sub { margin: 16px auto 0; max-width: 760px; font-size: 18px; line-height: 1.6; color: var(--ink-muted); text-wrap: pretty }
+.lp .ctas { display: flex; justify-content: center; gap: 12px; margin-top: 22px }
+.lp .proof { margin: 14px auto 0; width: max-content; max-width: 100%; font-size: 14px; color: var(--ink-muted) }
+
+/* Leo's card: the zone sits inside the glow, 520px wide */
+.lp .zone { position: relative; margin: 22px auto 0; width: min(520px, 100%) }
+.lp .zone::before {
+  content: ""; position: absolute; left: 50%; top: 52%; width: 1100px; height: 640px; transform: translate(-50%, -50%); z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, #ffffffd9 0%, #ffffff66 45%, #ffffff00 100%);
+}
+/* the unlock moment: a faint rose pool comes up behind the card only while Leo is checked in */
+.lp .zone::after {
+  content: ""; position: absolute; left: 50%; top: 56%; width: 860px; height: 520px; transform: translate(-50%, -50%); z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, var(--accent-pool) 0%, #f3e6ea00 100%); opacity: 0; transition: opacity .9s var(--ease);
+}
+.lp .zone:has(.card.legible)::after { opacity: .85 }
+.lp .card { position: relative; text-align: left; background: #ffffffeb; border: 1px solid var(--hairline-2); border-radius: var(--r-l); padding: 14px 20px 12px; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px) }
+.lp .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px }
+.lp .who { font-size: 14px; color: var(--ink-muted); white-space: nowrap }
+.lp .who b { font: 600 17px/1 var(--face); color: var(--ink); letter-spacing: -.01em }
+.lp .who .pri { color: var(--ink); font-weight: 500 }
+.lp .src { display: flex; justify-content: space-between; gap: 12px; margin: 9px 0 0; padding-bottom: 9px; border-bottom: 1px solid var(--hairline); font-size: 13px; line-height: 18px; color: var(--ink-muted) }
+.lp .chip {
+  appearance: none; display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 13px 0 11px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--hairline-2); background: var(--surface-2); color: var(--ink); font: 500 13px/1 var(--face); font-variant-numeric: tabular-nums; white-space: nowrap;
+  transition: border-color .3s, background .3s;
+}
+.lp .chip:hover { border-color: var(--hairline-3) }
+.lp .chip svg { width: 12px; height: 12px; flex: none }
+.lp .chip .dot, .lp .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none }
+.lp .chip.open { border-color: var(--accent-line); background: var(--accent-tint); color: var(--accent-ink) }
+.lp .lines { list-style: none; margin: 6px 0 0; padding: 0 }
+.lp .lines li { display: grid; grid-template-columns: 88px 1fr; column-gap: 10px; padding: 3px 0 }
+.lp .lab { font: 500 13px/22px var(--face); color: var(--ink-muted); opacity: 0; transition: opacity .35s linear }
+.lp .lab small { display: block; font-size: 11.5px; line-height: 1.2; margin: -1px 0 2px; color: var(--ink-muted-2) }
+.lp .lines li.on .lab { opacity: 1 }
+.lp .val { font: 400 14.5px/22px var(--face); color: transparent; transition: color .22s linear }
+.lp .card.legible .val { color: var(--ink) }
+.lp .hint { margin: 12px 0 0; font-size: 13px; color: var(--ink-muted) }
+
+.lp .rise { animation: lp-rise .85s var(--ease) both, lp-reveal-failsafe 0s linear 2.4s forwards }
+.lp .d1 { animation-delay: .05s, 2.4s } .lp .d2 { animation-delay: .14s, 2.4s } .lp .d3 { animation-delay: .22s, 2.4s } .lp .d4 { animation-delay: .3s, 2.4s }
+@keyframes lp-rise { from { opacity: 0; transform: translateY(14px) } }
+@keyframes lp-reveal-failsafe { to { opacity: 1; transform: none } }
+
+/* ───────── sections ───────── */
+.lp .sec { position: relative; padding: 136px 0; border-top: 1px solid var(--hairline) }
+.lp .sec-head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 28px 64px; align-items: end; margin-bottom: 64px }
+.lp h2 { margin: 0; font: 500 60px/1 var(--face); letter-spacing: -.042em; text-wrap: balance }
+.lp h3 { margin: 0; font: 500 24px/1.2 var(--face); letter-spacing: -.025em }
+.lp p { margin: 0 }
+.lp .lead { margin: 0; max-width: 470px; font-size: 18px; line-height: 1.6; color: var(--ink-muted); text-wrap: pretty }
+.lp .sec-head .lead { justify-self: end }
+
+/* product fragments: quiet UI, hairlines, no shadows */
+.lp .frag { background: var(--surface); border: 1px solid var(--hairline-2); border-radius: var(--r-l); padding: 18px 22px 20px }
+.lp .frag + .frag { margin-top: 16px }
+.lp .fh { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 28px; padding-bottom: 13px; margin-bottom: 16px; border-bottom: 1px solid var(--hairline); font-size: 14px; line-height: 1.4; color: var(--ink-muted) }
+.lp .fh b { color: var(--ink); font-weight: 500 }
+.lp .pill { display: inline-flex; align-items: center; gap: 7px; height: 28px; padding: 0 12px; border: 1px solid var(--hairline-2); border-radius: 999px; font: 500 13px/1 var(--face); color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums }
+.lp .pill svg { width: 12px; height: 12px; flex: none }
+.lp .pill.open { border-color: var(--accent-line); background: var(--accent-tint); color: var(--accent-ink) }
+.lp .pill.quiet { color: var(--ink-muted) }
+.lp .code { font-variant-numeric: tabular-nums; letter-spacing: .06em; color: var(--ink) }
+.lp .tick { color: var(--ink) }
+
+/* 1 · how a Sunday works */
+.lp .steps { list-style: none; margin: 0; padding: 0 }
+.lp .step { display: grid; grid-template-columns: 48px minmax(0, 4fr) minmax(0, 7fr); column-gap: 40px; padding: 56px 0; border-top: 1px solid var(--hairline) }
+.lp .step-n { font: 500 15px/40px var(--face); color: var(--ink-muted); font-variant-numeric: tabular-nums }
+.lp .step h3 { font-size: 36px; line-height: 40px; letter-spacing: -.035em }
+.lp .step-t p { margin: 14px 0 0; max-width: 430px; font-size: 17px; line-height: 1.65; color: var(--ink-muted) }
+.lp .q { margin: 0; font-size: 16.5px; line-height: 1.65; color: var(--ink-2) }
+.lp .q-split { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--hairline) }
+.lp .q-split .fh { border: 0; padding: 0; margin-bottom: 8px }
+.lp .tr { display: grid; grid-template-columns: 92px minmax(0, 1fr); column-gap: 14px; padding: 13px 0; border-top: 1px solid var(--hairline) }
+.lp .tr:first-child, .lp .fh + .tr { border-top: 0; padding-top: 0 }
+.lp .tr .k { font: 500 13px/22px var(--face); color: var(--ink-muted) }
+.lp .tr .k small { display: block; font-size: 12px; line-height: 1.2; color: var(--ink-muted-2) }
+.lp .tr .v { font-size: 15.5px; line-height: 22px }
+.lp .tr .from { margin-top: 5px; font-size: 14px; line-height: 1.45; color: var(--ink-muted) }
+.lp .pair { display: flex; align-items: center; gap: 16px; font: 500 26px/1 var(--face); letter-spacing: -.025em }
+.lp .pair .wire { flex: 1; height: 1px; background: var(--hairline-3) }
+.lp .checks { list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px }
+.lp .gate { list-style: none; margin: 0; padding: 0; position: relative }
+.lp .gate::before { content: ""; position: absolute; left: 14px; top: 18px; bottom: 18px; width: 1px; background: var(--hairline-2) }
+.lp .gate li { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 6px 0; font-size: 14px; color: var(--ink-muted) }
+.lp .gate .pill { background: var(--surface) }
+.lp .gate .pill.open { background: var(--accent-tint) }
+.lp .log { display: grid; grid-template-columns: 92px minmax(0, 1fr); column-gap: 14px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--hairline); font-size: 15px; line-height: 1.5 }
+.lp .log .k { font: 500 13px/22px var(--face); color: var(--ink-muted) }
+.lp .after { display: grid; grid-template-columns: 48px minmax(0, 4fr) minmax(0, 7fr); column-gap: 40px; margin: 0; padding: 40px 0 0; border-top: 1px solid var(--hairline); font-size: 17px; line-height: 1.65; color: var(--ink-muted) }
+.lp .after b { grid-column: 2; color: var(--ink); font-weight: 500; font-size: 17px }
+.lp .after span { grid-column: 3; max-width: 620px }
+
+/* 2 · private by design */
+.lp .split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 64px; align-items: start }
+.lp .split h2 { margin-bottom: 40px }
+.lp .facts { list-style: none; margin: 0; padding: 0 }
+.lp .facts li { padding: 16px 0; border-top: 1px solid var(--hairline); font-size: 17px; line-height: 1.6; color: var(--ink-2) }
+.lp .facts li:last-child { border-bottom: 1px solid var(--hairline) }
+.lp .limits { margin: 18px 0 0; max-width: 560px; font-size: 14px; line-height: 1.55; color: var(--ink-muted) }
+.lp .limits + .limits { margin-top: 8px }
+.lp .rows { list-style: none; margin: 0; padding: 0 }
+.lp .rows li { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-top: 1px solid var(--hairline); font-size: 15px; line-height: 1.5 }
+.lp .rows li:first-child { border-top: 0; padding-top: 0 }
+.lp .rows li span:last-child { color: var(--ink-muted); white-space: nowrap }
+.lp .rows.log-rows li { display: block }
+.lp .rows.log-rows li.dim { color: var(--ink-muted) }
+
+/* 3 · may / may not */
+.lp .two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start }
+.lp .rule-col { border: 1px solid var(--hairline-2); border-radius: var(--r-l); padding: 26px 28px 14px }
+.lp .rule-col h3 { padding-bottom: 16px; border-bottom: 1px solid var(--hairline) }
+.lp .rules { list-style: none; margin: 0; padding: 0 }
+.lp .rules li { padding: 15px 0; border-top: 1px solid var(--hairline); font-size: 17px; line-height: 1.55; color: var(--ink-2) }
+.lp .rules li:first-child { border-top: 0 }
+
+/* 4 · measured: two results side by side, the honest negative first; a hairline bar comparison for the second */
+.lp .meas { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 24px; align-items: stretch }
+.lp .meas .frag + .frag { margin-top: 0 }
+.lp .meas .frag { display: flex; flex-direction: column; padding: 18px 22px 22px }
+.lp .meas-pair { display: flex; flex-wrap: wrap; gap: 20px 48px; margin-top: 6px }
+.lp .meas-n { font: 500 64px/1 var(--face); letter-spacing: -.045em; font-variant-numeric: tabular-nums; white-space: nowrap }
+.lp .meas-n small { font-size: 24px; letter-spacing: -.02em; color: var(--ink-muted) }
+.lp .meas-k { margin-top: 10px; font-size: 15px; line-height: 1.4; color: var(--ink-muted) }
+.lp .meas-t { margin-top: auto; padding-top: 22px; font-size: 17px; line-height: 1.6; color: var(--ink-2); text-wrap: pretty }
+.lp .meas-t b { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums }
+.lp .bars { list-style: none; margin: 2px 0 0; padding: 0 }
+.lp .bars li { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; row-gap: 8px; padding: 10px 0 12px; border-top: 1px solid var(--hairline) }
+.lp .bars li:first-child { border-top: 0; padding-top: 0 }
+.lp .bars .bl { font-size: 15px; line-height: 1.4; color: var(--ink-2) }
+.lp .bars .bl small { font-size: 13px; color: var(--ink-muted); white-space: nowrap }
+.lp .bars .bv { font: 500 15px/1.4 var(--face); color: var(--ink); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap }
+.lp .bars .track { grid-column: 1 / -1; position: relative; height: 6px }
+.lp .bars .track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--hairline) }
+.lp .bars .fill { position: absolute; left: 0; top: 0; bottom: 0; min-width: 2px; border-radius: 0 3px 3px 0; background: var(--ink-2) }
+.lp .bars li.ours .fill { background: var(--ink) }
+.lp .bars li.ours .bl { color: var(--ink); font-weight: 500 }
+.lp .meas-foot { margin: 22px 0 0; max-width: 820px; font-size: 14px; line-height: 1.55; color: var(--ink-muted); text-wrap: pretty }
+.lp .meas-foot a { color: var(--ink-2); text-decoration: underline; text-decoration-color: var(--hairline-3); text-underline-offset: 3px }
+.lp .meas-foot a:hover { color: var(--ink) }
+
+/* 5 · director */
+.lp .matches { list-style: none; margin: 0; padding: 0 }
+.lp .matches li { display: grid; grid-template-columns: 120px 110px minmax(0, 1fr); align-items: center; column-gap: 16px; padding: 12px 0; border-top: 1px solid var(--hairline); font-size: 15.5px; line-height: 1.5 }
+.lp .matches li:first-child { border-top: 0; padding-top: 0 }
+.lp .matches .kid { font-weight: 500 }
+.lp .matches .bud { color: var(--ink-2) }
+.lp .matches .none { color: var(--ink-muted) }
+.lp .matches li.gap { grid-template-columns: 120px minmax(0, 1fr) }
+.lp .matches li.gap .msg { display: flex; align-items: baseline; gap: 12px; color: var(--ink) }
+.lp .matches li.gap .pill { flex: none; transform: translateY(-1px) }
+/* the page's one highlight outside the hero: the gap the director has to fill */
+.lp .pill.gap { border-color: var(--accent-line); background: var(--accent-tint); color: var(--accent-ink) }
+.lp .pack-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px }
+.lp .stepbox { border: 1px solid var(--hairline-2); border-radius: var(--r-s); padding: 14px 14px 12px; min-height: 132px; display: flex; flex-direction: column }
+.lp .stepbox b { font-weight: 500; font-size: 16px; line-height: 1.3 }
+.lp .stepbox .min { font-size: 14px; color: var(--ink-muted) }
+.lp .stepbox .sup { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--hairline); font-size: 13px; line-height: 1.4; color: var(--ink-2) }
+.lp .stepbox .sup + .sup { margin-top: 8px }
+.lp .story { display: grid; grid-template-columns: 150px minmax(0, 1fr); column-gap: 16px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--hairline) }
+.lp .story .k { font-size: 13px; line-height: 1.5; color: var(--ink-muted) }
+.lp .story p { margin: 0 0 6px; font-size: 16px; line-height: 1.55; color: var(--ink-2) }
+
+/* 6 · planning center */
+.lp .pco { list-style: none; margin: 0; padding: 0 }
+.lp .pco li { display: grid; grid-template-columns: 140px minmax(0, 1fr); column-gap: 24px; padding: 22px 0; border-top: 1px solid var(--hairline) }
+.lp .pco li:last-child { border-bottom: 1px solid var(--hairline) }
+.lp .pco b { font-weight: 500; font-size: 18px }
+.lp .pco span { font-size: 17px; line-height: 1.6; color: var(--ink-2) }
+
+/* 7 · stat band */
+.lp .stat { padding: 120px 0 128px; overflow: hidden }
+.lp .stat::before { content: ""; position: absolute; left: 50%; top: 50%; width: 1200px; height: 520px; transform: translate(-50%, -50%); pointer-events: none; background: radial-gradient(closest-side, #ffffff99, #ffffff00) }
+.lp .stat-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 20px 64px; align-items: end }
+.lp .stat .eyebrow { grid-column: 1 / -1; font: 500 15px/1.4 var(--face); letter-spacing: 0; color: var(--ink-muted) }
+.lp .stat-n { margin: 0; font: 500 184px/.84 var(--face); letter-spacing: -.06em; white-space: nowrap }
+.lp .stat-q { margin: 0; font: 500 30px/1.25 var(--face); letter-spacing: -.025em; text-wrap: balance }
+.lp .cite { margin: 14px 0 0; font-size: 14px; color: var(--ink-muted) }
+.lp .stat-line { margin: 28px 0 0; padding-top: 20px; border-top: 1px solid var(--hairline); font-size: 18px; color: var(--ink-2) }
+
+/* 8 · questions */
+.lp .qa { margin: 0; border-bottom: 1px solid var(--hairline) }
+.lp .qa > div { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 12px 64px; padding: 26px 0; border-top: 1px solid var(--hairline) }
+.lp .qa dt { font: 500 21px/1.35 var(--face); letter-spacing: -.015em }
+.lp .qa dd { margin: 0; font-size: 17px; line-height: 1.65; color: var(--ink-2) }
+
+/* 9 · footer */
+.lp .foot { padding: 72px 0 56px; border-top: 1px solid var(--hairline) }
+.lp .foot-top { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-bottom: 40px }
+.lp .fict { margin: 0; font-size: 15px; color: var(--ink-muted) }
+.lp .fict + .fict { margin-top: 4px }
+.lp .foot-links { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 18px; font-size: 14px; color: var(--ink-muted) }
+.lp .foot-links a { color: var(--ink-2) }
+.lp .foot-links a:hover { color: var(--ink) }
+
+/* below-fold reveal: one quiet rise per section; hidden only while IntersectionObserver is live */
+html.lp-io .lp .rv { opacity: 0; transform: translateY(18px) }
+html.lp-io .lp .rv.in { opacity: 1; transform: none; transition: opacity .8s var(--ease), transform .8s var(--ease) }
+
+@media (min-width: 1800px) {
+  .lp .wrap { width: 1320px }
+  .lp h1 { font-size: 108px; max-width: 1240px }
+  .lp .hero { padding-top: 60px }
+  .lp .zone { margin-top: 38px }
+}
+@media (max-width: 1100px) {
+  .lp .step { grid-template-columns: 40px minmax(0, 1fr); row-gap: 24px }
+  .lp .step .frag { grid-column: 2 }
+  .lp .after { grid-template-columns: 40px minmax(0, 1fr); row-gap: 6px }
+  .lp .after b, .lp .after span { grid-column: 2 }
+  .lp .split, .lp .stat-grid, .lp .meas { grid-template-columns: 1fr }
+  .lp .pack-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) }
+}
+@media (max-width: 860px) {
+  .lp .wrap { width: calc(100% - 32px) }
+  .lp .nav { height: 64px }
+  .lp .nav nav { display: none }
+  .lp .nav .btn-quiet { margin-left: auto }
+  .lp .hero { padding-top: 24px; padding-bottom: 28px }
+  .lp h1 { font-size: 46px; line-height: 1; letter-spacing: -.04em }
+  .lp .sub { font-size: 17px; margin-top: 16px }
+  .lp .sub .m-hide { display: none }
+  .lp .ctas { margin-top: 22px }
+  .lp .ctas .btn { height: 44px; padding: 0 16px }
+  .lp .zone { margin-top: 54px }
+  .lp .zone::after { width: 440px; height: 560px }
+  .lp .card { padding: 14px 14px 12px }
+  .lp .card-head { flex-direction: column; align-items: flex-start; gap: 10px }
+  .lp .lines li { grid-template-columns: 72px 1fr; column-gap: 8px }
+  .lp .lab small { font-size: 11px }
+  .lp .val { font-size: 14px }
+  .lp .sec { padding: 88px 0 }
+  .lp .sec-head { grid-template-columns: 1fr; margin-bottom: 40px }
+  .lp .sec-head .lead { justify-self: start }
+  .lp h2 { font-size: 38px; line-height: 1.04; letter-spacing: -.035em }
+  .lp .step { grid-template-columns: 1fr; padding: 40px 0 }
+  .lp .step-n { line-height: 1.4 }
+  .lp .step .frag { grid-column: 1 }
+  .lp .step h3 { font-size: 30px; line-height: 1.1 }
+  .lp .after { grid-template-columns: 1fr }
+  .lp .after b, .lp .after span { grid-column: 1 }
+  .lp .frag { padding: 16px 16px 18px }
+  .lp .meas .frag { padding: 16px 16px 20px }
+  .lp .meas-pair { gap: 16px 28px }
+  .lp .meas-n { font-size: 44px }
+  .lp .meas-n small { font-size: 20px }
+  .lp .bars .bl small { display: block; margin-top: 2px }
+  .lp .bars .bl .sep { display: none }
+  .lp .fh { flex-wrap: wrap; gap: 8px }
+  .lp .tr, .lp .log { grid-template-columns: 1fr; row-gap: 2px }
+  .lp .gate li { flex-direction: column; align-items: flex-start; gap: 6px; padding: 8px 0 }
+  .lp .gate::before { display: none }
+  .lp .two { grid-template-columns: 1fr }
+  .lp .rule-col { padding: 22px 20px 10px }
+  .lp .matches li, .lp .matches li.gap { grid-template-columns: 1fr; row-gap: 4px }
+  .lp .matches li.gap .msg { flex-direction: column; gap: 8px }
+  .lp .pack-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) }
+  .lp .stepbox { min-height: 0 }
+  .lp .story { grid-template-columns: 1fr; row-gap: 6px }
+  .lp .pco li { grid-template-columns: 1fr; row-gap: 6px }
+  .lp .stat { padding: 88px 0 }
+  .lp .stat-n { font-size: 112px }
+  .lp .stat-q { font-size: 24px }
+  .lp .qa > div { grid-template-columns: 1fr }
+  .lp .foot-top { flex-direction: column; align-items: flex-start }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:has(.lp) { scroll-behavior: auto }
+  .lp .rise { animation: none }
+  .lp .hf-fly, .lp .val, .lp .chip, .lp .lab { transition: none }
+}
