@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { clientIp } from '@/lib/auth/clientIp';
 import { getViewer } from '@/lib/auth/viewer';
 import { testFixtureMode } from '@/lib/testing/fixtureMode';
-import { attestationLimiter, ipKey } from '@/lib/venice/attestRate';
+import { attestationKeys, attestationLimiter } from '@/lib/venice/attestRate';
 import { fetchAttestationWithRetry } from '@/lib/venice/request';
 import { VENICE_BASE, modelId, nonceHex } from '@/lib/venice/teeProxy';
 
@@ -17,8 +17,9 @@ export async function GET(req: Request) {
   const nonce = nonceHex.safeParse(sp.get('nonce'));
   if (!model.success || !nonce.success) return NextResponse.json({ error: 'bad request' }, { status: 400 });
 
-  // A soft limit per church and per client, so one tab or one script can't spend the key's attestation budget.
-  const rate = attestationLimiter.take([`church:${viewer.churchId}`, ipKey(clientIp(req))], Date.now());
+  // A soft limit per person and per client (and a higher one per church), so one tab or one script can't spend the
+  // key's attestation budget, and one member can't spend the church's.
+  const rate = attestationLimiter.take(attestationKeys(viewer, clientIp(req)), Date.now());
   if (!rate.ok) {
     return NextResponse.json(
       { error: 'rate_limited', reason: 'attestation_rate' },
