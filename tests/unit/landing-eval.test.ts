@@ -23,11 +23,22 @@ describe('landing eval numbers', () => {
     expect([LANDING_EVAL.stories, LANDING_EVAL.english, LANDING_EVAL.spanish]).toEqual([60, 35, 25]);
     expect(ofText(LANDING_EVAL.safety.halfdoor)).toBe('157 of 157');
     expect(ofText(LANDING_EVAL.safety.plainSummary)).toBe('157 of 157');
-    expect(ofText(LANDING_EVAL.added.claudeShort)).toBe('29 of 54');
-    expect(ofText(LANDING_EVAL.added.sameShort)).toBe('23 of 51');
+    expect(ofText(LANDING_EVAL.added.claudeShort)).toBe('28 of 54');
+    expect(ofText(LANDING_EVAL.added.sameShort)).toBe('13 of 51');
     expect(ofText(LANDING_EVAL.added.halfdoor)).toBe('3 of 58');
-    expect(LANDING_EVAL.precisionPct).toBe(85);
+    expect(LANDING_EVAL.check).toEqual({ shortCards: true, flagged: { n: 13, of: 15 }, passed: { n: 14, of: 15 } });
+    expect(LANDING_EVAL.precisionPct).toBe(87);
     expect(LANDING_EVAL.claudeName).toBe('Claude Sonnet 5.5');
+  });
+
+  test('the short-card check wins over the rounds; unjudged samples are skipped', () => {
+    const s = (flagged: string, grounded: boolean | null) => ({ flagged, grounded });
+    const v: SupportValidation = {
+      rounds: [{ round: 2, samples: [s('unsupported', false), s('supported', true)] }],
+      shortCard: { samples: [s('unsupported', false), s('unsupported', true), s('unsupported', null), s('supported', false), s('supported', true)] },
+    };
+    expect(landingEval(results, v).check).toEqual({ shortCards: true, flagged: { n: 1, of: 2 }, passed: { n: 1, of: 2 } });
+    expect(landingEval(results, v).precisionPct).toBe(50);
   });
 
   test('precision comes from the latest hand-checked round', () => {

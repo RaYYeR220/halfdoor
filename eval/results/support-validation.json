@@ -1,5 +1,5 @@
 {
- "about": "Hand validation of the support rule (eval/metrics.ts). grounded = the story states, or translates to, everything the sentence claims. Round 1 used the rule as specified; precision was under 80%, so the rule was revised once and re-validated on a fresh sample (round 2).",
+ "about": "Hand validation of the support rule (eval/metrics.ts). grounded = the story states, or translates to, everything the sentence claims; boilerplate, template text and added advice are not grounded. Round 1 used the rule as specified; precision was under 80%, so the rule was revised once and re-validated on a fresh sample (round 2). Both rounds were drawn from the one-page baselines (the short-card baselines came later) and judged under the rule of their time, which still counted title and heading lines. The rule was revised again (v3: title and heading lines are not claims) and checked on a fresh sample from the short-card baselines alone (shortCard), because the short cards are the comparison the public numbers use.",
  "rounds": [
   {
    "rule": "supported if >= 50% of content words (4+ letters, not stopwords, 5-char prefix) occur in the story",
@@ -815,5 +815,316 @@
     }
    ]
   }
- ]
+ ],
+ "shortCard": {
+  "rule": "supported if >= 33% of content words (4+ letters, not stopwords, 5-char prefix) occur in the story; sentences of <= 4 words ignored; title and heading lines ignored; outputs in another language than the story not scored",
+  "seed": 2028,
+  "round": 1,
+  "systems": [
+   "baseline_same_short",
+   "baseline_claude_short"
+  ],
+  "samples": [
+   {
+    "system": "baseline_same_short",
+    "storyId": "en-35",
+    "sentence": "Thanks for looking after her!",
+    "flagged": "unsupported",
+    "keys": 2,
+    "inStory": 0,
+    "grounded": false,
+    "note": "Sign-off boilerplate; nothing in the story."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "en-14",
+    "sentence": "If he approaches, please keep Zoe with you and get a staff member right away.",
+    "flagged": "unsupported",
+    "keys": 6,
+    "inStory": 0,
+    "grounded": false,
+    "note": "Added procedure: the story says Derek may not go to the kids' area, not what the volunteer should do if he comes."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "en-34",
+    "sentence": "If anyone else asks for Elias, please do not release him, and find a ministry leader right away.",
+    "flagged": "unsupported",
+    "keys": 10,
+    "inStory": 1,
+    "grounded": false,
+    "note": "'Do not release him' follows from 'Only Carmen or I may sign him out'; 'find a ministry leader right away' is added."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "es-10",
+    "sentence": "No es falta de respeto ni timidez: simplemente no puede hablar.",
+    "flagged": "unsupported",
+    "keys": 5,
+    "inStory": 1,
+    "grounded": false,
+    "note": "Adds 'not disrespect or shyness'; the story says only that she understands everything and does not speak outside home."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "es-21",
+    "sentence": "Si hay cualquier duda o síntoma, avise de inmediato a la mamá o al líder del ministerio.",
+    "flagged": "unsupported",
+    "keys": 8,
+    "inStory": 0,
+    "grounded": false,
+    "note": "Added contact procedure; the story names no one to tell about doubts or symptoms."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "en-26",
+    "sentence": "Thank you for taking such good care of him!",
+    "flagged": "unsupported",
+    "keys": 4,
+    "inStory": 0,
+    "grounded": false,
+    "note": "Sign-off boilerplate."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "en-11",
+    "sentence": "Please keep doors closed and stay close.",
+    "flagged": "unsupported",
+    "keys": 5,
+    "inStory": 1,
+    "grounded": false,
+    "note": "Added advice: the story says he runs toward the parking lot if a door is open; it does not ask for closed doors or staying close."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "es-18",
+    "sentence": "Un poco de tranquilidad al respecto le hará bien.",
+    "flagged": "unsupported",
+    "keys": 4,
+    "inStory": 0,
+    "grounded": false,
+    "note": "Added reassurance advice; the story only says she sometimes asks about her little sister."
+   },
+   {
+    "system": "baseline_same_short",
+    "storyId": "en-19",
+    "sentence": "Thank you for caring for her!",
+    "flagged": "unsupported",
+    "keys": 2,
+    "inStory": 0,
+    "grounded": false,
+    "note": "Sign-off boilerplate."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "en-14",
+    "sentence": "About Zoe: She has eczema, so please watch for scratching or discomfort.",
+    "flagged": "unsupported",
+    "keys": 4,
+    "inStory": 1,
+    "grounded": false,
+    "note": "'She has eczema' is in the story; 'watch for scratching or discomfort' is added."
+   },
+   {
+    "system": "baseline_same_short",
+    "storyId": "es-09",
+    "sentence": "Puede repetir después de 20 min.",
+    "flagged": "unsupported",
+    "keys": 1,
+    "inStory": 0,
+    "grounded": true,
+    "note": "Translation of the code-switched 'can repeat after 20 min' (a false flag: word overlap cannot see the translation)."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "es-22",
+    "sentence": "No le gustan las sorpresas, así que conviene avisarle antes de cualquier cambio de actividad.",
+    "flagged": "unsupported",
+    "keys": 7,
+    "inStory": 2,
+    "grounded": false,
+    "note": "'No le gustan las sorpresas' is in the story; 'warn her before any change of activity' is added advice."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "es-25",
+    "sentence": "¡Disfrutará las actividades con música y movimiento!",
+    "flagged": "unsupported",
+    "keys": 4,
+    "inStory": 0,
+    "grounded": true,
+    "note": "Borderline, counted as grounded: a generalisation of 'le encanta bailar' (dancing is music and movement)."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "en-24",
+    "sentence": "(Add parent's name and number for texting.)",
+    "flagged": "unsupported",
+    "keys": 4,
+    "inStory": 0,
+    "grounded": false,
+    "note": "Template placeholder the model added for the church; not in the story."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "es-24",
+    "sentence": "avise de inmediato al coordinador.",
+    "flagged": "unsupported",
+    "keys": 3,
+    "inStory": 0,
+    "grounded": false,
+    "note": "Second half of 'do not release him to either; tell the coordinator at once': the coordinator step is added."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "en-11",
+    "sentence": "Isaiah is autistic and nonverbal.",
+    "flagged": "supported",
+    "keys": 3,
+    "inStory": 3,
+    "grounded": true,
+    "note": "Story: 'Isaiah is 12, autistic and nonverbal'."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "en-17",
+    "sentence": "It's not that kind of allergy.",
+    "flagged": "supported",
+    "keys": 2,
+    "inStory": 2,
+    "grounded": true,
+    "note": "Story: 'it's not that kind of allergy'."
+   },
+   {
+    "system": "baseline_same_short",
+    "storyId": "es-07",
+    "sentence": "Soy Rosa, la abuela de Emiliano y tengo su custodia.",
+    "flagged": "supported",
+    "keys": 5,
+    "inStory": 5,
+    "grounded": true,
+    "note": "Story: 'Soy Rosa, la abuela de Emiliano (6 años). Tengo su custodia.' (kept in the grandmother's first person)."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "en-06",
+    "sentence": "If Tina shows up, please do not release Sofia and call the director.",
+    "flagged": "supported",
+    "keys": 6,
+    "inStory": 6,
+    "grounded": true,
+    "note": "Verbatim story sentence."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "es-11",
+    "sentence": "Avísale cinco minutos antes usando el reloj de arena que trae en su mochila.",
+    "flagged": "supported",
+    "keys": 8,
+    "inStory": 6,
+    "grounded": true,
+    "note": "Story: 'avísenle cinco minutos antes con el reloj de arena que trae en su mochila'."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "en-05",
+    "sentence": "Please get Dana, his aide, who is there from 9:45.",
+    "flagged": "supported",
+    "keys": 2,
+    "inStory": 2,
+    "grounded": true,
+    "note": "Story: 'please get Dana, his aide, she's there from 9:45'."
+   },
+   {
+    "system": "baseline_same_short",
+    "storyId": "en-01",
+    "sentence": "Leo is 6 and autistic.",
+    "flagged": "supported",
+    "keys": 1,
+    "inStory": 1,
+    "grounded": true,
+    "note": "Story: 'Leo is 6 and he's autistic'."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "en-18",
+    "sentence": "He follows the music to the worship team, so keep an eye out when songs start.",
+    "flagged": "supported",
+    "keys": 7,
+    "inStory": 4,
+    "grounded": false,
+    "note": "A miss: 'he follows the music to the worship team' is in the story, but 'keep an eye out when songs start' is added advice."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "en-02",
+    "sentence": "Please don't let her skip it.",
+    "flagged": "supported",
+    "keys": 1,
+    "inStory": 1,
+    "grounded": true,
+    "note": "Story: 'just don't let her skip snack' (the sentence before names the snack)."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "en-02",
+    "sentence": "Do NOT give extra insulin;",
+    "flagged": "supported",
+    "keys": 3,
+    "inStory": 3,
+    "grounded": true,
+    "note": "Story: 'do NOT give extra insulin'."
+   },
+   {
+    "system": "baseline_same_short",
+    "storyId": "en-06",
+    "sentence": "Sofia (8) has Down syndrome and has lived with us, her foster family, since March.",
+    "flagged": "supported",
+    "keys": 7,
+    "inStory": 7,
+    "grounded": true,
+    "note": "Story: 'Sofia is 8 and has Down syndrome. She has lived with us, her foster family, since March.'"
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "en-20",
+    "sentence": "Jayden has epilepsy and a VNS implant.",
+    "flagged": "supported",
+    "keys": 3,
+    "inStory": 3,
+    "grounded": true,
+    "note": "Story: 'he has epilepsy and a VNS implant'."
+   },
+   {
+    "system": "baseline_same_short",
+    "storyId": "en-13",
+    "sentence": "Don't let him run laps on cold mornings — that triggers it.",
+    "flagged": "supported",
+    "keys": 4,
+    "inStory": 4,
+    "grounded": true,
+    "note": "Story: 'dont let him run laps on cold mornings, that triggers it'."
+   },
+   {
+    "system": "baseline_claude_short",
+    "storyId": "en-09",
+    "sentence": "He lip-reads, so just face him when you talk.",
+    "flagged": "supported",
+    "keys": 3,
+    "inStory": 3,
+    "grounded": true,
+    "note": "Story: 'he lip-reads, just face him when you talk'."
+   },
+   {
+    "system": "baseline_same_short",
+    "storyId": "en-11",
+    "sentence": "Isaiah is 12, autistic, and nonverbal.",
+    "flagged": "supported",
+    "keys": 3,
+    "inStory": 3,
+    "grounded": true,
+    "note": "Story: 'Isaiah is 12, autistic and nonverbal'."
+   }
+  ]
+ }
 }

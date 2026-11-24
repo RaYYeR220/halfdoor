@@ -12,7 +12,7 @@ Generated 2026-11-23 from `final.json`: 60 synthetic parent stories (35 EN, 25 E
 - **Safety facts: a plain summary is as good as Halfdoor.** Halfdoor card 99.4% (156/157), with the safety net accepted 100.0% (157/157); baselines 100.0% (157/157) (one-page, same model), 100.0% (157/157) (one-page, Claude), 98.7% (155/157) (short card, same model), 100.0% (157/157) (short card, Claude).
 - **Wrong claims:** Halfdoor 0 trap hits; baselines 1 (one-page, same model), 1 (one-page, Claude), 1 (short card, same model), 1 (short card, Claude). Of the 4 baseline trap hits in this run, 4 are reviewed scorer artifacts (the output says the right thing; appendix A), 0 real.
 - **Halfdoor's grounding numbers are expected by construction.** Its 0.05 sentences per card not grounded in the story and its 0 unsaid diagnosis labels follow from the design: the verifier drops any item it cannot point to in the story (a quote it cannot find, a paraphrase sharing no word with its quote, a diagnosis the parent did not use). That row shows the verifier works; it is not an independent finding.
-- **Length follows the prompt.** Asked for a one-page summary, the baselines write 258 words with 11.6 ungrounded sentences (one-page, same model) and 291 words with 12.5 ungrounded sentences (one-page, Claude); asked for a short card, 75 words with 0.5 ungrounded sentences (short card, same model) and 86 words with 0.8 ungrounded sentences (short card, Claude). A Halfdoor card is 92 words. With the short prompt a plain model gets close to the card on length and grounding; what stays different is that Halfdoor guarantees it by construction (every safety line is the parent's located sentence, nothing unlocated survives) and runs in the enclave, where a prompt only makes it likely.
+- **Length follows the prompt.** Asked for a one-page summary, the baselines write 258 words with 10.2 ungrounded sentences (one-page, same model) and 291 words with 11.6 ungrounded sentences (one-page, Claude); asked for a short card, 75 words with 0.3 ungrounded sentences (short card, same model) and 86 words with 0.7 ungrounded sentences (short card, Claude). A Halfdoor card is 92 words. With the short prompt a plain model gets close to the card on length and grounding; what stays different is that Halfdoor guarantees it by construction (every safety line is the parent's located sentence, nothing unlocated survives) and runs in the enclave, where a prompt only makes it likely.
 
 ## Safety facts and wrong claims (automatic scoring)
 
@@ -33,13 +33,14 @@ Outputs are read through a markdown-aware normalizer before the key is applied (
 |---|---|---|---|---|---|
 | Halfdoor card | 0.05 (of 5.8 sentences) | 3/58 (2 not scored) | 0 / 0 outputs | 92 / 74 | 27.8 s / 22.0 s |
 | Halfdoor card + safety net accepted | 0.05 (of 5.9 sentences) | 3/58 (2 not scored) | 0 / 0 outputs | 93 / 76 | 27.9 s / 23.0 s |
-| Plain summary, same enclave model | 11.61 (of 23.8 sentences) | 33/33 (27 not scored) | 13 / 0 outputs | 258 / 225 | 77.3 s / 68.0 s |
-| Plain summary, Claude Sonnet 5.5 | 12.48 (of 23.2 sentences) | 52/52 (8 not scored) | 3 / 0 outputs | 291 / 292 | 87.4 s / 88.0 s |
-| Short card prompt, same enclave model | 0.51 (of 6.5 sentences) | 23/51 (9 not scored) | 5 / 0 outputs | 75 / 75 | 22.4 s / 23.0 s |
-| Short card prompt, Claude Sonnet 5.5 | 0.80 (of 7.3 sentences) | 29/54 (6 not scored) | 1 / 0 outputs | 86 / 86 | 25.9 s / 26.0 s |
+| Plain summary, same enclave model | 10.24 (of 21.8 sentences) | 33/33 (27 not scored) | 13 / 0 outputs | 258 / 225 | 77.3 s / 68.0 s |
+| Plain summary, Claude Sonnet 5.5 | 11.60 (of 21.4 sentences) | 52/52 (8 not scored) | 3 / 0 outputs | 291 / 292 | 87.4 s / 88.0 s |
+| Short card prompt, same enclave model | 0.25 (of 5.8 sentences) | 13/51 (9 not scored) | 5 / 0 outputs | 75 / 75 | 22.4 s / 23.0 s |
+| Short card prompt, Claude Sonnet 5.5 | 0.72 (of 7.0 sentences) | 28/54 (6 not scored) | 1 / 0 outputs | 86 / 86 | 25.9 s / 26.0 s |
 
 - **Halfdoor's row is by construction.** The verifier only keeps what it can point to in the story and blocks diagnosis words the parent did not use, so near-zero here is the design working, not a separate result. The comparison that matters is between the baselines, and between a baseline and what the parent wrote.
-- **Not grounded**: a sentence counts as grounded when at least 33% of its content words (4+ letters, not stopwords, compared by 5-letter prefix) also occur in the story. Lines of 4 words or fewer are ignored. Hand check on a fresh random sample (appendix B): 17/20 flagged sentences really add something the parent did not write, and 14/20 passed sentences really are grounded, so the counts are approximate and lean low.
+- **Not grounded**: a sentence counts as grounded when at least 33% of its content words (4+ letters, not stopwords, compared by 5-letter prefix) also occur in the story. Lines of 4 words or fewer are ignored, and so are title and heading lines, which name the card or a section and claim nothing: a markdown heading, a bold-only heading line, a first line with no closing punctuation, and a line with no closing punctuation that has the child's name with an age or "card", "volunteer", "Sunday" (or the Spanish "tarjeta", "nota", "voluntario", "domingo"). Hand check on fresh random samples (appendix B): on the short cards, 13/15 flagged sentences really add something the parent did not write and 14/15 passed sentences really are grounded; on the one-page summaries (round 2, judged before title lines were skipped) 17/20 flagged and 14/20 passed; 3 of its flagged sentences are title lines the current rule skips, and without them 14/17 flagged sentences really add something. The errors go both ways (a translation or a close paraphrase gets flagged; an added instruction tacked onto a story sentence passes), so read the counts as approximate, not as a lower or upper bound.
+- **Rule change after the run (2026-11-24).** Support rule v3: title and heading lines no longer count as unsupported sentences (markdown headings, bold-only heading lines, a first line without terminal punctuation, and a line without terminal punctuation that has the child's name with an age or a card/volunteer/Sunday word). Same cached outputs, no model call. Every output was re-scored from the cached model outputs (`eval/rescore.ts`); safety facts and trap hits did not change. Outputs with a sentence not grounded, before → after: Halfdoor card 3/58 → 3/58 (0.05 → 0.05 per output); Halfdoor card + safety net accepted 3/58 → 3/58 (0.05 → 0.05 per output); Plain summary, same enclave model 33/33 → 33/33 (11.61 → 10.24 per output); Plain summary, Claude Sonnet 5.5 52/52 → 52/52 (12.48 → 11.60 per output); Short card prompt, same enclave model 23/51 → 13/51 (0.51 → 0.25 per output); Short card prompt, Claude Sonnet 5.5 29/54 → 28/54 (0.80 → 0.72 per output). The earlier rule counted a card's title ("Ethan, age 10 — Sunday Volunteer Card") as a sentence the parent never said, which inflated the short-card baselines most.
 - **Not scored for grounding**: an output whose detected language (a stopword heuristic) differs from its story's is skipped, because word overlap cannot see a translation. The one-page same-model summary answered all 25 Spanish stories in English. The detector also disagrees on some stories in either language, for every system (short or mixed text can come out as neither language, and code-switched stories can read as English). Skipped per system: Halfdoor card: 2 (2 detector mismatches); Halfdoor card + safety net accepted: 2 (2 detector mismatches); Plain summary, same enclave model: 27 (25 Spanish stories answered in English, 2 detector mismatches); Plain summary, Claude Sonnet 5.5: 8 (6 Spanish stories answered in English, 2 detector mismatches); Short card prompt, same enclave model: 9 (7 Spanish stories answered in English, 2 detector mismatches); Short card prompt, Claude Sonnet 5.5: 6 (2 Spanish stories answered in English, 4 detector mismatches).
 - **Unsaid labels**: diagnosis words (autism, ADHD, Down syndrome…) the story does not contain. "Exact word" is the check the product verifier applies; "label family" also accepts another form of the same diagnosis (autistic for autism, autismo for autism, the parent's lowercase "adhd", "CP").
 
@@ -52,20 +53,20 @@ Every Halfdoor sentence flagged as not grounded:
 Flagged sentences from each baseline, three per system, chosen at random (seeded, at least 6 words, at most one per story):
 
 - Plain summary, same enclave model:
-  - en-30: "She is a blessing, and your care will help her have a wonderful Sunday."
-  - en-34: "While this may not come up in class, it's important context."
-  - en-08: "Just needs a little extra warmth at drop-off and her blanket close by."
+  - en-09: "Avoid talking while turned away or from another room."
+  - en-24: "Saying Goodbye: Sam might cry at drop-off for a minute or two."
+  - en-12: "She simply cannot speak outside our home yet."
 - Plain summary, Claude Sonnet 5.5:
-  - es-05: "Preguntarle por su equipo favorito o su dinosaurio preferido puede ayudarlo a relajarse."
-  - es-18: "Es normal que al principio no quiera unirse a las actividades."
-  - en-02: "You're doing a great job looking after her!"
+  - es-10: "Gracias por cuidar de Renata con paciencia y cariño."
+  - en-35: "Talking about cats, cat crafts, cat stories, or drawing cats is a great way to connect with her and help her feel comfortable."
+  - es-05: "Dale un ratito de espacio sin presionarlo."
 - Short card prompt, same enclave model:
-  - en-12: "Harper (age 6) — Important Info for Sunday"
-  - en-15: "Keep doors closed and eyes on him."
-  - en-07: "Noah, age 5 — Sunday Volunteer Card"
+  - en-23: "😊 Thanks for caring for her!"
+  - en-34: "Thank you for caring for him!"
+  - es-09: "Puede repetir después de 20 min."
 - Short card prompt, Claude Sonnet 5.5:
-  - es-01: "Si alguien más se presenta, no lo entregue y avise a un líder."
-  - en-05: "Thank you for caring for him!"
+  - en-01: "A quieter spot or a break will help."
+  - en-21: "One suggestion: you may want to give the card to your volunteer lead rather than leaving it where others can see it, since it includes the protective order details."
   - en-33: "Thanks for loving on him this Sunday!"
 
 ## What went wrong
@@ -177,101 +178,137 @@ Both are left as they are. The en-32 table row ("Falls and gets hurt | Call 911"
 
 ## Appendix B: grounding-rule validation
 
-20 random sentences the rule flags as not grounded and 20 it passes, from the plain summaries, judged by hand against the story (grounded = the story states, or translates to, everything the sentence claims; boilerplate, headers and added advice are not grounded).
+Each check draws random sentences the rule flags as not grounded and as many it passes (seeded, `eval/support-sample.ts`), judged by hand against the story (grounded = the story states, or translates to, everything the sentence claims; boilerplate, template text and added advice are not grounded).
 
-| Round | Rule | Seed | Flagged that really add something | Passed that really are grounded |
-|---|---|---|---|---|
-| 1 | supported if >= 50% of content words (4+ letters, not stopwords, 5-char prefix) occur in the story | 2026 | 12/20 (60.0%) | 17/20 (85.0%) |
-| 2 | supported if >= 33% of content words (4+ letters, not stopwords, 5-char prefix) occur in the story; sentences of <= 4 words ignored; outputs in another language than the story not scored | 2027 | 17/20 (85.0%) | 14/20 (70.0%) |
+| Check | Drawn from | Rule | Seed | Flagged that really add something | Passed that really are grounded |
+|---|---|---|---|---|---|
+| Round 1 | one-page summaries | supported if >= 50% of content words (4+ letters, not stopwords, 5-char prefix) occur in the story | 2026 | 12/20 (60.0%) | 17/20 (85.0%) |
+| Round 2 | one-page summaries | supported if >= 33% of content words (4+ letters, not stopwords, 5-char prefix) occur in the story; sentences of <= 4 words ignored; outputs in another language than the story not scored | 2027 | 17/20 (85.0%) | 14/20 (70.0%) |
+| Short cards | short-card baselines | supported if >= 33% of content words (4+ letters, not stopwords, 5-char prefix) occur in the story; sentences of <= 4 words ignored; title and heading lines ignored; outputs in another language than the story not scored | 2028 | 13/15 (86.7%) | 14/15 (93.3%) |
 
-Round 1 missed the 80% target: its false flags were translations, close paraphrases and short label lines. The rule was revised once (language check, one-third threshold, short lines ignored) and checked again on a fresh sample (round 2).
+Round 1 missed the 80% target: its false flags were translations, close paraphrases and short label lines. The rule was revised once (language check, one-third threshold, short lines ignored) and checked again on a fresh sample (round 2). Rounds 1 and 2 judged title lines ("Sunday Care Summary — Jonah (age 4)") as not grounded, so they counted toward precision. Title lines are not claims, and the short cards open with one, so the rule was revised again to skip them (v3, see "Rule change after the run" above) and checked on a fresh sample drawn from the short-card baselines only, under v3. That check is the one the public short-card numbers cite.
 
 <details><summary>Round 1 judgments</summary>
 
-- unsupported, grounded · es-15 · "Sitting apart makes him feel bad/left out." — Translation of "NO necesita sentarse en mesa aparte, eso lo hace sentir mal" (English answer to a Spanish story).
-- unsupported, not grounded · es-20 · "Make sure walkways and the classroom have clear space for her wheelchair to move around." — Added advice; the story says nothing about walkways or room layout.
-- unsupported, grounded · en-27 · "No other action needed." — Restates "Above 250 just text me" (the "just").
-- unsupported, not grounded · es-16 · "Confidential – Please Read Before Sunday" — Boilerplate header, not from the story.
-- unsupported, grounded · en-08 · "She will likely hang on to her parent at the door for a few minutes." — Paraphrase of "will probably hang on to me at the door for a bit".
-- unsupported, not grounded · es-10 · "Don't single her out in front of the group." — Added advice; the story does not mention singling her out.
-- unsupported, grounded · en-33 · "Medical/Allergy Info: None." — Restates "No medical stuff."
-- unsupported, grounded · es-24 · "Información proporcionada por su abuela y tutora." — Meta line, but true: the grandmother wrote the story and has custody.
-- unsupported, not grounded · en-08 · "A calm, warm greeting" — Added advice.
-- unsupported, grounded · es-12 · "Keep the classroom door closed at all times." — Translation of "la puerta del salón cerrada".
-- unsupported, grounded · es-16 · "CUSTODY: Only her foster parents, Pablo and Ana, or her social worker, Mrs." — Translation of "Solo nosotros (Pablo y Ana) o la trabajadora social, la señora Gómez".
-- unsupported, not grounded · es-21 · "Evite también actividades o manualidades con alimentos (por ejemplo, galletas, cereal, masa o recipientes que hayan tenido leche o huevo)." — Added advice (crafts with food); not in the story.
-- unsupported, not grounded · es-10 · "Su silencio no significa que esté bien ni que no la haya oído." — Added interpretation of her silence.
-- unsupported, not grounded · en-22 · "he picks up on tension." — Not in the story.
-- unsupported, not grounded · en-14 · "Greet Zoe warmly and let her choose a puzzle to start." — Greeting advice added (only "loves puzzles" is from the story).
-- unsupported, not grounded · es-01 · "Avise antes, si puede, de música fuerte, aplausos o juegos ruidosos." — "Warn beforehand" is added; the story only says loud noises scare him.
-- unsupported, grounded · en-22 · "What to Do: If he seems overwhelmed or panicky, calmly and quietly invite him to step into the hallway with a leader." — Paraphrase of "If he gets panicky let him step into the hallway with a leader".
-- unsupported, not grounded · es-09 · "Health Information — Please Read" — Boilerplate header.
-- unsupported, not grounded · en-03 · "Jonah: Volunteer Information Sheet" — Boilerplate header.
-- unsupported, not grounded · es-13 · "A great way to connect with her and help her feel comfortable." — Added.
-- supported, grounded · es-17 · "Durante la alabanza fuerte o cualquier momento ruidoso, mantenerlo cerca de un adulto." — From "cuando hay alabanza fuerte mejor que esté cerca de un adulto".
-- supported, grounded · en-25 · "The tube must be replaced within one hour, or the opening can start to close." — From "it has to go back in within an hour or the hole starts closing".
-- supported, grounded · en-17 · "Penny cannot have the communion bread." — From "she can't have the bread".
-- supported, grounded · en-11 · "If a door is open, Isaiah may run toward the parking lot." — From "He runs toward the parking lot if a door is open".
-- supported, grounded · en-08 · "She calls her blanket "Mimi" and will bring it with her." — From "She calls her blanket Mimi and will bring it".
-- supported, not grounded · es-18 · "Paula es una niña muy tímida, pero con mucho corazón." — "muy tímida" is from the story; "con mucho corazón" is invented.
-- supported, grounded · en-05 · "Please give him only his own thickened drinks." — From "only thickened drinks, we send them".
-- supported, grounded · en-17 · "Penny is 8 years old and has celiac disease." — From the first sentence.
-- supported, grounded · es-12 · "La puerta del salón siempre cerrada mientras Gael esté dentro." — From "la puerta del salón cerrada".
-- supported, grounded · en-32 · "An adult must be within arm's reach of Emma at all times during any water activity." — From "an adult has to be within arm's reach of her" (water games).
-- supported, grounded · en-10 · "Do NOT use the 0.15 mg Auvi-Q — that one belongs to her sister, Rose." — From "NOT the 0.15 her sister Rose has".
-- supported, not grounded · en-17 · "Celiac disease is an autoimmune condition, not an anaphylactic allergy." — "autoimmune condition" is added medical information.
-- supported, grounded · en-15 · "Allergy — bees (EpiPen): Wyatt is allergic to bees." — From "allergic to bees (epipen...)".
-- supported, grounded · en-32 · "Water games: Adult within arm's reach." — From the water-games sentence.
-- supported, grounded · en-09 · "He lip-reads — just make sure you're facing him when you talk to him." — From "he lip-reads, just face him when you talk".
-- supported, not grounded · es-22 · "Tiene un estimulador del nervio vago (VNS), un dispositivo implantado que ayuda a controlar las crisis." — "un dispositivo implantado que ayuda a controlar las crisis" is added explanation.
-- supported, grounded · en-25 · "No food, no snacks, and no water, not even a sip." — From "gets NOTHING by mouth, not even water".
-- supported, grounded · es-04 · "About Camila: Camila is 4 years old and is a joy to be around." — Translation of "es nuestra alegría".
-- supported, grounded · en-09 · "His uncle Ray is on the pickup list and is allowed to collect him — he simply never does." — From "he can, he's on the list, he just never does".
-- supported, grounded · en-32 · "She falls and gets hurt, or" — Fragment of "only if she falls and gets hurt".
+- unsupported, grounded · baseline_same · es-15 · "Sitting apart makes him feel bad/left out." — Translation of "NO necesita sentarse en mesa aparte, eso lo hace sentir mal" (English answer to a Spanish story).
+- unsupported, not grounded · baseline_claude · es-20 · "Make sure walkways and the classroom have clear space for her wheelchair to move around." — Added advice; the story says nothing about walkways or room layout.
+- unsupported, grounded · baseline_claude · en-27 · "No other action needed." — Restates "Above 250 just text me" (the "just").
+- unsupported, not grounded · baseline_same · es-16 · "Confidential – Please Read Before Sunday" — Boilerplate header, not from the story.
+- unsupported, grounded · baseline_same · en-08 · "She will likely hang on to her parent at the door for a few minutes." — Paraphrase of "will probably hang on to me at the door for a bit".
+- unsupported, not grounded · baseline_same · es-10 · "Don't single her out in front of the group." — Added advice; the story does not mention singling her out.
+- unsupported, grounded · baseline_same · en-33 · "Medical/Allergy Info: None." — Restates "No medical stuff."
+- unsupported, grounded · baseline_claude · es-24 · "Información proporcionada por su abuela y tutora." — Meta line, but true: the grandmother wrote the story and has custody.
+- unsupported, not grounded · baseline_same · en-08 · "A calm, warm greeting" — Added advice.
+- unsupported, grounded · baseline_same · es-12 · "Keep the classroom door closed at all times." — Translation of "la puerta del salón cerrada".
+- unsupported, grounded · baseline_same · es-16 · "CUSTODY: Only her foster parents, Pablo and Ana, or her social worker, Mrs." — Translation of "Solo nosotros (Pablo y Ana) o la trabajadora social, la señora Gómez".
+- unsupported, not grounded · baseline_claude · es-21 · "Evite también actividades o manualidades con alimentos (por ejemplo, galletas, cereal, masa o recipientes que hayan tenido leche o huevo)." — Added advice (crafts with food); not in the story.
+- unsupported, not grounded · baseline_claude · es-10 · "Su silencio no significa que esté bien ni que no la haya oído." — Added interpretation of her silence.
+- unsupported, not grounded · baseline_claude · en-22 · "he picks up on tension." — Not in the story.
+- unsupported, not grounded · baseline_claude · en-14 · "Greet Zoe warmly and let her choose a puzzle to start." — Greeting advice added (only "loves puzzles" is from the story).
+- unsupported, not grounded · baseline_claude · es-01 · "Avise antes, si puede, de música fuerte, aplausos o juegos ruidosos." — "Warn beforehand" is added; the story only says loud noises scare him.
+- unsupported, grounded · baseline_same · en-22 · "What to Do: If he seems overwhelmed or panicky, calmly and quietly invite him to step into the hallway with a leader." — Paraphrase of "If he gets panicky let him step into the hallway with a leader".
+- unsupported, not grounded · baseline_same · es-09 · "Health Information — Please Read" — Boilerplate header.
+- unsupported, not grounded · baseline_claude · en-03 · "Jonah: Volunteer Information Sheet" — Boilerplate header.
+- unsupported, not grounded · baseline_same · es-13 · "A great way to connect with her and help her feel comfortable." — Added.
+- supported, grounded · baseline_claude · es-17 · "Durante la alabanza fuerte o cualquier momento ruidoso, mantenerlo cerca de un adulto." — From "cuando hay alabanza fuerte mejor que esté cerca de un adulto".
+- supported, grounded · baseline_claude · en-25 · "The tube must be replaced within one hour, or the opening can start to close." — From "it has to go back in within an hour or the hole starts closing".
+- supported, grounded · baseline_claude · en-17 · "Penny cannot have the communion bread." — From "she can't have the bread".
+- supported, grounded · baseline_claude · en-11 · "If a door is open, Isaiah may run toward the parking lot." — From "He runs toward the parking lot if a door is open".
+- supported, grounded · baseline_same · en-08 · "She calls her blanket "Mimi" and will bring it with her." — From "She calls her blanket Mimi and will bring it".
+- supported, not grounded · baseline_claude · es-18 · "Paula es una niña muy tímida, pero con mucho corazón." — "muy tímida" is from the story; "con mucho corazón" is invented.
+- supported, grounded · baseline_claude · en-05 · "Please give him only his own thickened drinks." — From "only thickened drinks, we send them".
+- supported, grounded · baseline_claude · en-17 · "Penny is 8 years old and has celiac disease." — From the first sentence.
+- supported, grounded · baseline_claude · es-12 · "La puerta del salón siempre cerrada mientras Gael esté dentro." — From "la puerta del salón cerrada".
+- supported, grounded · baseline_claude · en-32 · "An adult must be within arm's reach of Emma at all times during any water activity." — From "an adult has to be within arm's reach of her" (water games).
+- supported, grounded · baseline_same · en-10 · "Do NOT use the 0.15 mg Auvi-Q — that one belongs to her sister, Rose." — From "NOT the 0.15 her sister Rose has".
+- supported, not grounded · baseline_claude · en-17 · "Celiac disease is an autoimmune condition, not an anaphylactic allergy." — "autoimmune condition" is added medical information.
+- supported, grounded · baseline_same · en-15 · "Allergy — bees (EpiPen): Wyatt is allergic to bees." — From "allergic to bees (epipen...)".
+- supported, grounded · baseline_same · en-32 · "Water games: Adult within arm's reach." — From the water-games sentence.
+- supported, grounded · baseline_same · en-09 · "He lip-reads — just make sure you're facing him when you talk to him." — From "he lip-reads, just face him when you talk".
+- supported, not grounded · baseline_claude · es-22 · "Tiene un estimulador del nervio vago (VNS), un dispositivo implantado que ayuda a controlar las crisis." — "un dispositivo implantado que ayuda a controlar las crisis" is added explanation.
+- supported, grounded · baseline_claude · en-25 · "No food, no snacks, and no water, not even a sip." — From "gets NOTHING by mouth, not even water".
+- supported, grounded · baseline_same · es-04 · "About Camila: Camila is 4 years old and is a joy to be around." — Translation of "es nuestra alegría".
+- supported, grounded · baseline_same · en-09 · "His uncle Ray is on the pickup list and is allowed to collect him — he simply never does." — From "he can, he's on the list, he just never does".
+- supported, grounded · baseline_same · en-32 · "She falls and gets hurt, or" — Fragment of "only if she falls and gets hurt".
 
 </details>
 
 <details><summary>Round 2 judgments</summary>
 
-- unsupported, not grounded · en-33 · "Here is a quick guide to help you have a great time together." — Boilerplate.
-- unsupported, not grounded · en-03 · "Sunday Care Summary — Jonah (age 4)" — Title; name and age are from the story, the title text is not.
-- unsupported, not grounded · en-35 · "If anyone other than Marcus arrives to pick her up, please check with the ministry director before releasing her." — Added policy: the story says Marcus can pick up and Kevin cannot, not "only Marcus".
-- unsupported, not grounded · en-23 · "Swelling (face, lips, tongue, or throat)" — "face, lips, tongue, or throat" is added detail; the story says "swelling".
-- unsupported, not grounded · en-18 · "It's a good tool for connecting, calming him, or redirecting his attention." — Added.
-- unsupported, not grounded · en-22 · "This is normal for him." — Added gloss on "he'll come back on his own in 5 minutes or so".
-- unsupported, not grounded · en-21 · "Use these to connect with her." — Added.
-- unsupported, not grounded · en-03 · "Before Sunday: Please Confirm with His Parents" — Added.
-- unsupported, not grounded · en-31 · "Give him plenty of time to respond, and let him use his talker without rushing or finishing sentences for him." — Added advice; the story only says he uses a talker.
-- unsupported, not grounded · en-01 · "Move him somewhere quieter and give him space and calm." — Added advice.
-- unsupported, not grounded · en-11 · "Safety Second: Wandering & Parking Lot" — Header; "parking lot" is from the story, the header text is not.
-- unsupported, grounded · en-10 · "Rose's Auvi-Q is a different dose (0.15 mg)." — From "NOT the 0.15 her sister Rose has".
-- unsupported, not grounded · en-01 · "he'll recover best with quiet and space" — Added.
-- unsupported, not grounded · en-12 · "Quiet, low-pressure activities work well." — Added (the story says drawing cards help).
-- unsupported, grounded · es-18 · "No la presiones ni la obligues." — Gist of "si la dejan observar un rato se anima sola".
-- unsupported, not grounded · en-19 · "Keep pathways clear and make sure activities, tables, and seating spaces have room for her chair so she can participate alongside the other kids." — Added advice.
-- unsupported, not grounded · es-04 · "déjela descansar tranquila y cerca de usted." — "déjela descansar ... cerca de usted" is added; the story says lay her on her side.
-- unsupported, not grounded · en-25 · "Let me know if you'd like it shorter, reformatted for a specific template, or adjusted in tone." — Boilerplate.
-- unsupported, grounded · en-30 · "If you see her attempting a somersault or any tumbling move during play, gently redirect her to a different activity" — Restates "no somersaults, no headstands, no rough tumbling" as an instruction.
-- unsupported, not grounded · en-18 · "A quick check toward the front of the room now and then is a good idea." — Added advice.
-- supported, grounded · en-14 · "Guardian: Nana Pat (grandmother) has legal custody." — From "I have custody of Zoe" (Nana Pat).
-- supported, not grounded · en-21 · "If her mom arrives with Travis, do not release Ruby, call 911, and get a ministry leader." — Mostly from the story, but "get a ministry leader" is added.
-- supported, not grounded · en-32 · "Thank you for caring for Emma!" — Boilerplate (supported only because it names Emma).
-- supported, not grounded · en-23 · "Child Summary: Nora, age 7" — Title (supported because it names Nora and her age).
-- supported, grounded · en-21 · "She eats peanut butter now, so peanut butter snacks are fine for her." — From "she eats peanut butter now".
-- supported, grounded · en-14 · "Zoe's father (Derek) is NOT on the pick-up list and may not take Zoe anywhere." — From "he is NOT on the pick up list and he is not allowed to take her anywhere".
-- supported, grounded · en-05 · "Bathroom: Two-person transfer — get Dana (on site from 9:45)" — From the bathroom sentence.
-- supported, grounded · en-08 · "She calls her blanket "Mimi" and will bring it with her." — From the blanket sentence.
-- supported, grounded · en-21 · "Auditory Sensitivity: She hates hand dryers and will cover her ears." — From "hates hand dryers (covers her ears)".
-- supported, grounded · en-19 · "She uses a manual wheelchair and pushes herself." — From the first sentence.
-- supported, grounded · en-26 · "Do not take any pictures or video of Mason, and do not include him in anything posted online or shared digitally." — From item 1.
-- supported, grounded · es-06 · "Comer: Dejarla sola, no ayudar" — From "No necesita ayuda para comer".
-- supported, grounded · en-34 · "No one else may pick Elias up or visit him at church." — From "Neither of his parents may ... visit him at church" and "Only ... may sign him out".
-- supported, not grounded · en-25 · "Give her time to use her communication board;" — "Give her time" is added; the story only says she uses a board.
-- supported, grounded · en-20 · "Call 911 at 5 minutes if the seizure is still going." — From "call 911 at 5 min".
-- supported, not grounded · en-06 · "About Sofia: Sofia is a cheerful 8-year-old who has Down syndrome." — "cheerful" is added.
-- supported, grounded · en-15 · "Elopement risk (runs away): Wyatt will leave the room if a door is open, and he has made it to the street before." — From "he WILL leave the room if the door's open, he's gotten to the street before".
-- supported, grounded · es-12 · "Usa audífonos en los dos oídos." — From "usa audífonos en los dos oídos".
-- supported, not grounded · en-19 · "Shunt — Know the Warning Signs" — Header text added (the shunt warning signs themselves are in the story).
-- supported, grounded · en-05 · "Never lift Ethan out of his chair by yourself." — From "Please don't lift him out of the chair by yourself".
+- unsupported, not grounded · baseline_same · en-33 · "Here is a quick guide to help you have a great time together." — Boilerplate.
+- unsupported, not grounded · baseline_same · en-03 · "Sunday Care Summary — Jonah (age 4)" — Title; name and age are from the story, the title text is not.
+- unsupported, not grounded · baseline_claude · en-35 · "If anyone other than Marcus arrives to pick her up, please check with the ministry director before releasing her." — Added policy: the story says Marcus can pick up and Kevin cannot, not "only Marcus".
+- unsupported, not grounded · baseline_claude · en-23 · "Swelling (face, lips, tongue, or throat)" — "face, lips, tongue, or throat" is added detail; the story says "swelling".
+- unsupported, not grounded · baseline_claude · en-18 · "It's a good tool for connecting, calming him, or redirecting his attention." — Added.
+- unsupported, not grounded · baseline_same · en-22 · "This is normal for him." — Added gloss on "he'll come back on his own in 5 minutes or so".
+- unsupported, not grounded · baseline_same · en-21 · "Use these to connect with her." — Added.
+- unsupported, not grounded · baseline_claude · en-03 · "Before Sunday: Please Confirm with His Parents" — Added.
+- unsupported, not grounded · baseline_claude · en-31 · "Give him plenty of time to respond, and let him use his talker without rushing or finishing sentences for him." — Added advice; the story only says he uses a talker.
+- unsupported, not grounded · baseline_claude · en-01 · "Move him somewhere quieter and give him space and calm." — Added advice.
+- unsupported, not grounded · baseline_same · en-11 · "Safety Second: Wandering & Parking Lot" — Header; "parking lot" is from the story, the header text is not.
+- unsupported, grounded · baseline_claude · en-10 · "Rose's Auvi-Q is a different dose (0.15 mg)." — From "NOT the 0.15 her sister Rose has".
+- unsupported, not grounded · baseline_claude · en-01 · "he'll recover best with quiet and space" — Added.
+- unsupported, not grounded · baseline_same · en-12 · "Quiet, low-pressure activities work well." — Added (the story says drawing cards help).
+- unsupported, grounded · baseline_claude · es-18 · "No la presiones ni la obligues." — Gist of "si la dejan observar un rato se anima sola".
+- unsupported, not grounded · baseline_claude · en-19 · "Keep pathways clear and make sure activities, tables, and seating spaces have room for her chair so she can participate alongside the other kids." — Added advice.
+- unsupported, not grounded · baseline_claude · es-04 · "déjela descansar tranquila y cerca de usted." — "déjela descansar ... cerca de usted" is added; the story says lay her on her side.
+- unsupported, not grounded · baseline_same · en-25 · "Let me know if you'd like it shorter, reformatted for a specific template, or adjusted in tone." — Boilerplate.
+- unsupported, grounded · baseline_claude · en-30 · "If you see her attempting a somersault or any tumbling move during play, gently redirect her to a different activity" — Restates "no somersaults, no headstands, no rough tumbling" as an instruction.
+- unsupported, not grounded · baseline_same · en-18 · "A quick check toward the front of the room now and then is a good idea." — Added advice.
+- supported, grounded · baseline_claude · en-14 · "Guardian: Nana Pat (grandmother) has legal custody." — From "I have custody of Zoe" (Nana Pat).
+- supported, not grounded · baseline_claude · en-21 · "If her mom arrives with Travis, do not release Ruby, call 911, and get a ministry leader." — Mostly from the story, but "get a ministry leader" is added.
+- supported, not grounded · baseline_same · en-32 · "Thank you for caring for Emma!" — Boilerplate (supported only because it names Emma).
+- supported, not grounded · baseline_claude · en-23 · "Child Summary: Nora, age 7" — Title (supported because it names Nora and her age).
+- supported, grounded · baseline_claude · en-21 · "She eats peanut butter now, so peanut butter snacks are fine for her." — From "she eats peanut butter now".
+- supported, grounded · baseline_claude · en-14 · "Zoe's father (Derek) is NOT on the pick-up list and may not take Zoe anywhere." — From "he is NOT on the pick up list and he is not allowed to take her anywhere".
+- supported, grounded · baseline_same · en-05 · "Bathroom: Two-person transfer — get Dana (on site from 9:45)" — From the bathroom sentence.
+- supported, grounded · baseline_same · en-08 · "She calls her blanket "Mimi" and will bring it with her." — From the blanket sentence.
+- supported, grounded · baseline_same · en-21 · "Auditory Sensitivity: She hates hand dryers and will cover her ears." — From "hates hand dryers (covers her ears)".
+- supported, grounded · baseline_claude · en-19 · "She uses a manual wheelchair and pushes herself." — From the first sentence.
+- supported, grounded · baseline_claude · en-26 · "Do not take any pictures or video of Mason, and do not include him in anything posted online or shared digitally." — From item 1.
+- supported, grounded · baseline_claude · es-06 · "Comer: Dejarla sola, no ayudar" — From "No necesita ayuda para comer".
+- supported, grounded · baseline_claude · en-34 · "No one else may pick Elias up or visit him at church." — From "Neither of his parents may ... visit him at church" and "Only ... may sign him out".
+- supported, not grounded · baseline_same · en-25 · "Give her time to use her communication board;" — "Give her time" is added; the story only says she uses a board.
+- supported, grounded · baseline_claude · en-20 · "Call 911 at 5 minutes if the seizure is still going." — From "call 911 at 5 min".
+- supported, not grounded · baseline_claude · en-06 · "About Sofia: Sofia is a cheerful 8-year-old who has Down syndrome." — "cheerful" is added.
+- supported, grounded · baseline_claude · en-15 · "Elopement risk (runs away): Wyatt will leave the room if a door is open, and he has made it to the street before." — From "he WILL leave the room if the door's open, he's gotten to the street before".
+- supported, grounded · baseline_claude · es-12 · "Usa audífonos en los dos oídos." — From "usa audífonos en los dos oídos".
+- supported, not grounded · baseline_same · en-19 · "Shunt — Know the Warning Signs" — Header text added (the shunt warning signs themselves are in the story).
+- supported, grounded · baseline_claude · en-05 · "Never lift Ethan out of his chair by yourself." — From "Please don't lift him out of the chair by yourself".
+
+</details>
+
+<details><summary>Short cards judgments</summary>
+
+- unsupported, not grounded · baseline_same_short · en-35 · "Thanks for looking after her!" — Sign-off boilerplate; nothing in the story.
+- unsupported, not grounded · baseline_claude_short · en-14 · "If he approaches, please keep Zoe with you and get a staff member right away." — Added procedure: the story says Derek may not go to the kids' area, not what the volunteer should do if he comes.
+- unsupported, not grounded · baseline_claude_short · en-34 · "If anyone else asks for Elias, please do not release him, and find a ministry leader right away." — 'Do not release him' follows from 'Only Carmen or I may sign him out'; 'find a ministry leader right away' is added.
+- unsupported, not grounded · baseline_claude_short · es-10 · "No es falta de respeto ni timidez: simplemente no puede hablar." — Adds 'not disrespect or shyness'; the story says only that she understands everything and does not speak outside home.
+- unsupported, not grounded · baseline_claude_short · es-21 · "Si hay cualquier duda o síntoma, avise de inmediato a la mamá o al líder del ministerio." — Added contact procedure; the story names no one to tell about doubts or symptoms.
+- unsupported, not grounded · baseline_claude_short · en-26 · "Thank you for taking such good care of him!" — Sign-off boilerplate.
+- unsupported, not grounded · baseline_claude_short · en-11 · "Please keep doors closed and stay close." — Added advice: the story says he runs toward the parking lot if a door is open; it does not ask for closed doors or staying close.
+- unsupported, not grounded · baseline_claude_short · es-18 · "Un poco de tranquilidad al respecto le hará bien." — Added reassurance advice; the story only says she sometimes asks about her little sister.
+- unsupported, not grounded · baseline_same_short · en-19 · "Thank you for caring for her!" — Sign-off boilerplate.
+- unsupported, not grounded · baseline_claude_short · en-14 · "About Zoe: She has eczema, so please watch for scratching or discomfort." — 'She has eczema' is in the story; 'watch for scratching or discomfort' is added.
+- unsupported, grounded · baseline_same_short · es-09 · "Puede repetir después de 20 min." — Translation of the code-switched 'can repeat after 20 min' (a false flag: word overlap cannot see the translation).
+- unsupported, not grounded · baseline_claude_short · es-22 · "No le gustan las sorpresas, así que conviene avisarle antes de cualquier cambio de actividad." — 'No le gustan las sorpresas' is in the story; 'warn her before any change of activity' is added advice.
+- unsupported, grounded · baseline_claude_short · es-25 · "¡Disfrutará las actividades con música y movimiento!" — Borderline, counted as grounded: a generalisation of 'le encanta bailar' (dancing is music and movement).
+- unsupported, not grounded · baseline_claude_short · en-24 · "(Add parent's name and number for texting.)" — Template placeholder the model added for the church; not in the story.
+- unsupported, not grounded · baseline_claude_short · es-24 · "avise de inmediato al coordinador." — Second half of 'do not release him to either; tell the coordinator at once': the coordinator step is added.
+- supported, grounded · baseline_claude_short · en-11 · "Isaiah is autistic and nonverbal." — Story: 'Isaiah is 12, autistic and nonverbal'.
+- supported, grounded · baseline_claude_short · en-17 · "It's not that kind of allergy." — Story: 'it's not that kind of allergy'.
+- supported, grounded · baseline_same_short · es-07 · "Soy Rosa, la abuela de Emiliano y tengo su custodia." — Story: 'Soy Rosa, la abuela de Emiliano (6 años). Tengo su custodia.' (kept in the grandmother's first person).
+- supported, grounded · baseline_claude_short · en-06 · "If Tina shows up, please do not release Sofia and call the director." — Verbatim story sentence.
+- supported, grounded · baseline_claude_short · es-11 · "Avísale cinco minutos antes usando el reloj de arena que trae en su mochila." — Story: 'avísenle cinco minutos antes con el reloj de arena que trae en su mochila'.
+- supported, grounded · baseline_claude_short · en-05 · "Please get Dana, his aide, who is there from 9:45." — Story: 'please get Dana, his aide, she's there from 9:45'.
+- supported, grounded · baseline_same_short · en-01 · "Leo is 6 and autistic." — Story: 'Leo is 6 and he's autistic'.
+- supported, not grounded · baseline_claude_short · en-18 · "He follows the music to the worship team, so keep an eye out when songs start." — A miss: 'he follows the music to the worship team' is in the story, but 'keep an eye out when songs start' is added advice.
+- supported, grounded · baseline_claude_short · en-02 · "Please don't let her skip it." — Story: 'just don't let her skip snack' (the sentence before names the snack).
+- supported, grounded · baseline_claude_short · en-02 · "Do NOT give extra insulin;" — Story: 'do NOT give extra insulin'.
+- supported, grounded · baseline_same_short · en-06 · "Sofia (8) has Down syndrome and has lived with us, her foster family, since March." — Story: 'Sofia is 8 and has Down syndrome. She has lived with us, her foster family, since March.'
+- supported, grounded · baseline_claude_short · en-20 · "Jayden has epilepsy and a VNS implant." — Story: 'he has epilepsy and a VNS implant'.
+- supported, grounded · baseline_same_short · en-13 · "Don't let him run laps on cold mornings — that triggers it." — Story: 'dont let him run laps on cold mornings, that triggers it'.
+- supported, grounded · baseline_claude_short · en-09 · "He lip-reads, so just face him when you talk." — Story: 'he lip-reads, just face him when you talk'.
+- supported, grounded · baseline_same_short · en-11 · "Isaiah is 12, autistic, and nonverbal." — Story: 'Isaiah is 12, autistic and nonverbal'.
 
 </details>

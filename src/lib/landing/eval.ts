@@ -1,13 +1,15 @@
 // The landing's "Measured" numbers, read from the eval results at build time. Nothing here is typed in by hand:
-// every count comes from eval/results/final.json (and the support rule's hand check from support-validation.json).
+// every count comes from eval/results/final.json (and the support rule's hand check from support-validation.json,
+// the short-card check when there is one, since the landing compares short cards).
 import type { ResultsFile } from '../../../eval/results';
 import final from '../../../eval/results/final.json';
 import validation from '../../../eval/results/support-validation.json';
 
 export type Fraction = { n: number; of: number };
 
-type SupportSample = { flagged: string; grounded: boolean };
-export type SupportValidation = { rounds: { round: number; samples: SupportSample[] }[] };
+type SupportSample = { flagged: string; grounded: boolean | null };
+type SupportCheck = { samples: SupportSample[] };
+export type SupportValidation = { rounds: (SupportCheck & { round: number })[]; shortCard?: SupportCheck };
 
 export type LandingEval = {
   stories: number;
@@ -17,7 +19,9 @@ export type LandingEval = {
   safety: { halfdoor: Fraction; plainSummary: Fraction };
   /** Outputs with at least one sentence the story does not support, of the outputs scored for support. */
   added: { claudeShort: Fraction; sameShort: Fraction; halfdoor: Fraction };
-  /** Share of flagged sentences that really add something, from the latest hand-checked round. */
+  /** The hand check of the support rule: the short-card check when there is one, else the latest round. */
+  check: { shortCards: boolean; flagged: Fraction; passed: Fraction };
+  /** Share of flagged sentences in that check that really add something. */
   precisionPct: number;
   /** Display name of the comparison model, e.g. "Claude Sonnet 5.5". */
   claudeName: string;
@@ -54,18 +58,28 @@ export function landingEval(f: ResultsFile, v: SupportValidation): LandingEval {
   const english = ids.filter((id) => id.startsWith('en-')).length;
   const spanish = ids.filter((id) => id.startsWith('es-')).length;
   if (english + spanish !== f.meta.stories) throw new Error('eval story languages do not add up to the story count');
+  const safety = { halfdoor: kept('halfdoor_net'), plainSummary: kept('baseline_claude') };
+  const addedBy = { claudeShort: added('baseline_claude_short'), sameShort: added('baseline_same_short'), halfdoor: added('halfdoor') };
 
-  const round = [...v.rounds].sort((a, b) => b.round - a.round)[0];
-  const flagged = round?.samples.filter((s) => s.flagged === 'unsupported') ?? [];
-  if (!flagged.length) throw new Error('support validation has no flagged samples');
-  const precisionPct = Math.round((100 * flagged.filter((s) => !s.grounded).length) / flagged.length);
+  const checked = v.shortCard ?? [...v.rounds].sort((a, b) => b.round - a.round)[0];
+  const judged = checked?.samples.filter((s) => s.grounded !== null) ?? [];
+  const flagged = judged.filter((s) => s.flagged === 'unsupported');
+  const passed = judged.filter((s) => s.flagged === 'supported');
+  if (!flagged.length || !passed.length) throw new Error('support validation has no judged flagged and passed samples');
+  const check = {
+    shortCards: !!v.shortCard,
+    flagged: { n: flagged.filter((s) => s.grounded === false).length, of: flagged.length },
+    passed: { n: passed.filter((s) => s.grounded === true).length, of: passed.length },
+  };
+  const precisionPct = Math.round((100 * check.flagged.n) / check.flagged.of);
 
   return {
     stories: f.meta.stories,
     english,
     spanish,
-    safety: { halfdoor: kept('halfdoor_net'), plainSummary: kept('baseline_claude') },
-    added: { claudeShort: added('baseline_claude_short'), sameShort: added('baseline_same_short'), halfdoor: added('halfdoor') },
+    safety,
+    added: addedBy,
+    check,
     precisionPct,
     claudeName: modelDisplayName(f.meta.claudeModel),
   };
@@ -73,5 +87,5 @@ export function landingEval(f: ResultsFile, v: SupportValidation): LandingEval {
 
 export const LANDING_EVAL: LandingEval = landingEval(final as unknown as ResultsFile, validation as SupportValidation);
 
-/** "29 of 54" */
+/** "28 of 54" */
 export const ofText = (x: Fraction) => `${x.n} of ${x.of}`;

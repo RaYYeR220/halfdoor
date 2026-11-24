@@ -7,7 +7,7 @@ import {
   SYSTEM_LABEL, adjudicate, frac, headlineTable, num, pct, plural, provenanceTable, readAdjudication, readResults, sec, table, usd,
   type Adjudicated, type Adjudication, type ResultsFile,
 } from '../eval/results';
-import type { SupportValidationFile } from '../eval/support-sample';
+import { checkCounts, type CheckCounts, type SupportValidationFile } from '../eval/support-sample';
 
 /** The docs the script fills, at the repo root. */
 export const DOCS = ['README.md', 'JUDGES.md', 'CLAIMS.md'] as const;
@@ -37,17 +37,16 @@ const isBaseline = (system: string) => system.startsWith('baseline');
 const ofText = (n: number, of: number) => `${n} of ${of}`;
 const pctOf = (n: number, of: number) => `${pct(n, of).replace(/\.0%$/, '%')} (${ofText(n, of)})`;
 
-/** The latest hand-checked round of the grounding rule: flagged sentences that really add something, passed ones that really are grounded. */
-export function groundingCheck(sv: SupportValidationFile | null): { flagged: { n: number; of: number }; passed: { n: number; of: number } } | null {
-  const round = sv?.rounds.length ? [...sv.rounds].sort((a, b) => b.round - a.round)[0] : null;
-  if (!round) return null;
-  const flagged = round.samples.filter((s) => s.flagged === 'unsupported' && s.grounded !== null);
-  const passed = round.samples.filter((s) => s.flagged === 'supported' && s.grounded !== null);
-  if (!flagged.length || !passed.length) return null;
-  return {
-    flagged: { n: flagged.filter((s) => s.grounded === false).length, of: flagged.length },
-    passed: { n: passed.filter((s) => s.grounded === true).length, of: passed.length },
-  };
+/**
+ * The hand check the docs cite for the grounding rule: the short-card check when there is one (the public numbers
+ * compare short cards), else the latest round. Flagged sentences that really add something, passed ones that really
+ * are grounded; unjudged samples are skipped.
+ */
+export function groundingCheck(sv: SupportValidationFile | null): CheckCounts | null {
+  const check = sv?.shortCard ?? (sv?.rounds.length ? [...sv.rounds].sort((a, b) => b.round - a.round)[0] : null);
+  if (!check) return null;
+  const k = checkCounts(check);
+  return k.flagged.of && k.passed.of ? k : null;
 }
 
 /**
@@ -75,7 +74,8 @@ export function summaryTable(f: ResultsFile, reviewed: Map<string, Adjudicated>)
 /**
  * Every name a doc block may use. Per system: `<system>-present|limiter|traps|flips|number|sibling|
  * stories-with-trap|p50|p95|cost|cost-per-story` (automatic scoring), `<system>-reviewed-present|reviewed-traps`
- * (after hand review), `<system>-ungrounded|words|read|unsaid-labels|added` (provenance). Whole run: `headline`,
+ * (after hand review), `<system>-ungrounded|words|read|unsaid-labels|added` (provenance), `<system>-added-before`
+ * (the same count before the latest re-score, when there is one). Whole run: `headline`,
  * `provenance` and `summary` tables, `model`, `claude-model`, `stories`, `stories-en`, `stories-es`, `facts-total`,
  * `eval-cost`, `baselines-trap-review`; with support-validation.json: `grounding-precision`, `grounding-passed`.
  */
@@ -88,7 +88,7 @@ export function evalValues(f: ResultsFile, adj: Adjudication = { items: {} }, sv
     'claude-model': f.meta.claudeModel,
     stories: String(f.meta.stories),
   };
-  for (const { system, agg } of f.aggregates) {
+  for (const { system, model, agg } of f.aggregates) {
     v[`${system}-present`] = frac(agg.present, agg.total);
     v[`${system}-limiter`] = frac(agg.limiterPresent, agg.limiterTotal);
     v[`${system}-traps`] = String(agg.trapHits);
@@ -112,6 +112,9 @@ export function evalValues(f: ResultsFile, adj: Adjudication = { items: {} }, sv
       v[`${system}-unsaid-labels`] = String(p.outputsWithUnsaidLabel);
       v[`${system}-added`] = ofText(p.storiesWithUnsupported, p.supportScored);
     }
+    // The same count under the rule before the latest re-score (eval/rescore.ts), so the docs can show what changed.
+    const before = f.meta.rescored?.at(-1)?.before[`${system}@${model}`];
+    if (before) v[`${system}-added-before`] = ofText(before.storiesWithUnsupported, before.supportScored);
   }
   v.provenance = provenanceTable(f);
   if (f.aggregates[0]) {

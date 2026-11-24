@@ -17,7 +17,71 @@
   "concurrency": 4,
   "balanceBeforeUsd": 93.88412816,
   "balanceAfterUsd": 93.88412816,
-  "liveSpendUsd": 0
+  "liveSpendUsd": 0,
+  "rescored": [
+   {
+    "at": "2026-11-24T11:03:09.121Z",
+    "note": "Support rule v3: title and heading lines no longer count as unsupported sentences (markdown headings, bold-only heading lines, a first line without terminal punctuation, and a line without terminal punctuation that has the child's name with an age or a card/volunteer/Sunday word). Same cached outputs, no model call.",
+    "before": {
+     "halfdoor@e2ee-deepseek-v4-flash": {
+      "storiesWithUnsupported": 3,
+      "supportScored": 58,
+      "unsupportedMean": 0.05172413793103448,
+      "present": 156,
+      "trapHits": 0
+     },
+     "halfdoor_net@e2ee-deepseek-v4-flash": {
+      "storiesWithUnsupported": 3,
+      "supportScored": 58,
+      "unsupportedMean": 0.05172413793103448,
+      "present": 157,
+      "trapHits": 0
+     },
+     "halfdoor@e2ee-qwen3-6-35b-a3b": {
+      "storiesWithUnsupported": 0,
+      "supportScored": 59,
+      "unsupportedMean": 0,
+      "present": 149,
+      "trapHits": 0
+     },
+     "halfdoor_net@e2ee-qwen3-6-35b-a3b": {
+      "storiesWithUnsupported": 0,
+      "supportScored": 59,
+      "unsupportedMean": 0,
+      "present": 154,
+      "trapHits": 0
+     },
+     "halfdoor@e2ee-gpt-oss-120b-p": {
+      "storiesWithUnsupported": 2,
+      "supportScored": 58,
+      "unsupportedMean": 0.034482758620689655,
+      "present": 150,
+      "trapHits": 0
+     },
+     "halfdoor_net@e2ee-gpt-oss-120b-p": {
+      "storiesWithUnsupported": 2,
+      "supportScored": 59,
+      "unsupportedMean": 0.03389830508474576,
+      "present": 154,
+      "trapHits": 0
+     },
+     "halfdoor@e2ee-glm-5-3-flash": {
+      "storiesWithUnsupported": 4,
+      "supportScored": 58,
+      "unsupportedMean": 0.06896551724137931,
+      "present": 157,
+      "trapHits": 0
+     },
+     "halfdoor_net@e2ee-glm-5-3-flash": {
+      "storiesWithUnsupported": 4,
+      "supportScored": 58,
+      "unsupportedMean": 0.06896551724137931,
+      "present": 157,
+      "trapHits": 0
+     }
+    }
+   }
+  ]
  },
  "aggregates": [
   {
@@ -403,6 +467,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -437,6 +505,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -471,6 +543,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -505,6 +581,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -539,6 +619,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -573,6 +657,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -607,6 +695,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -641,6 +733,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -675,6 +771,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -709,6 +809,10 @@
    "safetyPrompts": 2,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -743,6 +847,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -777,6 +885,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -811,6 +923,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -845,6 +961,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -879,6 +999,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -913,6 +1037,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -947,6 +1075,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -981,6 +1113,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1015,6 +1151,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1049,6 +1189,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1083,6 +1227,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1117,6 +1265,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1151,6 +1303,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1185,6 +1341,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1219,6 +1379,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1253,6 +1417,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1287,6 +1455,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1321,6 +1493,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1355,6 +1531,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1389,6 +1569,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1423,6 +1607,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1457,6 +1645,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1491,6 +1683,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 9,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1527,6 +1723,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1563,6 +1763,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1597,6 +1801,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 9,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1631,6 +1839,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1665,6 +1877,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1699,6 +1915,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1733,6 +1953,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1767,6 +1991,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1801,6 +2029,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1837,6 +2069,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1871,6 +2107,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1905,6 +2145,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1939,6 +2183,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -1973,6 +2221,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2007,6 +2259,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2041,6 +2297,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2075,6 +2335,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2109,6 +2373,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [
      "volunteers should encourage fair play."
@@ -2145,6 +2413,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2179,6 +2451,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 9,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2213,6 +2489,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2249,6 +2529,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2283,6 +2567,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2317,6 +2605,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2351,6 +2643,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2387,6 +2683,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 2,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2421,6 +2721,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2455,6 +2759,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2489,6 +2797,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2523,6 +2835,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2557,6 +2873,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": false,
+    "lang": {
+     "output": "en",
+     "story": "other"
+    },
     "sentences": 0,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2591,6 +2911,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2625,6 +2949,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2659,6 +2987,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2693,6 +3025,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2727,6 +3063,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2761,6 +3101,10 @@
    "safetyPrompts": 2,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2795,6 +3139,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2829,6 +3177,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2863,6 +3215,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2897,6 +3253,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2931,6 +3291,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2965,6 +3329,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -2999,6 +3367,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3033,6 +3405,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3067,6 +3443,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3101,6 +3481,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3135,6 +3519,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3169,6 +3557,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3203,6 +3595,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3237,6 +3633,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3271,6 +3671,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 8,
     "unsupported": [
      "include him naturally with the group."
@@ -3309,6 +3713,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 2,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3343,6 +3751,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3377,6 +3789,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [
      "He hates being singled out - avoid putting him on the spot in front of the group."
@@ -3413,6 +3829,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3447,6 +3867,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3481,6 +3905,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3515,6 +3943,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3549,6 +3981,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": false,
+    "lang": {
+     "output": "other",
+     "story": "en"
+    },
     "sentences": 0,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3583,6 +4019,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": false,
+    "lang": {
+     "output": "other",
+     "story": "en"
+    },
     "sentences": 0,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3617,6 +4057,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3651,6 +4095,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3685,6 +4133,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [
      "support her mobility as needed."
@@ -3721,6 +4173,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3755,6 +4211,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 2,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3789,6 +4249,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [
      "She laughs at everything — humor, silliness, and fun moments connect easily with her."
@@ -3825,6 +4289,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3859,6 +4327,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3893,6 +4365,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3927,6 +4403,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3961,6 +4441,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -3995,6 +4479,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4029,6 +4517,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4063,6 +4555,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4097,6 +4593,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": false,
+    "lang": {
+     "output": "en",
+     "story": "other"
+    },
     "sentences": 0,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4131,6 +4631,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4165,6 +4669,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4199,6 +4707,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4233,6 +4745,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 9,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4269,6 +4785,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 1,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4303,6 +4823,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4337,6 +4861,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4371,6 +4899,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4405,6 +4937,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4439,6 +4975,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4473,6 +5013,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4507,6 +5051,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4543,6 +5091,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4577,6 +5129,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": false,
+    "lang": {
+     "output": "other",
+     "story": "en"
+    },
     "sentences": 0,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4611,6 +5167,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4645,6 +5205,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4679,6 +5243,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4713,6 +5281,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4747,6 +5319,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4781,6 +5357,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4815,6 +5395,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4849,6 +5433,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": false,
+    "lang": {
+     "output": "other",
+     "story": "en"
+    },
     "sentences": 0,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4883,6 +5471,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": false,
+    "lang": {
+     "output": "other",
+     "story": "en"
+    },
     "sentences": 0,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4917,6 +5509,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4951,6 +5547,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -4985,6 +5585,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5019,6 +5623,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5053,6 +5661,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5087,6 +5699,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5121,6 +5737,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5155,6 +5775,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [
      "She's obsessed with cats — cat stories, pictures, or toys are an easy way to connect."
@@ -5191,6 +5815,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5225,6 +5853,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 11,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5259,6 +5891,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5293,6 +5929,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5329,6 +5969,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5365,6 +6009,10 @@
    "safetyPrompts": 2,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5401,6 +6049,10 @@
    "safetyPrompts": 2,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5435,6 +6087,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5469,6 +6125,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5503,6 +6163,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 2,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5537,6 +6201,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5571,6 +6239,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5605,6 +6277,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5643,6 +6319,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 1,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5677,6 +6357,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5711,6 +6395,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5745,6 +6433,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5779,6 +6471,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5813,6 +6509,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5847,6 +6547,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5881,6 +6585,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5915,6 +6623,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5949,6 +6661,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -5983,6 +6699,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6017,6 +6737,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6051,6 +6775,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6085,6 +6813,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6119,6 +6851,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6153,6 +6889,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6187,6 +6927,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6221,6 +6965,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 2,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6255,6 +7003,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6289,6 +7041,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6323,6 +7079,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6357,6 +7117,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6391,6 +7155,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6425,6 +7193,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6459,6 +7231,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6495,6 +7271,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6529,6 +7309,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6563,6 +7347,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6597,6 +7385,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6631,6 +7423,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6665,6 +7461,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6699,6 +7499,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6733,6 +7537,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6767,6 +7575,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6801,6 +7613,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6835,6 +7651,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6869,6 +7689,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6903,6 +7727,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6937,6 +7765,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -6971,6 +7803,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7005,6 +7841,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7039,6 +7879,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [
      "no la quiten, es su voz."
@@ -7075,6 +7919,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7109,6 +7957,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7143,6 +7995,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7177,6 +8033,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7211,6 +8071,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [
      "le gusta hablar y conversar con los demás."
@@ -7247,6 +8111,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7281,6 +8149,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7315,6 +8187,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7349,6 +8225,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7383,6 +8263,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7417,6 +8301,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7451,6 +8339,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7485,6 +8377,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7519,6 +8415,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7553,6 +8453,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7587,6 +8491,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7621,6 +8529,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7655,6 +8567,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7689,6 +8605,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7723,6 +8643,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7757,6 +8681,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7791,6 +8719,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [
      "No la levanten, lo odia."
@@ -7827,6 +8759,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7863,6 +8799,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7897,6 +8837,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7931,6 +8875,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7965,6 +8913,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -7999,6 +8951,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8033,6 +8989,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8067,6 +9027,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8101,6 +9065,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8135,6 +9103,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8169,6 +9141,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8203,6 +9179,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8237,6 +9217,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8271,6 +9255,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8305,6 +9293,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8339,6 +9331,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8373,6 +9369,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8407,6 +9407,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8441,6 +9445,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8475,6 +9483,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8509,6 +9521,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8543,6 +9559,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8577,6 +9597,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8611,6 +9635,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8645,6 +9673,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8679,6 +9711,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8713,6 +9749,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8747,6 +9787,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8781,6 +9825,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8815,6 +9863,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8849,6 +9901,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8883,6 +9939,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8917,6 +9977,10 @@
    "safetyPrompts": 2,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8951,6 +10015,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -8985,6 +10053,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9019,6 +10091,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9053,6 +10129,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9087,6 +10167,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9121,6 +10205,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9155,6 +10243,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9189,6 +10281,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9223,6 +10319,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9257,6 +10357,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9291,6 +10395,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9325,6 +10433,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9359,6 +10471,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9393,6 +10509,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9427,6 +10547,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9461,6 +10585,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9495,6 +10623,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9529,6 +10661,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9563,6 +10699,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9597,6 +10737,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9631,6 +10775,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9665,6 +10813,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9699,6 +10851,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 9,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9733,6 +10889,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9767,6 +10927,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9801,6 +10965,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 9,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9835,6 +11003,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9869,6 +11041,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9903,6 +11079,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9937,6 +11117,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -9971,6 +11155,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10005,6 +11193,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10039,6 +11231,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10073,6 +11269,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10107,6 +11307,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10141,6 +11345,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10175,6 +11383,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10209,6 +11421,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10243,6 +11459,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10277,6 +11497,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10311,6 +11535,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [
      "volunteers should encourage fair play."
@@ -10347,6 +11575,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10381,6 +11613,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 9,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10415,6 +11651,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10451,6 +11691,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10485,6 +11729,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10519,6 +11767,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10553,6 +11805,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10587,6 +11843,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10621,6 +11881,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10655,6 +11919,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10689,6 +11957,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10723,6 +11995,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10757,6 +12033,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": false,
+    "lang": {
+     "output": "en",
+     "story": "other"
+    },
     "sentences": 0,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10791,6 +12071,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10825,6 +12109,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10859,6 +12147,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10893,6 +12185,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10927,6 +12223,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10961,6 +12261,10 @@
    "safetyPrompts": 2,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -10995,6 +12299,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11029,6 +12337,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11063,6 +12375,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11097,6 +12413,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11131,6 +12451,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11165,6 +12489,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11199,6 +12527,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11233,6 +12565,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11267,6 +12603,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11301,6 +12641,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11335,6 +12679,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11369,6 +12717,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11403,6 +12755,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11437,6 +12793,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11471,6 +12831,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 8,
     "unsupported": [
      "include him naturally with the group."
@@ -11509,6 +12873,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 2,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11543,6 +12911,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11577,6 +12949,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [
      "He hates being singled out - avoid putting him on the spot in front of the group."
@@ -11613,6 +12989,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11647,6 +13027,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11681,6 +13065,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11715,6 +13103,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11749,6 +13141,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": false,
+    "lang": {
+     "output": "other",
+     "story": "en"
+    },
     "sentences": 0,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11783,6 +13179,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": false,
+    "lang": {
+     "output": "other",
+     "story": "en"
+    },
     "sentences": 0,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11817,6 +13217,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11851,6 +13255,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11885,6 +13293,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [
      "support her mobility as needed."
@@ -11921,6 +13333,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11955,6 +13371,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -11989,6 +13409,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [
      "She laughs at everything — humor, silliness, and fun moments connect easily with her."
@@ -12025,6 +13449,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12059,6 +13487,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12093,6 +13525,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12127,6 +13563,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12161,6 +13601,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12195,6 +13639,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12229,6 +13677,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12263,6 +13715,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12297,6 +13753,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": false,
+    "lang": {
+     "output": "en",
+     "story": "other"
+    },
     "sentences": 0,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12331,6 +13791,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12365,6 +13829,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12399,6 +13867,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12433,6 +13905,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 9,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12467,6 +13943,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 2,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12501,6 +13981,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12535,6 +14019,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12569,6 +14057,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12603,6 +14095,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12637,6 +14133,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12671,6 +14171,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12705,6 +14209,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12741,6 +14249,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12775,6 +14287,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12809,6 +14325,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12843,6 +14363,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12877,6 +14401,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12911,6 +14439,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12945,6 +14477,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -12979,6 +14515,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13013,6 +14553,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13047,6 +14591,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": false,
+    "lang": {
+     "output": "other",
+     "story": "en"
+    },
     "sentences": 0,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13081,6 +14629,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": false,
+    "lang": {
+     "output": "other",
+     "story": "en"
+    },
     "sentences": 0,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13115,6 +14667,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13149,6 +14705,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13183,6 +14743,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13217,6 +14781,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13251,6 +14819,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13285,6 +14857,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13319,6 +14895,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13353,6 +14933,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "en",
+     "story": "en"
+    },
     "sentences": 4,
     "unsupported": [
      "She's obsessed with cats — cat stories, pictures, or toys are an easy way to connect."
@@ -13389,6 +14973,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13423,6 +15011,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 11,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13457,6 +15049,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13491,6 +15087,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13525,6 +15125,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13559,6 +15163,10 @@
    "safetyPrompts": 2,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13593,6 +15201,10 @@
    "safetyPrompts": 2,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13627,6 +15239,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13661,6 +15277,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13695,6 +15315,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13729,6 +15353,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13763,6 +15391,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13797,6 +15429,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13833,6 +15469,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 2,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13867,6 +15507,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13901,6 +15545,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13935,6 +15583,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -13969,6 +15621,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14003,6 +15659,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14037,6 +15697,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14071,6 +15735,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14105,6 +15773,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14139,6 +15811,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14173,6 +15849,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14207,6 +15887,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14241,6 +15925,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14275,6 +15963,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14309,6 +16001,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14343,6 +16039,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14377,6 +16077,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14411,6 +16115,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14445,6 +16153,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14479,6 +16191,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14513,6 +16229,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14547,6 +16267,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14581,6 +16305,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14615,6 +16343,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14649,6 +16381,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14685,6 +16421,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14719,6 +16459,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14753,6 +16497,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14787,6 +16535,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14821,6 +16573,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14855,6 +16611,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14889,6 +16649,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14923,6 +16687,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14957,6 +16725,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -14991,6 +16763,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15025,6 +16801,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15059,6 +16839,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15093,6 +16877,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15127,6 +16915,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15161,6 +16953,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15195,6 +16991,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15229,6 +17029,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [
      "no la quiten, es su voz."
@@ -15265,6 +17069,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15299,6 +17107,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15333,6 +17145,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15367,6 +17183,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15401,6 +17221,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [
      "le gusta hablar y conversar con los demás."
@@ -15437,6 +17261,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15471,6 +17299,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15505,6 +17337,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15539,6 +17375,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15573,6 +17413,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15607,6 +17451,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15641,6 +17489,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15675,6 +17527,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15709,6 +17565,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15743,6 +17603,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15777,6 +17641,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15811,6 +17679,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15845,6 +17717,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15879,6 +17755,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15913,6 +17793,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15947,6 +17831,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -15981,6 +17869,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [
      "No la levanten, lo odia."
@@ -16017,6 +17909,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16053,6 +17949,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16087,6 +17987,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16121,6 +18025,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16155,6 +18063,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16189,6 +18101,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16223,6 +18139,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16257,6 +18177,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16291,6 +18215,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 7,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16325,6 +18253,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16359,6 +18291,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16393,6 +18329,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16427,6 +18367,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16461,6 +18405,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16495,6 +18443,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16529,6 +18481,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16563,6 +18519,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16597,6 +18557,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 3,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16631,6 +18595,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "es",
+     "story": "es"
+    },
     "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16665,6 +18633,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16699,6 +18671,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16733,6 +18709,10 @@
    "safetyPrompts": 1,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
@@ -16767,6 +18747,10 @@
    "safetyPrompts": 0,
    "prov": {
     "supportScored": true,
+    "lang": {
+     "output": "other",
+     "story": "other"
+    },
     "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],

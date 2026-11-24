@@ -18,7 +18,57 @@
   "concurrency": 4,
   "balanceBeforeUsd": 93.73311434,
   "balanceAfterUsd": 93.73311434,
-  "liveSpendUsd": 0
+  "liveSpendUsd": 0,
+  "rescored": [
+   {
+    "at": "2026-11-24T11:02:32.692Z",
+    "note": "Support rule v3: title and heading lines no longer count as unsupported sentences (markdown headings, bold-only heading lines, a first line without terminal punctuation, and a line without terminal punctuation that has the child's name with an age or a card/volunteer/Sunday word). Same cached outputs, no model call.",
+    "before": {
+     "halfdoor@e2ee-deepseek-v4-flash": {
+      "storiesWithUnsupported": 3,
+      "supportScored": 58,
+      "unsupportedMean": 0.05172413793103448,
+      "present": 156,
+      "trapHits": 0
+     },
+     "halfdoor_net@e2ee-deepseek-v4-flash": {
+      "storiesWithUnsupported": 3,
+      "supportScored": 58,
+      "unsupportedMean": 0.05172413793103448,
+      "present": 157,
+      "trapHits": 0
+     },
+     "baseline_same@e2ee-deepseek-v4-flash": {
+      "storiesWithUnsupported": 33,
+      "supportScored": 33,
+      "unsupportedMean": 11.606060606060606,
+      "present": 157,
+      "trapHits": 1
+     },
+     "baseline_claude@claude-sonnet-5-5": {
+      "storiesWithUnsupported": 52,
+      "supportScored": 52,
+      "unsupportedMean": 12.48076923076923,
+      "present": 157,
+      "trapHits": 1
+     },
+     "baseline_same_short@e2ee-deepseek-v4-flash": {
+      "storiesWithUnsupported": 23,
+      "supportScored": 51,
+      "unsupportedMean": 0.5098039215686274,
+      "present": 155,
+      "trapHits": 1
+     },
+     "baseline_claude_short@claude-sonnet-5-5": {
+      "storiesWithUnsupported": 29,
+      "supportScored": 54,
+      "unsupportedMean": 0.7962962962962963,
+      "present": 157,
+      "trapHits": 1
+     }
+    }
+   }
+  ]
  },
  "aggregates": [
   {
@@ -129,9 +179,9 @@
     "errors": 0,
     "provenance": {
      "supportScored": 33,
-     "unsupportedMean": 11.606060606060606,
+     "unsupportedMean": 10.242424242424242,
      "storiesWithUnsupported": 33,
-     "sentencesMean": 23.757575757575758,
+     "sentencesMean": 21.78787878787879,
      "outputsWithUnsaidLabel": 13,
      "outputsWithUnsaidFamily": 0,
      "wordsMean": 257.53333333333336,
@@ -169,9 +219,9 @@
     "errors": 0,
     "provenance": {
      "supportScored": 52,
-     "unsupportedMean": 12.48076923076923,
+     "unsupportedMean": 11.596153846153847,
      "storiesWithUnsupported": 52,
-     "sentencesMean": 23.192307692307693,
+     "sentencesMean": 21.403846153846153,
      "outputsWithUnsaidLabel": 3,
      "outputsWithUnsaidFamily": 0,
      "wordsMean": 291.4,
@@ -209,9 +259,9 @@
     "errors": 0,
     "provenance": {
      "supportScored": 51,
-     "unsupportedMean": 0.5098039215686274,
-     "storiesWithUnsupported": 23,
-     "sentencesMean": 6.470588235294118,
+     "unsupportedMean": 0.2549019607843137,
+     "storiesWithUnsupported": 13,
+     "sentencesMean": 5.764705882352941,
      "outputsWithUnsaidLabel": 5,
      "outputsWithUnsaidFamily": 0,
      "wordsMean": 74.8,
@@ -249,9 +299,9 @@
     "errors": 0,
     "provenance": {
      "supportScored": 54,
-     "unsupportedMean": 0.7962962962962963,
-     "storiesWithUnsupported": 29,
-     "sentencesMean": 7.2592592592592595,
+     "unsupportedMean": 0.7222222222222222,
+     "storiesWithUnsupported": 28,
+     "sentencesMean": 6.962962962962963,
      "outputsWithUnsaidLabel": 1,
      "outputsWithUnsaidFamily": 0,
      "wordsMean": 86.21666666666667,
@@ -331,13 +381,11 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 37,
+    "sentences": 34,
     "unsupported": [
      "Here is a one-page summary for the volunteer.",
-     "Parent/Guardian Contact for this Session:",
      "He is autistic, which means he experiences the world in his own unique way.",
      "This guide is to help you and Leo have a great, safe Sunday together.",
-     "His Interests & What Works Well:",
      "Knowing the names of a few (T-Rex, Triceratops, Stegosaurus) will be a great way to connect with him.",
      "Cars, trucks, trains, etc., are a great source of comfort and fun for him.",
      "Sensory Sensitivities: Leo is very sensitive to loud sounds, especially in large, echoing rooms.",
@@ -353,7 +401,6 @@
      "Leo's father is NOT permitted to pick him up.",
      "Leo may ONLY be released to:",
      "Please do not release Leo to anyone else, even if they claim to be a family member or friend.",
-     "Summary for a Successful Sunday",
      "Thank you so much for caring for Leo.",
      "Your attention and care will help him feel safe and have a wonderful time.",
      "If you have any questions, please don't hesitate to reach out to Sara."
@@ -393,7 +440,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 24,
+    "sentences": 23,
     "unsupported": [
      "Leo may only be released to:",
      "If anyone else arrives asking for Leo, do not release him.",
@@ -402,7 +449,6 @@
      "Move him somewhere quieter and give him space and calm.",
      "Please stay aware of exits at all times and try to position yourself between Leo and the door, especially if the room gets loud or busy.",
      "If he does run, follow him immediately and alert a leader.",
-     "TIPS FOR A GOOD MORNING",
      "Stay calm and patient if he has a hard moment;",
      "he'll recover best with quiet and space",
      "If you have any concerns during the morning, find a ministry leader.",
@@ -560,15 +606,13 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 28,
+    "sentences": 25,
     "unsupported": [
      "Here is a one-page summary you can print and hand to the volunteer.",
-     "Sunday Care Summary: Maya (Age 9)",
      "She is very independent and knows how to manage her own equipment.",
      "Please keep her phone near her so you can hear it.",
      "Please follow these steps if her app alarms or she tells you she feels \"low.\"",
      "Recheck: After 15 minutes, check her app/sensor again to make sure her number is going up.",
-     "IF SHE IS HIGH (Over 300 mg/dL):",
      "Note for the volunteer: If you ever feel unsure or if she seems unwell, please call or text me immediately.",
      "It is always better to check in"
     ],
@@ -607,14 +651,13 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 30,
+    "sentences": 27,
     "unsupported": [
      "She manages it very well on her own, and you only need to know a few key things to keep her safe and comfortable.",
      "If you hear an alarm, check on her right away.",
      "Please don't adjust or touch it.",
      "If she's still low or you're unsure, call her parent.",
      "Signs she may be low: shaky, sweaty, pale, unusually quiet or irritable, confused, or tired.",
-     "If Maya's Blood Sugar Is High (Over 300)",
      "This is important for keeping her levels steady.",
      "These are great ways to connect and help her feel at home.",
      "She seems unwell, or you're ever unsure what to do",
@@ -655,7 +698,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 9,
+    "sentences": 8,
     "unsupported": [
      "Thanks for looking after her!"
     ],
@@ -694,7 +737,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 10,
+    "sentences": 9,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -770,9 +813,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 17,
+    "sentences": 15,
     "unsupported": [
-     "Sunday Care Summary — Jonah (age 4)",
      "Stay with him, keep him safe, and time it.",
      "Typical seizure length: Under 2 minutes",
      "Questions or concerns: Contact a parent/guardian right away."
@@ -812,7 +854,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 21,
+    "sentences": 19,
     "unsupported": [
      "Daily medication: None needed at church.",
      "Use a watch or phone timer.",
@@ -821,7 +863,6 @@
      "Tell the 911 operator he has epilepsy and that you are giving his rescue medication.",
      "Notify his parents/guardians right away, whether or not the seizure is a long one.",
      "Stay nearby and keep an eye on him.",
-     "Before Sunday: Please Confirm with His Parents",
      "Since this was written quickly, a few details are worth double-checking so you feel fully prepared:",
      "Which side to position him: Ask if they prefer a specific position (for example, on his side) during and after a seizure.",
      "Parent contact: Confirm the best phone number to reach them during the service.",
@@ -864,7 +905,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 7,
+    "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -977,10 +1018,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 22,
+    "sentences": 19,
     "unsupported": [
-     "Here's a one-page summary for Sunday's volunteer:",
-     "CHILD SUMMARY: AVA (age 7) — Sunday Volunteer Notes",
      "If she leaves, please go with her or retrieve her calmly;",
      "a gentle check-in usually works better than a confrontation.",
      "Give her space to move and simple, clear directions.",
@@ -1026,16 +1065,14 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 27,
+    "sentences": 25,
     "unsupported": [
-     "Volunteer Summary: Ava, Age 7",
      "She can eat any snack.",
      "Please also keep her away from Max until her hands are clean.",
      "Stay calm and don't chase or scold.",
      "Follow her at a relaxed pace or send a second volunteer, and keep her in sight.",
      "Once you find her, speak gently and give her a moment to settle before talking about what happened.",
      "Let a ministry leader know she has stepped out so someone can help cover the room.",
-     "Tips for a Good Morning",
      "Give her something active to do, like handing out supplies, being your helper, or standing during activities.",
      "Short, clear, one-step instructions work better than long explanations.",
      "She responds well to encouragement.",
@@ -1080,7 +1117,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 6,
+    "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -1193,10 +1230,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 24,
+    "sentences": 22,
     "unsupported": [
-     "Sunday Volunteer Summary — Ethan (Age 10)",
-     "One-page overview for the volunteer looking after Ethan",
      "He's a great kid to spend time with—enjoy getting to know him!",
      "Keep Ethan company, include him in activities, and enjoy his humor and Minecraft talk."
     ],
@@ -1283,9 +1318,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 11,
+    "sentences": 10,
     "unsupported": [
-     "Ethan, age 10 — Sunday Volunteer Card",
      "Thanks for caring for him!"
     ],
     "unsaidLabels": [],
@@ -1401,9 +1435,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 21,
+    "sentences": 20,
     "unsupported": [
-     "Here's a one-page summary for the volunteer:",
      "Class/Group: Sunday kids' ministry",
      "She settles well into group activities and enjoys participating in singing and music time.",
      "Please gently redirect her to \"high-fives\" or waving instead of hugging, and keep her close during pick-up/drop-off times and any transitions.",
@@ -1445,9 +1478,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 23,
+    "sentences": 22,
     "unsupported": [
-     "Sunday Volunteer Summary: Sofia, Age 8",
      "Please keep a gentle eye on her in crowded spaces and redirect her kindly if she wanders toward unfamiliar adults.",
      "What Helps Her Thrive: Music is her favorite part of any activity, so singing, movement, and songs are a great way to engage her.",
      "She responds well to warmth and encouragement.",
@@ -1645,9 +1677,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 23,
+    "sentences": 22,
     "unsupported": [
-     "Noah, Age 5: Volunteer Summary Sheet",
      "This includes items like granola bars, trail mix, hummus or tahini, some breads and crackers, and nut-based butters or spreads.",
      "Know where the bag is at all times.",
      "Notify the ministry leader and his parents.",
@@ -1697,10 +1728,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 6,
-    "unsupported": [
-     "Noah, age 5 — Sunday Volunteer Card"
-    ],
+    "sentences": 5,
+    "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
     "words": 77,
@@ -1812,9 +1841,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 23,
+    "sentences": 22,
     "unsupported": [
-     "Here's a one-page summary you can print or hand to the volunteer:",
      "She's a sweet, shy little one who warms up quickly with a little patience and the right activity.",
      "This is normal and expected — give her a little time.",
      "Please let her keep it — it's her security item and helps her feel safe.",
@@ -1863,7 +1891,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 21,
+    "sentences": 20,
     "unsupported": [
      "This is normal for her, so there's no need to rush the goodbye.",
      "Once she's warmed up, she settles in well.",
@@ -1875,7 +1903,6 @@
      "Pairing her near a friendly, confident child can help.",
      "Greet her warmly and by name.",
      "Let her ease in at her own pace without pressure to join right away.",
-     "Notes for Parents at Pickup",
      "It's always reassuring for a parent to hear how their child did, especially on a first solo Sunday.",
      "A quick report on how she settled in and what she enjoyed will be much appreciated.",
      "Thank you for caring for Grace this week!"
@@ -1915,10 +1942,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 6,
-    "unsupported": [
-     "Sunday Volunteer Card — Grace, age 3"
-    ],
+    "sentences": 5,
+    "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
     "words": 78,
@@ -2030,9 +2055,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 16,
+    "sentences": 15,
     "unsupported": [
-     "Sunday Volunteer Summary — Elijah (11)",
      "Avoid talking while turned away or from another room.",
      "If Ray does show up and you weren't expecting it, that's still fine per the list, but it's unusual enough to double-check with a leader.",
      "Thank you for caring for Elijah this Sunday!"
@@ -2072,7 +2096,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 25,
+    "sentences": 23,
     "unsupported": [
      "Elijah is a friendly 11-year-old who needs a few simple accommodations to feel comfortable and included.",
      "None of it is complicated, and knowing these basics ahead of time will make Sunday go smoothly.",
@@ -2080,7 +2104,6 @@
      "Please decide ahead of time who will do this so it's not left to chance.",
      "Please release him only to one of them.",
      "If anyone else arrives, check with the ministry director before releasing him.",
-     "Tips for a Good Morning",
      "Seat him where he can see you and the other kids' faces.",
      "Repeat or rephrase if he seems unsure rather than just speaking louder.",
      "Check in quietly if he seems withdrawn or overwhelmed.",
@@ -2237,13 +2260,11 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 20,
+    "sentences": 18,
     "unsupported": [
-     "Child Summary for Sunday Volunteer",
      "She must not eat or drink anything containing dairy — no milk, cheese, yogurt, butter, baked goods with milk, etc.",
      "Please check with the children's ministry lead before giving her any food.",
      "The safest approach is to give her only food provided by her parents.",
-     "💉 EMERGENCY MEDICATION — PLEASE READ CAREFULLY",
      "If Lily has any signs of a reaction (hives, swelling, trouble breathing, vomiting, sudden fussiness/lethargy after possible exposure), use the Auvi-Q and call 911 immediately, then notify her parents and the children's ministry lead.",
      "(No action needed — just so you're not surprised it's not in her bag.)",
      "Allergy action plan and emergency contacts are in her bag — please review them before she arrives and keep her bag with you.",
@@ -2285,7 +2306,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 30,
+    "sentences": 28,
     "unsupported": [
      "This includes cheese, yogurt, butter, cream, and anything containing milk.",
      "Check all snacks before offering them.",
@@ -2450,7 +2471,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 40,
+    "sentences": 34,
     "unsupported": [
      "Here is a one-page summary for the volunteer.",
      "Thank you for caring for Isaiah this Sunday!",
@@ -2459,20 +2480,15 @@
      "Even if he seems distracted or you need his attention, do not remove it.",
      "To talk with him, give him time to respond on the device.",
      "You can also speak to him normally using simple, clear sentences.",
-     "Safety First: Pica & Choking Hazard",
      "If you see him putting something in his mouth, calmly ask him to \"take it out\" and redirect him to a safe activity.",
      "Watch him closely during craft or snack time.",
-     "Safety Second: Wandering & Parking Lot",
      "Keep doors closed and locked.",
      "If you are outside or near a door, always position yourself between Isaiah and the exit.",
      "Call his name calmly and use a firm \"stop\" while moving toward him.",
-     "Pick-Up Authorization (IMPORTANT: Update for 2025)",
      "Both parents are fully allowed to pick him up.",
-     "What He Loves (Use These to Connect!)",
      "He is a huge fan of Thomas the Tank Engine.",
      "Safe toys: Large picture books (board books), big blocks (too big to swallow), or train toys that are large and sturdy.",
      "Activities: Watching train videos, listening to train sounds, or rolling a large ball back and forth.",
-     "Quick Tips for a Great Sunday",
      "He may need a quiet corner if he gets overwhelmed.",
      "Point to what you want him to do (e.g., point to the chair for \"sit\").",
      "Praise him for safe behavior.",
@@ -2517,7 +2533,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 24,
+    "sentences": 22,
     "unsupported": [
      "It is his voice, the way he tells you what he wants, needs, and feels.",
      "Talk to him directly, give him time to respond, and expect that he understands you.",
@@ -2679,9 +2695,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 25,
+    "sentences": 23,
     "unsupported": [
-     "Here's a one-page summary for the volunteer:",
      "She simply cannot speak outside our home yet.",
      "This is not a choice, and it is not something to correct or push.",
      "Give her a few extra seconds to respond.",
@@ -2729,7 +2744,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 33,
+    "sentences": 30,
     "unsupported": [
      "Her silence is not rudeness, defiance, or shyness she can switch off.",
      "Please don't pressure her to talk, ask her to \"use her words,\" or draw attention to her not speaking.",
@@ -2787,9 +2802,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 7,
+    "sentences": 6,
     "unsupported": [
-     "Harper (age 6) — Important Info for Sunday",
      "Thank you for caring for her!"
     ],
     "unsaidLabels": [],
@@ -2903,9 +2917,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 16,
+    "sentences": 15,
     "unsupported": [
-     "Here's a one-page summary for Caleb's volunteer:",
      "Quick note: Caleb is a fun, energetic kid.",
      "The main thing to know is his asthma — everything else is easy.",
      "If he starts coughing, wheezing, or seems short of breath, get the inhaler and spacer right away and let the kids' ministry lead know.",
@@ -2947,9 +2960,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 16,
+    "sentences": 15,
     "unsupported": [
-     "Caleb, Age 9: Sunday Volunteer Summary",
      "Please read this section carefully before Sunday.",
      "Wait 20 minutes and watch him closely.",
      "Please make sure his inhaler and spacer are with him or easy to reach at all times, and let his parents know if you needed to use it.",
@@ -2994,7 +3006,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 6,
+    "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -3107,11 +3119,9 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 14,
+    "sentences": 11,
     "unsupported": [
-     "Child Summary: Zoe (Age 4)",
      "Please be mindful of this — avoid harsh soaps, scented lotions, or anything that may irritate her skin, and let Nana Pat know if she seems uncomfortable or itchy.",
-     "Family & Custody — Please Read Carefully",
      "If anyone else asks for Zoe or comes to the kids' area, please politely redirect them and contact Nana Pat or the kids' ministry lead right away.",
      "Thank you for caring for Zoe this Sunday!"
     ],
@@ -3150,10 +3160,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 23,
+    "sentences": 21,
     "unsupported": [
-     "Child Summary: Zoe (Age 4)",
-     "⚠️ Pick-Up & Safety Instructions (Please Read First)",
      "If Mom arrives alone, do not release Zoe.",
      "Please find a ministry leader.",
      "If he comes to the kids' area, politely direct him back to the main service and notify a ministry leader right away.",
@@ -3321,9 +3329,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 28,
+    "sentences": 25,
     "unsupported": [
-     "Sunday Volunteer Summary — Wyatt (age 7)",
      "Quick picture: Wyatt is a friendly, energetic 7-year-old with ADHD.",
      "He does best with clear, simple instructions, lots of movement, and knowing what's coming next.",
      "He's a runner — safety supervision is the #1 priority.",
@@ -3332,7 +3339,6 @@
      "If there's any suspected sting or reaction, text his mom immediately and get help from the children's ministry lead.",
      "Keep him away from outdoor areas with flowering plants/insects where possible.",
      "No medication at church — nothing needs to be given.",
-     "What works well with him",
      "Lots of movement — give him active jobs (handing things out, carrying items, helping set up) and let him stand, wiggle, or move between activities rather than sitting still for long stretches.",
      "Clear expectations and warnings — short, specific instructions (\"Feet on the floor,\" \"Stay in this room\") and a heads-up before transitions (\"Two more minutes, then cleanup\").",
      "Positive attention — praise the behavior you want to see;",
@@ -3382,7 +3388,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 25,
+    "sentences": 24,
     "unsupported": [
      "Safety information is at the top.",
      "Choose a position near the exit and keep eyes on him throughout.",
@@ -3436,7 +3442,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 7,
+    "sentences": 6,
     "unsupported": [
      "Keep doors closed and eyes on him."
     ],
@@ -3788,16 +3794,14 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 26,
+    "sentences": 23,
     "unsupported": [
-     "Volunteer Care Summary: Penny (Age 8)",
      "She may remind you of her food rules herself, and she's usually right!",
      "If another child is eating snack near her, a quick reminder to keep food and crumbs away from Penny's space is helpful.",
      "If it helps, let her know ahead of time so she isn't caught off guard.",
      "No emergency medication is needed.",
      "This isn't an emergency, but her parent needs to know.",
      "If she says she feels unwell during class, notify the ministry leader and her parent right away.",
-     "Tips for a Great Sunday",
      "Trust Penny when she speaks up about food.",
      "She knows her rules well.",
      "Praise her for advocating for herself.",
@@ -3840,7 +3844,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 5,
+    "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -3877,7 +3881,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 7,
+    "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -3997,7 +4001,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 22,
+    "sentences": 21,
     "unsupported": [
      "In loud rooms, get down to his eye level, face him, and speak clearly.",
      "Keep your face visible so he can use visual cues.",
@@ -4159,7 +4163,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 21,
+    "sentences": 20,
     "unsupported": [
      "Here is a one-page summary you can print or send to the volunteer.",
      "Quick note: Aaliyah is independent and capable.",
@@ -4203,7 +4207,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 27,
+    "sentences": 26,
     "unsupported": [
      "She knows her own body and routines well, so please treat her like any other kid her age and let her lead on what she needs.",
      "Use nitrile or vinyl only.",
@@ -4213,7 +4217,6 @@
      "A quiet \"Take the time you need\" is plenty.",
      "Please don't push her chair unless she asks.",
      "Keep pathways clear and make sure activities, tables, and seating spaces have room for her chair so she can participate alongside the other kids.",
-     "Call 911 AND her parent/guardian right away if she has:",
      "Unusual or extreme sleepiness, or is hard to wake",
      "Do not wait to see if it passes.",
      "Call 911 first or at the same time as calling her parent, and stay with her until help arrives.",
@@ -4255,7 +4258,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 7,
+    "sentences": 6,
     "unsupported": [
      "Thank you for caring for her!"
     ],
@@ -4370,9 +4373,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 19,
+    "sentences": 15,
     "unsupported": [
-     "Sunday Volunteer Summary: Jayden (Age 9)",
      "Call 911 at the 5-minute mark if the seizure hasn't stopped—don't wait.",
      "Jayden is a wonderful, fun kid—ask him about Pokémon or tell him a joke!",
      "Please reach out to the children's ministry lead—better to ask ahead than wonder during class."
@@ -4412,7 +4414,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 20,
+    "sentences": 19,
     "unsupported": [
      "He's a great kid, so ask him about his favorite Pokémon and let him tell you a joke or two.",
      "Stay with Jayden, keep him safe, and have another volunteer notify his parents or guardians right away.",
@@ -4455,10 +4457,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 8,
-    "unsupported": [
-     "Jayden, age 9 — Sunday Volunteer Card"
-    ],
+    "sentences": 7,
+    "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
     "words": 81,
@@ -4573,10 +4573,9 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 42,
+    "sentences": 40,
     "unsupported": [
      "Here is a one-page summary for the volunteer.",
-     "Child Summary for Sunday Volunteer",
      "Hello and thank you for caring for Ruby this Sunday!",
      "This summary is to help you have a safe, fun, and successful time with her.",
      "Ruby is a sweet and wonderful child, and we want to set her (and you!) up for a great morning.",
@@ -4591,7 +4590,6 @@
      "Routine: Like many children, Ruby thrives on routine.",
      "A simple, predictable schedule for the morning will help her feel secure.",
      "You do not need to worry about cross-contamination or provide a nut-free snack for her specifically.",
-     "HOW YOU CAN HELP RUBY HAVE A GREAT SUNDAY",
      "Be Patient & Calm: A calm, gentle tone and a patient approach will work best.",
      "Give Clear Instructions: Use simple, direct language.",
      "For example, \"Ruby, please sit here,\" instead of \"Let's find a seat.\"",
@@ -4640,11 +4638,9 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 27,
+    "sentences": 25,
     "unsupported": [
-     "Child Care Summary: Ruby (Age 6)",
      "Please read before Sunday and keep this page confidential.",
-     "Safety and Pickup: Please Read First",
      "Then alert a ministry leader.",
      "Do not try to handle it yourself, and keep Ruby with you or another trusted adult.",
      "If anyone else asks to pick up Ruby, check with a ministry leader before releasing her.",
@@ -4692,10 +4688,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 7,
-    "unsupported": [
-     "Child Info Card — Ruby (age 6)"
-    ],
+    "sentences": 6,
+    "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
     "words": 86,
@@ -4811,12 +4805,11 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 36,
+    "sentences": 34,
     "unsupported": [
      "Here is a one-page summary for the volunteer.",
      "He is generally kind and pleasant but can feel anxious in new or group settings.",
      "Your patience and quiet support will help him have a great Sunday.",
-     "Key Information at a Glance",
      "Important: He strongly dislikes being singled out.",
      "Please avoid calling attention to his needs in front of the group.",
      "This is normal for him.",
@@ -4868,7 +4861,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 25,
+    "sentences": 24,
     "unsupported": [
      "He's a kind kid who does best when he feels like part of the group rather than the center of attention.",
      "He really dislikes being called out in front of others.",
@@ -4921,10 +4914,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 8,
-    "unsupported": [
-     "Sunday Volunteer Card — Gabriel (age 11)"
-    ],
+    "sentences": 7,
+    "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
     "words": 95,
@@ -5036,9 +5027,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 22,
+    "sentences": 20,
     "unsupported": [
-     "Sunday Volunteer Summary: Nora (Age 7)",
      "Read this before class — thank you for caring for Nora!",
      "This is a medical emergency-level allergy, so please take it seriously.",
      "No food unless it comes from her own family.",
@@ -5091,7 +5081,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 24,
+    "sentences": 22,
     "unsupported": [
      "Please check with her parent before offering any snack, treat, or craft supply (some craft dough and paints contain egg).",
      "Keep the bag within reach at all times, including during games, crafts, and bathroom breaks.",
@@ -5147,7 +5137,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 8,
+    "sentences": 7,
     "unsupported": [
      "😊 Thanks for caring for her!"
     ],
@@ -5495,11 +5485,10 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 42,
+    "sentences": 38,
     "unsupported": [
      "Here's a one-page summary for the volunteer.",
      "I've organized it so the most critical safety information is up front and easy to scan.",
-     "Sunday Care Summary: Olivia (Age 9)",
      "Thank you for caring for Olivia this Sunday!",
      "This page gives you everything you need to keep her safe and happy.",
      "Please gently redirect her and don't offer food or drink.",
@@ -5511,7 +5500,6 @@
      "Engage her, joke with her, and include her in activities.",
      "(No special action needed — just for your awareness.)",
      "(Add any other items here before Sunday)",
-     "How to Help Her Have a Great Morning",
      "Include her in songs, stories, and activities — she loves being part of things.",
      "don't rush or answer for her.",
      "Keep her chair accessible and check in with her about comfort or positioning.",
@@ -5558,7 +5546,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 29,
+    "sentences": 27,
     "unsupported": [
      "Parent/guardian phone: [add before Sunday]",
      "Give her plenty of time to respond.",
@@ -5610,10 +5598,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 6,
-    "unsupported": [
-     "Olivia (age 9) – Sunday Volunteer Card"
-    ],
+    "sentences": 5,
+    "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
     "words": 80,
@@ -5725,12 +5711,10 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 22,
+    "sentences": 20,
     "unsupported": [
-     "Sunday Care Summary — Mason (age 10)",
      "Thank you for caring for Mason this Sunday!",
      "Here's what you need to know so his time with us is safe and calm.",
-     "⚠️ Safety & Legal Requirements (most important)",
      "Please do not take photos or videos of Mason, and do not post anything about him or including him on social media, group chats, or anywhere online.",
      "If anyone else asks to collect Mason, politely say you're not able to release him and contact Linda.",
      "Patience makes a big difference.",
@@ -5772,12 +5756,10 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 24,
+    "sentences": 22,
     "unsupported": [
-     "Mason (age 10): Sunday Volunteer Summary",
      "Please read before class begins.",
      "Do not share its contents with other families or post it anywhere.",
-     "Safety and Privacy: Please Follow Exactly",
      "If other children or volunteers are taking photos during an activity, please make sure Mason is not in the frame.",
      "If anyone else arrives, or if you are unsure about anyone, do not release Mason.",
      "Keep him with you and contact the children's ministry leader right away.",
@@ -5823,7 +5805,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 8,
+    "sentences": 7,
     "unsupported": [
      "Thank you for caring for Mason this Sunday."
     ],
@@ -5940,9 +5922,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 21,
+    "sentences": 16,
     "unsupported": [
-     "Here's a one-page summary for the volunteer:",
      "Omnipod (insulin pump — delivers insulin automatically;",
      "do not remove or tamper with it)",
      "She may not always recognize or report a low — watch for pale skin and crankiness.",
@@ -5984,7 +5965,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 27,
+    "sentences": 24,
     "unsupported": [
      "her family is still learning, so please be patient and communicate openly with her parent)",
      "Omnipod: an insulin pump worn on her body.",
@@ -5992,7 +5973,6 @@
      "Check it with the reader or phone as directed by her parent.",
      "She may try to take extra, so keep the tube with you rather than leaving it within her reach.",
      "Let her parent know what happened.",
-     "Watch For Signs of a Low",
      "Gets unusually tired, shaky, or sweaty",
      "If she seems off, check first and ask questions later.",
      "A quick scan takes seconds.",
@@ -6151,13 +6131,11 @@
      "output": "other",
      "story": "other"
     },
-    "sentences": 19,
+    "sentences": 17,
     "unsupported": [
-     "Child Summary Sheet — Sunday Volunteer",
      "No sesame in any form — including hummus, tahini, sesame oil, breads/crackers with sesame seeds, and shared snacks.",
      "Check all food labels or stick to food sent from home.",
      "Ask a leader if unsure — no sharing food.",
-     "Emergency Plan — If Ella Is Exposed",
      "Don't wait for symptoms to get worse.",
      "Know where the bag is at all times.",
      "Ask the kids' ministry lead — don't guess on food or symptoms.",
@@ -6348,9 +6326,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 14,
+    "sentences": 13,
     "unsupported": [
-     "Sunday Volunteer Summary — Ben (Age 12)",
      "(This is an approved arrangement, not a rule-bending request.)",
      "No one else unless cleared through the usual check-in process.",
      "Food & medical: No allergies or restrictions — he can have whatever snacks are served.",
@@ -6441,10 +6418,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 6,
-    "unsupported": [
-     "Sunday Volunteer Card — Ben (12)"
-    ],
+    "sentences": 5,
+    "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
     "words": 67,
@@ -6556,11 +6531,10 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 24,
+    "sentences": 22,
     "unsupported": [
      "Here is a one-page summary for the volunteer.",
      "Please know that her affectionate nature is a big part of who she is, and we want to encourage that while also helping her learn gentle and appropriate ways to greet her friends.",
-     "Important Health & Safety Information (Please Read Carefully)",
      "If you need to help her up, please support her body, not just her arms.",
      "She has a tendency to \"pocket\" food in her cheeks, so please keep an eye on her during snack time to ensure she is chewing and swallowing safely.",
      "Embrace the Hugs (Gently): Hannah expresses her love through hugs.",
@@ -6608,14 +6582,13 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 23,
+    "sentences": 22,
     "unsupported": [
      "She's a delight to have in class.",
      "No rough or high-impact play where her head or neck could be jolted",
      "If she needs to be picked up, support her body (under the arms and around the torso or hips) rather than pulling on her arms or hands",
      "If you see her attempting a somersault or any tumbling move during play, gently redirect her to a different activity",
      "Check that she has swallowed before moving on to the next activity.",
-     "Tips for a Great Morning",
      "Hugs are her love language.",
      "A gentle reminder to hug softly is fine, and you can offer a high five or a side hug if you'd like a different greeting.",
      "Lots of encouragement, simple instructions, and patience go a long way.",
@@ -6659,10 +6632,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 5,
-    "unsupported": [
-     "Sunday Volunteer Card — Hannah, Age 5"
-    ],
+    "sentences": 4,
+    "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
     "words": 83,
@@ -6774,9 +6745,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 25,
+    "sentences": 24,
     "unsupported": [
-     "Sunday Volunteer Summary: Daniel (Age 7)",
      "Please give him extra time to respond — he understands what's happening around him, but processing and responding can take a moment.",
      "Speak to him directly and naturally, in short sentences.",
      "Don't rush to fill silence — wait for him.",
@@ -6825,7 +6795,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 25,
+    "sentences": 23,
     "unsupported": [
      "Try asking him to count the chairs, crayons, or kids in the room.",
      "It's a great way to connect with him.",
@@ -6876,10 +6846,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 6,
-    "unsupported": [
-     "Daniel (7) – Sunday Volunteer Card"
-    ],
+    "sentences": 5,
+    "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
     "words": 81,
@@ -7037,7 +7005,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 26,
+    "sentences": 25,
     "unsupported": [
      "These are brief and not an emergency.",
      "She will not respond if you speak to her or wave a hand in front of her.",
@@ -7088,7 +7056,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 6,
+    "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -7201,18 +7169,16 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 23,
+    "sentences": 21,
     "unsupported": [
      "Here is a one-page summary for the volunteer.",
      "Thank you for caring for Lucas this Sunday.",
      "Here is a quick guide to help you have a great time together.",
      "He loves to share what he knows, so you can expect him to be an active participant and may even correct you on Bible trivia—please take it in stride and celebrate his enthusiasm for God's Word!",
-     "How to Set Him Up for Success",
      "It's okay if it's not you, and we're all here to have fun.\").",
      "Phrases like \"You worked so hard on that!\" or \"I love how you tried your best!\" are much more encouraging to him than \"You won!\"",
      "Asking him to help pass out supplies, hold a poster, or be your special assistant is a great way to make him feel valued and engaged.",
      "You can help him by gently reinforcing this: \"Let's hear from a few other friends first, then it will be your turn!\"",
-     "Key Takeaways for a Great Sunday",
      "HELP HIM: Gently encourage him to let his peers share their answers and thoughts first.",
      "Thank you for your time and for showing Christ's love to Lucas.",
      "Your care will make a huge difference in his Sunday experience."
@@ -7252,7 +7218,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 22,
+    "sentences": 21,
     "unsupported": [
      "A few simple strategies will help his Sunday go smoothly.",
      "He may correct you, which comes from enthusiasm and not disrespect.",
@@ -7420,7 +7386,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 30,
+    "sentences": 29,
     "unsupported": [
      "Here is a one-page summary suitable for the volunteer.",
      "This information is critical for his safety.",
@@ -7438,8 +7404,7 @@
      "Reassure him that he is safe.",
      "The most important things you can provide for Elias are predictability, calmness, and safety.",
      "Following the classroom routine and using a gentle tone will help him feel secure.",
-     "Thank you for your care and attention in looking after him.",
-     "In case of an emergency, please contact:"
+     "Thank you for your care and attention in looking after him."
     ],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -7476,9 +7441,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 22,
+    "sentences": 21,
     "unsupported": [
-     "Child Care Summary: Elias, Age 9",
      "Pickup and Safety: Please Read First",
      "If any of these individuals, or anyone else not named above, arrives and asks to see or take Elias, please do not release him.",
      "Stay calm, keep Elias with you or another volunteer, and notify the children's ministry leader or a church staff member right away so they can contact Frank or Carmen.",
@@ -7526,7 +7490,7 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 7,
+    "sentences": 6,
     "unsupported": [
      "Thank you for caring for him!"
     ],
@@ -7644,9 +7608,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 18,
+    "sentences": 17,
     "unsupported": [
-     "Sunday Volunteer Summary — Aria (age 6)",
      "Aria is a sweet 6-year-old who loves cats — expect her to light up over anything feline.",
      "Cat books, cat drawings, cat facts: all great ways to connect with her.",
      "Pickup arrangements are a little confusing, so please double-check before releasing her:",
@@ -7692,9 +7655,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 17,
+    "sentences": 16,
     "unsupported": [
-     "Pickup Information (please read carefully)",
      "If you've seen a note elsewhere suggesting otherwise, that was a mistake at her school and has been corrected.",
      "Then notify the ministry director.",
      "If anyone other than Marcus arrives to pick her up, please check with the ministry director before releasing her.",
@@ -7738,9 +7700,8 @@
      "output": "en",
      "story": "en"
     },
-    "sentences": 7,
+    "sentences": 6,
     "unsupported": [
-     "Aria (6) — Sunday Volunteer Card",
      "Thanks for looking after her!"
     ],
     "unsaidLabels": [],
@@ -7895,7 +7856,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 27,
+    "sentences": 23,
     "unsupported": [
      "Idioma de la familia: Español",
      "No le dar ningún alimento ni merienda sin confirmar que no contiene maní.",
@@ -7947,7 +7908,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 10,
+    "sentences": 9,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -7984,7 +7945,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 8,
+    "sentences": 7,
     "unsupported": [
      "Si alguien más se presenta, no lo entregue y avise a un líder."
     ],
@@ -8101,7 +8062,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 23,
+    "sentences": 20,
     "unsupported": [
      "Tener materiales de arte a mano es una excelente manera de conectar con ella y mantenerla contenta durante la clase.",
      "Tiene diabetes tipo 1, que está bien controlada con ayuda de su equipo médico.",
@@ -8148,7 +8109,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 7,
+    "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -8185,7 +8146,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 7,
+    "sentences": 6,
     "unsupported": [
      "Una nota práctica: conviene que el voluntario tenga a mano el número de WhatsApp de la mamá y la ubicación de la lonchera con el jugo antes de que empiece la clase."
     ],
@@ -8489,16 +8450,14 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 19,
+    "sentences": 16,
     "unsupported": [
-     "Resumen de Camila: Voluntario/a del domingo",
      "Una canción o actividad de Frozen es una buena manera de conectar con ella y hacerla sentir cómoda.",
      "Mantenga la calma y tome el tiempo desde el inicio (mire el reloj o use el cronómetro del teléfono).",
      "Despeje el área a su alrededor para que no se golpee.",
      "No la sujete ni le poner nada en la boca.",
      "déjela descansar tranquila y cerca de usted.",
      "Avise a sus papás y al líder del ministerio infantil.",
-     "Antes de empezar el servicio",
      "Confirme con sus papás cómo localizarlos durante el servicio.",
      "Asegúrese de que haya otro adulto cerca que pueda ayudar o llamar al 911 si hace falta.",
      "Camila es una niña como cualquier otra que disfruta jugar, cantar y bailar.",
@@ -8576,7 +8535,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 8,
+    "sentences": 7,
     "unsupported": [
      "Avisen a sus papás de inmediato.",
      "(Nota: la última línea la agregué yo;"
@@ -8692,7 +8651,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 18,
+    "sentences": 17,
     "unsupported": [
      "Fútbol: un buen tema para romper el hielo.",
      "Dinosaurios: otro tema que lo motiva a conversar.",
@@ -8776,7 +8735,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 6,
+    "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -8891,9 +8850,8 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 24,
+    "sentences": 23,
     "unsupported": [
-     "Resumen de Lucía para el voluntario del domingo",
      "Trátela como a cualquier niña de su edad: entiende todo y le gusta participar en las actividades.",
      "Asegúrese de que haya espacio suficiente para que circule con comodidad en el salón y en los pasillos.",
      "Esto es una regla de seguridad, sin excepciones.",
@@ -8974,7 +8932,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 9,
+    "sentences": 8,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -9087,7 +9045,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 23,
+    "sentences": 22,
     "unsupported": [
      "Para el voluntario de turno el domingo",
      "Es muy cariñoso, así que se llevará bien con los voluntarios y los otros niños.",
@@ -9140,7 +9098,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 7,
+    "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -9177,7 +9135,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 7,
+    "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -9516,7 +9474,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 7,
+    "sentences": 6,
     "unsupported": [
      "Puede repetir después de 20 min."
     ],
@@ -9670,7 +9628,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 26,
+    "sentences": 25,
     "unsupported": [
      "Su silencio no es timidez, desobediencia ni falta de interés: es una condición de ansiedad.",
      "Por favor, no la presione para que hable.",
@@ -9879,9 +9837,8 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 15,
+    "sentences": 14,
     "unsupported": [
-     "Lo más importante que debes saber",
      "Así tendrá tiempo de prepararse y el paso a la siguiente actividad será mucho más tranquilo.",
      "Es una excelente manera de conectar con él: pregúntale cuál es su favorito o pídele que te enseñe sobre alguno.",
      "Si necesitas captar su atención o motivarlo, los dinosaurios son un buen camino.",
@@ -9926,7 +9883,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 6,
+    "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -10078,10 +10035,8 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 22,
+    "sentences": 20,
     "unsupported": [
-     "⚠️ SEGURIDAD: LO PRIMERO QUE DEBE SABER",
-     "Lo que necesitamos de usted:",
      "Si necesita que otro voluntario lo cubra un momento, avise antes de apartarse.",
      "Antes de empezar, localice las salidas del área y verifique que estén cerradas.",
      "Si se moja, quíteselos de inmediato (juegos con agua, lluvia, derrames, etc.) y guárdelos en un lugar seguro.",
@@ -10129,7 +10084,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 5,
+    "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -10166,7 +10121,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 7,
+    "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -10281,9 +10236,8 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 18,
+    "sentences": 17,
     "unsupported": [
-     "Ximena, 12 años: Resumen para la voluntaria del domingo",
      "Es una niña de 12 años a la que le encanta el K-pop, así que es un buen tema para conversar con ella y hacerla sentir cómoda.",
      "Si alguien lo menciona, esa información está desactualizada.",
      "Mantén la calma y anota la hora en que empieza.",
@@ -10330,7 +10284,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 6,
+    "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -10367,7 +10321,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 8,
+    "sentences": 7,
     "unsupported": [
      "¡Es un buen tema para conversar con ella!"
     ],
@@ -10675,14 +10629,11 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 29,
+    "sentences": 25,
     "unsupported": [
-     "Para el voluntario de la clase del domingo",
      "Sepa dónde está su mochila en todo momento, y que esté al alcance (no en un cuarto cerrado ni lejos del salón).",
      "Esta alergia puede poner su vida en peligro.",
      "Tómela en serio aunque Tomás se vea bien.",
-     "🚨 Qué hacer en una emergencia",
-     "Si ve cualquiera de estas señales:",
      "No espere a ver si mejora.",
      "Avise a un líder o coordinador del ministerio y a los padres de Tomás.",
      "Quédese con él hasta que llegue la ayuda.",
@@ -10882,10 +10833,9 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 19,
+    "sentences": 17,
     "unsupported": [
      "tener plastilina a mano es una buena manera de ayudarla a sentirse cómoda y entretenida.",
-     "IMPORTANTE: Reglas de seguridad (orden judicial)",
      "No entregue a Antonella a ninguna otra persona, aunque diga ser familiar, amigo de la familia o conocido de la iglesia.",
      "Si se presenta en la iglesia, no le permita acercarse a ella, manténgala dentro del salón con otro voluntario y avise de inmediato a un líder del ministerio para que contacte a Pablo y Ana.",
      "Esto incluye fotos grupales donde ella aparezca.",
@@ -10930,7 +10880,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 5,
+    "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -10967,9 +10917,8 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 7,
+    "sentences": 6,
     "unsupported": [
-     "Tarjeta para la voluntaria o el voluntario – Domingo",
      "Si él se presenta, no se la entregue y avise de inmediato a un líder."
     ],
     "unsaidLabels": [],
@@ -11086,11 +11035,9 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 19,
+    "sentences": 17,
     "unsupported": [
-     "Resumen de Benja – Ministerio Infantil",
      "Sobre Benja: Es un niño cariñoso y dulce.",
-     "⚠️ Lo más importante: riesgo de salirse",
      "Si no lo ve, avise de inmediato a otro líder y revise primero hacia el estacionamiento.",
      "Si lo nota inquieto o nervioso, acérquese con calma y ofrézcale un lugar más tranquilo junto a usted.",
      "Por su TDAH, ayudan las instrucciones cortas y claras, y las actividades que lo mantengan ocupado.",
@@ -11173,9 +11120,8 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 8,
+    "sentences": 7,
     "unsupported": [
-     "Tarjeta para el voluntario: Benja, 10 años",
      "Gracias por cuidarlo con cariño."
     ],
     "unsaidLabels": [],
@@ -11289,10 +11235,8 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 22,
+    "sentences": 20,
     "unsupported": [
-     "Resumen de Paula para el voluntario del domingo",
-     "Cómo ayudarla a sentirse cómoda",
      "Al llegar, no esperes que participe de inmediato.",
      "Es normal que al principio no quiera unirse a las actividades.",
      "No la presiones ni la obligues.",
@@ -11341,7 +11285,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 6,
+    "sentences": 5,
     "unsupported": [
      "Gracias por cuidarla con paciencia."
     ],
@@ -11380,7 +11324,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 6,
+    "sentences": 5,
     "unsupported": [
      "Un poco de tranquilidad al respecto le hará bien."
     ],
@@ -11495,9 +11439,8 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 19,
+    "sentences": 17,
     "unsupported": [
-     "Resumen para el voluntario: Matías (6 años)",
      "Ante la duda, no le dar el alimento.",
      "Después, avisa a los padres.",
      "Ten a mano tijeras, lápices y materiales que le funcionen bien.",
@@ -11576,10 +11519,8 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 8,
-    "unsupported": [
-     "Tarjeta para el voluntario: Matías (6 años)"
-    ],
+    "sentences": 7,
+    "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
     "words": 73,
@@ -11882,9 +11823,8 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 29,
+    "sentences": 25,
     "unsupported": [
-     "RESUMEN DE SEBASTIÁN: PARA EL VOLUNTARIO DEL DOMINGO",
      "Esta es la información más importante de esta hoja.",
      "No es seguro para él.",
      "Evite también actividades o manualidades con alimentos (por ejemplo, galletas, cereal, masa o recipientes que hayan tenido leche o huevo).",
@@ -11900,7 +11840,6 @@
      "Siga el protocolo de la iglesia para cambios de pañal (por ejemplo, con dos adultos presentes o a la vista).",
      "Esté atento a señales de frustración (llanto, empujones, apretar los puños) y ofrézcale redirección, como cambiarlo de actividad, darle un juguete o acompañarlo a un rincón tranquilo.",
      "Mantenga una supervisión cercana, sobre todo en juegos con otros niños o cuando haya que compartir juguetes.",
-     "Antes de que los padres se vayan, confirme:",
      "Número de celular donde se les pueda localizar durante el servicio.",
      "Cualquier otra indicación que quieran añadir.",
      "Es normal y muy valioso que sean tan claros con sus instrucciones."
@@ -11940,7 +11879,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 6,
+    "sentences": 5,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -12095,9 +12034,8 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 26,
+    "sentences": 21,
     "unsupported": [
-     "Resumen de Alma para el voluntario del domingo",
      "Anote la hora en que empezó la crisis y quédese con ella.",
      "Estas son pautas generales de primeros auxilios para crisis epilépticas;",
      "confirme con la familia si tienen indicaciones adicionales.",
@@ -12108,7 +12046,6 @@
      "Pida a los demás niños que se alejen con otro adulto, con calma, para darle privacidad y tranquilidad.",
      "Tenerle a mano un libro o una actividad de lectura es una buena opción.",
      "Avísele con anticipación de los cambios en la actividad, el horario o el lugar, y evite sorpresas repentinas.",
-     "Antes de que los padres se vayan",
      "Confirme el número de teléfono donde puede localizarlos durante el servicio.",
      "Asegúrese de saber dónde está su pulsera con el imán y de tenerla siempre a la vista.",
      "Pregunte si hay algo más que deba saber (desencadenantes de crisis, cómo se ve normalmente una crisis en ella, cómo se recupera después).",
@@ -12149,7 +12086,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 7,
+    "sentences": 6,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -12186,7 +12123,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 9,
+    "sentences": 8,
     "unsupported": [
      "No le gustan las sorpresas, así que conviene avisarle antes de cualquier cambio de actividad."
     ],
@@ -12301,11 +12238,10 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 18,
+    "sentences": 16,
     "unsupported": [
      "Puedes usar estos temas para conectar con él desde el primer momento.",
      "Por ejemplo, preguntarle cuál es su carro o superhéroe favorito, o relacionar las historias bíblicas con personajes valientes y fuertes.",
-     "Cosas a tener en cuenta",
      "Ten paciencia y ofrécele ayuda amable cuando haya que turnarse.",
      "Prueba con: \"¿Prefieres darle el carro a tu amigo ahora o esperar un minuto y luego dárselo?\"",
      "Así siente que tiene control y suele calmarse más rápido.",
@@ -12349,7 +12285,7 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 5,
+    "sentences": 4,
     "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
@@ -12503,16 +12439,14 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 19,
+    "sentences": 16,
     "unsupported": [
-     "RESUMEN PARA EL VOLUNTARIO: Nicolás (7 años)",
      "Información proporcionada por su abuela y tutora.",
      "Confidencial: por favor no compartir con otras personas ni comentarlo delante de otros niños.",
      "Tiene TDAH, por lo que se distrae con facilidad y le cuesta mantener la atención en una sola actividad.",
      "Conviene darle instrucciones cortas y claras, y redirigirlo con calma si se desconcentra.",
      "Hay que estar atentos a dónde está en todo momento.",
      "Se recomienda recordarle antes de empezar que debe avisarle a un voluntario cuando necesite ir, y acompañarlo o supervisar que llegue y regrese.",
-     "SEGURIDAD EN LA SALIDA (muy importante)",
      "Si alguno de ellos se presenta, no discutir ni entregarlo: mantener a Nicolás con un voluntario y avisar de inmediato al coordinador o líder del ministerio infantil.",
      "Ante cualquier duda, no entregar al niño hasta confirmar con el coordinador y con la abuela.",
      "Ante cualquier situación (recogida dudosa, necesidad del niño, etc.), acudir al coordinador del ministerio.",
@@ -12555,10 +12489,8 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 7,
-    "unsupported": [
-     "Nota para la voluntaria — Nicolás (7 años)"
-    ],
+    "sentences": 6,
+    "unsupported": [],
     "unsaidLabels": [],
     "unsaidFamilies": [],
     "words": 68,
@@ -12594,9 +12526,8 @@
      "output": "es",
      "story": "es"
     },
-    "sentences": 10,
+    "sentences": 9,
     "unsupported": [
-     "Tarjeta para el voluntario – Nicolás (7 años)",
      "avise de inmediato al coordinador.",
      "Contacto: Su abuela (tutora a cargo)."
     ],

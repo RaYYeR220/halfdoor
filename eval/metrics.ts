@@ -2,17 +2,20 @@
 //   - unsupported sentences: a sentence is SUPPORTED when at least a third of its content words also occur in
 //     the story (content word = 4+ letters, not a stopword, compared by 5-char prefix after normalizeForMatch);
 //     sentences of 4 words or fewer (headers, "Allergies: none") and sentences with no content word are
-//     ignored, and an output in another language than its story is not scored (word overlap cannot see a
-//     translation). This is the rule after one revision: the first version (half of the content words,
-//     3-word headers, no language check) was 60% precise on a hand-checked sample; see
-//     eval/results/support-validation.json;
+//     ignored, title and heading lines are ignored (isTitleLine: they name the card, they claim nothing), and
+//     an output in another language than its story is not scored (word overlap cannot see a translation).
+//     Rule history, each change checked by hand on a fresh sample (eval/results/support-validation.json):
+//     v1 half of the content words, 3-word headers, no language check (60% precise); v2 one third, 4-word
+//     headers, language check; v3 (this) also ignores title and heading lines, which v2 counted as unsupported
+//     ("**Wyatt, age 7**", "## About Harper", "Child Care Summary: Elias, Age 9");
 //   - unsaid labels: diagnosis labels (LABEL_WORDS) in the output that the story never uses, as exact words
 //     (the product verifier's check) and by label family (another form or language of the same diagnosis);
 //   - length: words and reading time at 200 words per minute.
 import { unsaidLabels } from '../src/lib/text/labels';
 import { detectLang, type Lang } from '../src/lib/text/lang';
 import { hasWord, hasWordExact, normalizeForMatch } from '../src/lib/text/normalize';
-import { normalizeOutput } from './normalize';
+import { childNameFor } from './childName';
+import { normalizeOutput, normalizeUnits, type Unit } from './normalize';
 
 export const SUPPORT_THRESHOLD = 1 / 3;
 export const MAX_IGNORED_WORDS = 4;
@@ -34,12 +37,46 @@ export function contentKeys(text: string): string[] {
     .map((w) => w.slice(0, 5));
 }
 
-/** Sentences of an output: markdown stripped (no carrying), split on the scorer's separators. */
-export function outputSentences(text: string): string[] {
-  return normalizeOutput(text, { carry: false })
-    .split(/\n|(?<=[.!?;])\s+|[•|]/u)
+const SENTENCE_SPLIT = /\n|(?<=[.!?;])\s+|[•|]/u;
+const splitSentences = (text: string) =>
+  text
+    .split(SENTENCE_SPLIT)
     .map((s) => s.trim())
     .filter(Boolean);
+
+/** Sentences of an output: markdown stripped (no carrying), split on the scorer's separators. */
+export function outputSentences(text: string): string[] {
+  return splitSentences(normalizeOutput(text, { carry: false }));
+}
+
+/** A line that ends like a sentence: . ! ? or … (closing quotes or brackets may follow). */
+const TERMINAL = /[.!?…]["'”’)\]]*\s*$/u;
+/** With the child's name, these make a line a title: an age, or the card / volunteer / Sunday it is for. */
+const TITLE_WORDS =
+  /(?<![\p{L}\p{N}])(?:\d{1,2}|age|aged|edad|años|anos|years?|card|tarjeta|nota|volunteers?|voluntari[oa]s?|sunday|domingo)(?![\p{L}\p{N}])/iu;
+
+/**
+ * A title or heading line names the card or a section; it claims nothing about the child, so the support rule
+ * skips it. One of: a markdown heading or a bold-only heading line (the normalizer's heading kind); the first
+ * line of the output when it is plain text without terminal punctuation; a plain text line without terminal
+ * punctuation that has the child's name and an age or "card" / "tarjeta" / "nota" / "volunteer" / "voluntario" /
+ * "Sunday" / "domingo". A plain line must be a single sentence; list items and table rows are never titles.
+ */
+export function isTitleLine(unit: Unit, first: boolean, childName = ''): boolean {
+  if (unit.kind === 'heading') return true;
+  if (unit.kind !== 'text' || TERMINAL.test(unit.text) || splitSentences(unit.text).length !== 1) return false;
+  if (first) return true;
+  return !!childName && hasWord(normalizeForMatch(unit.text).norm, childName) && TITLE_WORDS.test(unit.text);
+}
+
+export type OutputSentence = { sentence: string; title: boolean };
+
+/** outputSentences, each marked when it comes from a title or heading line (isTitleLine). */
+export function outputClaims(text: string, childName = ''): OutputSentence[] {
+  return normalizeUnits(text, { carry: false }).flatMap((u, i) => {
+    const title = isTitleLine(u, i === 0, childName);
+    return splitSentences(u.text).map((sentence) => ({ sentence, title }));
+  });
 }
 
 export type SentenceSupport = { sentence: string; keys: number; inStory: number; supported: boolean };
@@ -53,9 +90,10 @@ export function sentenceSupport(sentence: string, storyKeys: Set<string>): Sente
   return { sentence, keys: keys.length, inStory, supported: inStory / keys.length >= SUPPORT_THRESHOLD };
 }
 
+/** Support of every claim sentence of an output (title and heading lines skipped). */
 export function supportOf(text: string, story: string): SentenceSupport[] {
   const storyKeys = new Set(contentKeys(story));
-  return outputSentences(text).flatMap((s) => sentenceSupport(s, storyKeys) ?? []);
+  return outputClaims(text, childNameFor(story)).flatMap((s) => (s.title ? [] : (sentenceSupport(s.sentence, storyKeys) ?? [])));
 }
 
 /** Same diagnosis across inflection and EN/ES, so a translation is not counted as a new label. */

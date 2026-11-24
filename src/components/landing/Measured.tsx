@@ -76,9 +76,11 @@ export function Measured({ repoUrl }: { repoUrl: string | null }) {
           </article>
         </div>
         <p className="meas-foot rv">
-          Checked by a word-overlap rule on every sentence (hand-checked precision {E.precisionPct}%; it misses some added
-          sentences, so the summary counts are, if anything, low). Halfdoor&apos;s low count is by design — it drops any line
-          it can&apos;t point to. Full method and every output: {evalHref ? <a href={evalHref}>eval/</a> : 'eval/'} in the source.
+          Checked by a word-overlap rule on every sentence; a card&apos;s title doesn&apos;t count. By hand, on a random sample of
+          {E.check.shortCards ? ' short-card' : ''} sentences: {ofText(E.check.flagged)} the rule flagged really added something,
+          and {ofText(E.check.passed)} it passed really came from the parent. It errs both ways, so the counts are approximate.
+          Halfdoor&apos;s low count is by design — it drops any line it can&apos;t point to. Full method and every output:{' '}
+          {evalHref ? <a href={evalHref}>eval/</a> : 'eval/'} in the source.
         </p>
       </div>
     </section>

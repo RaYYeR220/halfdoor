@@ -73,8 +73,8 @@ The demo allows 15 AI calls per demo church. If you run out, **Reset demo church
 | Halfdoor card + safety net accepted | `e2ee-deepseek-v4-flash` | 100.0% (157/157) | 0 | 3 of 58 | 93 |
 | Plain summary, same enclave model | `e2ee-deepseek-v4-flash` | 100.0% (157/157) | 0 | 33 of 33 | 258 |
 | Plain summary, Claude Sonnet 5.5 | `claude-sonnet-5-5` | 100.0% (157/157) | 0 | 52 of 52 | 291 |
-| Short card prompt, same enclave model | `e2ee-deepseek-v4-flash` | 100.0% (157/157) | 0 | 23 of 51 | 75 |
-| Short card prompt, Claude Sonnet 5.5 | `claude-sonnet-5-5` | 100.0% (157/157) | 0 | 29 of 54 | 86 |
+| Short card prompt, same enclave model | `e2ee-deepseek-v4-flash` | 100.0% (157/157) | 0 | 13 of 51 | 75 |
+| Short card prompt, Claude Sonnet 5.5 | `claude-sonnet-5-5` | 100.0% (157/157) | 0 | 28 of 54 | 86 |
 <!-- /eval:summary -->
 
 Method, every output and both hand reviews: [`eval/results/summary.md`](eval/results/summary.md). Short version in the [README](README.md#measured).

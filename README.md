@@ -71,7 +71,7 @@ Details: [PRIVACY.md](PRIVACY.md).
 
 **On safety facts, a plain AI summary did as well as Halfdoor.** After hand review, the one-page Claude summary kept <!-- eval:baseline_claude-reviewed-present -->100.0% (157/157)<!-- /eval:baseline_claude-reviewed-present -->; Halfdoor kept <!-- eval:halfdoor-reviewed-present -->99.4% (156/157)<!-- /eval:halfdoor-reviewed-present -->, and <!-- eval:halfdoor_net-reviewed-present -->100.0% (157/157)<!-- /eval:halfdoor_net-reviewed-present --> once the parent accepts its safety prompts. Wrong safety claims in the plain outputs: <!-- eval:baselines-trap-review -->4 flagged automatically, 0 confirmed by hand review<!-- /eval:baselines-trap-review -->. Halfdoor's case is provenance, privacy and a fixed card shape, not recall.
 
-**What changes is what gets added.** Outputs with a sentence the parent never said: short prompted card <!-- eval:baseline_claude_short-added -->29 of 54<!-- /eval:baseline_claude_short-added --> (Claude) and <!-- eval:baseline_same_short-added -->23 of 51<!-- /eval:baseline_same_short-added --> (same model); Halfdoor <!-- eval:halfdoor-added -->3 of 58<!-- /eval:halfdoor-added -->. That low count is by construction (the verifier drops any line it can't point to), so it shows the verifier works, not a separate finding. A prompt makes faithful cards likely; Halfdoor enforces it.
+**What changes is what gets added.** Outputs with a sentence the parent never said: short prompted card <!-- eval:baseline_claude_short-added -->28 of 54<!-- /eval:baseline_claude_short-added --> (Claude) and <!-- eval:baseline_same_short-added -->13 of 51<!-- /eval:baseline_same_short-added --> (same model); Halfdoor <!-- eval:halfdoor-added -->3 of 58<!-- /eval:halfdoor-added -->. That low count is by construction (the verifier drops any line it can't point to), so it shows the verifier works, not a separate finding. A prompt makes faithful cards likely; Halfdoor enforces it.
 
 <!-- eval:summary -->
 | System | Model | Safety facts kept | Wrong safety claims | Outputs with a sentence the parent never said | Words, mean |
@@ -80,11 +80,11 @@ Details: [PRIVACY.md](PRIVACY.md).
 | Halfdoor card + safety net accepted | `e2ee-deepseek-v4-flash` | 100.0% (157/157) | 0 | 3 of 58 | 93 |
 | Plain summary, same enclave model | `e2ee-deepseek-v4-flash` | 100.0% (157/157) | 0 | 33 of 33 | 258 |
 | Plain summary, Claude Sonnet 5.5 | `claude-sonnet-5-5` | 100.0% (157/157) | 0 | 52 of 52 | 291 |
-| Short card prompt, same enclave model | `e2ee-deepseek-v4-flash` | 100.0% (157/157) | 0 | 23 of 51 | 75 |
-| Short card prompt, Claude Sonnet 5.5 | `claude-sonnet-5-5` | 100.0% (157/157) | 0 | 29 of 54 | 86 |
+| Short card prompt, same enclave model | `e2ee-deepseek-v4-flash` | 100.0% (157/157) | 0 | 13 of 51 | 75 |
+| Short card prompt, Claude Sonnet 5.5 | `claude-sonnet-5-5` | 100.0% (157/157) | 0 | 28 of 54 | 86 |
 <!-- /eval:summary -->
 
-<sub>**Method.** One sample per story and system. Facts and wrong claims are scored automatically against the answer key, then every automatic miss and flag was read by hand ([`adjudication.json`](eval/results/adjudication.json)). "A sentence the parent never said" is a word-overlap rule; on a fresh hand-checked sample, <!-- eval:grounding-precision -->85% (17 of 20)<!-- /eval:grounding-precision --> of flagged sentences really add something and <!-- eval:grounding-passed -->70% (14 of 20)<!-- /eval:grounding-passed --> of passed ones really are grounded, so counts lean low. Outputs in another language than their story aren't scored for it. Halfdoor drafting median <!-- eval:halfdoor-p50 -->7.1 s<!-- /eval:halfdoor-p50 --> (model calls only), <!-- eval:halfdoor-cost-per-story -->$0.0002<!-- /eval:halfdoor-cost-per-story --> per card at Venice list prices. Everything: [`eval/results/summary.md`](eval/results/summary.md).</sub>
+<sub>**Method.** One sample per story and system. Facts and wrong claims are scored automatically against the answer key, then every automatic miss and flag was read by hand ([`adjudication.json`](eval/results/adjudication.json)). "A sentence the parent never said" is a word-overlap rule; a card's title or a heading is not counted as a sentence (the rule was revised after the run to skip them and every output re-scored from the cache, no new model calls: [rule change](eval/results/summary.md#provenance-what-each-output-adds)). On a fresh hand-checked sample of short-card sentences, <!-- eval:grounding-precision -->86.7% (13 of 15)<!-- /eval:grounding-precision --> of flagged sentences really add something and <!-- eval:grounding-passed -->93.3% (14 of 15)<!-- /eval:grounding-passed --> of passed ones really are grounded; the rule errs both ways, so the counts are approximate. Outputs in another language than their story aren't scored for it. Halfdoor drafting median <!-- eval:halfdoor-p50 -->7.1 s<!-- /eval:halfdoor-p50 --> (model calls only), <!-- eval:halfdoor-cost-per-story -->$0.0002<!-- /eval:halfdoor-cost-per-story --> per card at Venice list prices. Everything: [`eval/results/summary.md`](eval/results/summary.md).</sub>
 
 ## Planning Center integration
 
@@ -152,7 +152,7 @@ pnpm eval                    # the evaluation (paid model calls)
 - **The server sees the approved card when it is saved,** before sealing it. The raw story never reaches it in plain text.
 - **Planning Center sync is in progress.** Check-Ins has no webhooks, so it will be polled, not pushed.
 - **Demo clock:** demo churches are created when you open them, so their pages shift displayed times to make the first service read 9:00 on a Sunday.
-- **The added-sentence measure is approximate** (<!-- eval:grounding-precision -->85% (17 of 20)<!-- /eval:grounding-precision --> precision on a hand-checked sample), and the stories are synthetic.
+- **The added-sentence measure is approximate** (<!-- eval:grounding-precision -->86.7% (13 of 15)<!-- /eval:grounding-precision --> precision on a hand-checked sample of short-card sentences, and it misses some added sentences too), and the stories are synthetic.
 - **Expired cards are deleted when the demo is opened,** not by a scheduled job yet.
 - **Paraphrase and translation checks cover English and Spanish;** in other languages every line is the parent's own sentence.
 - **ARASAAC pictograms are non-commercial** (CC BY-NC-SA).

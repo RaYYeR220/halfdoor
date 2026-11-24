@@ -169,6 +169,23 @@ describe('doc values from a small run', () => {
     expect('grounding-precision' in evalValues(f, adj)).toBe(false);
   });
 
+  test('the short-card check, when there is one, is the one the docs cite', () => {
+    const s = (flagged: 'unsupported' | 'supported', grounded: boolean) => ({ system: 'baseline_claude_short', storyId: 's', sentence: 'x', flagged, keys: 1, inStory: 0, grounded, note: '' });
+    const withShort: SupportValidationFile = { ...sv, shortCard: { rule: 'v3', seed: 3, round: 1, samples: [s('unsupported', false), s('unsupported', false), s('unsupported', true), s('supported', false), s('supported', true)] } };
+    expect(groundingCheck(withShort)).toEqual({ flagged: { n: 2, of: 3 }, passed: { n: 1, of: 2 } });
+    expect(evalValues(f, adj, withShort)['grounding-precision']).toBe('66.7% (2 of 3)');
+  });
+
+  test('after a re-score, the count before it is available to the docs', () => {
+    expect('halfdoor-added-before' in v).toBe(false);
+    const before = { storiesWithUnsupported: 2, supportScored: 2, unsupportedMean: 1, present: 3, trapHits: 0 };
+    const rescored: ResultsFile = { ...f, meta: { ...f.meta, rescored: [{ at: '2026-11-24', note: 'v3', before: { 'halfdoor@e2ee-x': before } }] } };
+    const r = evalValues(rescored, adj, sv);
+    expect(r['halfdoor-added-before']).toBe('2 of 2');
+    expect(r['halfdoor-added']).toBe('1 of 2');
+    expect('baseline_claude-added-before' in r).toBe(false);
+  });
+
   test('summary table: reviewed facts and claims, added sentences, words; unreviewed flags are called out', () => {
     const t = v.summary.split('\n');
     expect(t[0]).toBe('| System | Model | Safety facts kept | Wrong safety claims | Outputs with a sentence the parent never said | Words, mean |');

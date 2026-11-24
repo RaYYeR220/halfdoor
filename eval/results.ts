@@ -2,6 +2,14 @@
 import { existsSync, readFileSync } from 'node:fs';
 import type { Aggregate, ModelCandidate, Row } from './score';
 
+/** One re-score of a results file from the cache (eval/rescore.ts): when, why, and the numbers it replaced. */
+export type RescoreRecord = {
+  at: string;
+  note: string;
+  /** Keyed `system@model`. */
+  before: Record<string, { storiesWithUnsupported: number; supportScored: number; unsupportedMean: number; present: number; trapHits: number }>;
+};
+
 export type ResultsFile = {
   meta: {
     createdAt: string;
@@ -14,6 +22,8 @@ export type ResultsFile = {
     balanceBeforeUsd: number | null;
     balanceAfterUsd: number | null;
     liveSpendUsd: number;
+    /** Re-scores of these same outputs from the cache after a scoring-rule change (eval/rescore.ts), oldest first. */
+    rescored?: RescoreRecord[];
   };
   aggregates: { system: string; model: string; agg: Aggregate }[];
   /** Sweep only: model choice over the `halfdoor` aggregates. */

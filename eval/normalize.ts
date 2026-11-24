@@ -79,12 +79,22 @@ function classify(raw: string): Line {
 
 const endsWithColon = (s: string) => /:\s*$/u.test(s);
 
+/** One output unit and the kind of line it came from ('heading': a markdown heading or a bold-only heading line). */
+export type Unit = { text: string; kind: 'heading' | 'row' | 'item' | 'text' };
+
 /**
  * `carry` (default true): headings and leads are carried onto the next unit / list children and list items
  * become single units (for the sentence-scoped key patterns). `carry: false` keeps every heading, lead and
  * item as its own line with its own sentences (for counting sentences, e.g. the support metric).
  */
 export function normalizeOutput(text: string, opts: { carry?: boolean } = {}): string {
+  return normalizeUnits(text, opts)
+    .map((u) => u.text)
+    .join('\n');
+}
+
+/** normalizeOutput as a list of units, each tagged with the kind of line it came from (a carried unit takes its body's kind). */
+export function normalizeUnits(text: string, opts: { carry?: boolean } = {}): Unit[] {
   const carry = opts.carry !== false;
   const lines = text
     .normalize('NFC')
@@ -93,18 +103,18 @@ export function normalizeOutput(text: string, opts: { carry?: boolean } = {}): s
     .filter((l) => !FENCE.test(l))
     .map(classify);
 
-  const units: string[] = [];
+  const units: Unit[] = [];
   let heading: string | null = null;
   /** Open leads: a list item (or text line, indent -1) ending in ":" that owns the deeper items after it. */
   const leads: { indent: number; text: string; childIndent?: number }[] = [];
 
-  const emit = (u: string) => {
+  const emit = (u: string, kind: Unit['kind']) => {
     const body = u.trim();
     if (!body) return;
-    if (!carry && heading) units.push(canon(heading));
+    if (!carry && heading) units.push({ text: canon(heading), kind: 'heading' });
     const withHeading = carry && heading ? `${heading.replace(/[:.]\s*$/u, '')}: ${body}` : body;
     heading = null;
-    units.push(canon(withHeading));
+    units.push({ text: canon(withHeading), kind });
   };
   const nextNonBlank = (i: number) => {
     for (let j = i + 1; j < lines.length; j++) if (lines[j].kind !== 'blank') return lines[j];
@@ -119,7 +129,7 @@ export function normalizeOutput(text: string, opts: { carry?: boolean } = {}): s
       case 'sep':
         break;
       case 'heading':
-        if (heading) units.push(canon(heading)); // two headings in a row: the first stands alone
+        if (heading) units.push({ text: canon(heading), kind: 'heading' }); // two headings in a row: the first stands alone
         heading = l.text;
         break;
       case 'row': {
@@ -129,7 +139,7 @@ export function normalizeOutput(text: string, opts: { carry?: boolean } = {}): s
           .split('|')
           .map((c) => stripInline(c).replace(/[?:]+\s*$/u, '').trim())
           .filter(Boolean);
-        emit(carry ? joinSentences(cells.join(': ')) : cells.join(': '));
+        emit(carry ? joinSentences(cells.join(': ')) : cells.join(': '), 'row');
         break;
       }
       case 'item': {
@@ -142,11 +152,11 @@ export function normalizeOutput(text: string, opts: { carry?: boolean } = {}): s
           break;
         }
         if (!carry) {
-          emit(l.text);
+          emit(l.text, 'item');
           break;
         }
         const prefix = leads.map((x) => x.text).join(' ');
-        emit(joinSentences(prefix ? `${prefix} ${l.text}` : l.text));
+        emit(joinSentences(prefix ? `${prefix} ${l.text}` : l.text), 'item');
         break;
       }
       case 'text': {
@@ -155,11 +165,11 @@ export function normalizeOutput(text: string, opts: { carry?: boolean } = {}): s
           leads.push({ indent: -1, text: joinSentences(l.text), childIndent: next.indent });
           break;
         }
-        emit(l.text);
+        emit(l.text, 'text');
         break;
       }
     }
   }
-  if (heading) units.push(canon(heading));
-  return units.join('\n');
+  if (heading) units.push({ text: canon(heading), kind: 'heading' });
+  return units;
 }

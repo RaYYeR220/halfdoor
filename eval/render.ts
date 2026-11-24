@@ -22,7 +22,7 @@ import {
   type ResultsFile,
 } from './results';
 import { scoreOutput, type Aggregate, type Row } from './score';
-import { rng, sample, type SupportValidationFile } from './support-sample';
+import { checkCounts, isTitleNow, rng, sample, type SupportSample, type SupportValidationFile } from './support-sample';
 import type { EvalStory } from './types';
 
 const DIR = join(process.cwd(), 'eval', 'results');
@@ -155,18 +155,48 @@ function render(final: ResultsFile, sweep: ResultsFile | null, adj: Adjudication
 
   // ---- 2. provenance
   md.push('## Provenance: what each output adds', '', provenanceTable(final), '');
-  const r2 = sv?.rounds.at(-1);
-  const prec = (r: NonNullable<typeof r2>) => {
-    const u = r.samples.filter((s) => s.flagged === 'unsupported');
-    const s = r.samples.filter((x) => x.flagged === 'supported');
-    return { p: u.filter((x) => x.grounded === false).length, pn: u.length, c: s.filter((x) => x.grounded === true).length, cn: s.length };
+  const r2 = sv?.rounds.length ? [...sv.rounds].sort((a, b) => b.round - a.round)[0] : undefined;
+  const short = sv?.shortCard;
+  const storyText = (id: string) => stories.get(id)?.text ?? '';
+  const titleNow = (s: SupportSample) => isTitleNow(s, final, storyText);
+  const fr = (x: { n: number; of: number }) => `${x.n}/${x.of}`;
+  const handCheck = () => {
+    const parts: string[] = [];
+    if (short) {
+      const k = checkCounts(short);
+      parts.push(`on the short cards, ${fr(k.flagged)} flagged sentences really add something the parent did not write and ${fr(k.passed)} passed sentences really are grounded`);
+    }
+    if (r2) {
+      const k = checkCounts(r2);
+      const titles = r2.samples.filter((s) => s.flagged === 'unsupported' && titleNow(s)).length;
+      const k3 = checkCounts(r2, titleNow);
+      parts.push(
+        `on the one-page summaries (round ${r2.round}, judged before title lines were skipped) ${fr(k.flagged)} flagged and ${fr(k.passed)} passed` +
+          (titles ? `; ${plural(titles, 'of its flagged sentences is a title line', 'of its flagged sentences are title lines')} the current rule skips, and without ${titles === 1 ? 'it' : 'them'} ${fr(k3.flagged)} flagged sentences really add something` : ''),
+      );
+    }
+    return parts.length
+      ? ` Hand check on fresh random samples (appendix B): ${parts.join('; ')}. The errors go both ways (a translation or a close paraphrase gets flagged; an added instruction tacked onto a story sentence passes), so read the counts as approximate, not as a lower or upper bound.`
+      : '';
+  };
+  const rescores = final.meta.rescored ?? [];
+  const rescoreLine = (rec: (typeof rescores)[number]) => {
+    const key = (system: string, model: string) => `${system}@${model}`;
+    const moved = A.filter(({ system, model }) => rec.before[key(system, model)]).map(({ system, model, agg: a }) => ({ system, b: rec.before[key(system, model)], a }));
+    const safetySame = moved.every((x) => x.b.present === x.a.present && x.b.trapHits === x.a.trapHits);
+    return (
+      `- **Rule change after the run (${rec.at.slice(0, 10)}).** ${rec.note} Every output was re-scored from the cached model outputs (\`eval/rescore.ts\`)` +
+      (safetySame ? '; safety facts and trap hits did not change. ' : '. ') +
+      `Outputs with a sentence not grounded, before → after: ${moved
+        .map((x) => `${label(x.system)} ${x.b.storiesWithUnsupported}/${x.b.supportScored} → ${x.a.provenance?.storiesWithUnsupported}/${x.a.provenance?.supportScored} (${num(x.b.unsupportedMean, 2)} → ${num(x.a.provenance?.unsupportedMean ?? 0, 2)} per output)`)
+        .join('; ')}. The earlier rule counted a card's title ("Ethan, age 10 — Sunday Volunteer Card") as a sentence the parent never said, which inflated the short-card baselines most.`
+    );
   };
   md.push(
     "- **Halfdoor's row is by construction.** The verifier only keeps what it can point to in the story and blocks diagnosis words the parent did not use, so near-zero here is the design working, not a separate result. The comparison that matters is between the baselines, and between a baseline and what the parent wrote.",
-    `- **Not grounded**: a sentence counts as grounded when at least ${Math.round(SUPPORT_THRESHOLD * 100)}% of its content words (4+ letters, not stopwords, compared by 5-letter prefix) also occur in the story. Lines of ${MAX_IGNORED_WORDS} words or fewer are ignored.` +
-      (r2
-        ? ` Hand check on a fresh random sample (appendix B): ${prec(r2).p}/${prec(r2).pn} flagged sentences really add something the parent did not write, and ${prec(r2).c}/${prec(r2).cn} passed sentences really are grounded, so the counts are approximate and lean low.`
-        : ''),
+    `- **Not grounded**: a sentence counts as grounded when at least ${Math.round(SUPPORT_THRESHOLD * 100)}% of its content words (4+ letters, not stopwords, compared by 5-letter prefix) also occur in the story. Lines of ${MAX_IGNORED_WORDS} words or fewer are ignored, and so are title and heading lines, which name the card or a section and claim nothing: a markdown heading, a bold-only heading line, a first line with no closing punctuation, and a line with no closing punctuation that has the child's name with an age or "card", "volunteer", "Sunday" (or the Spanish "tarjeta", "nota", "voluntario", "domingo").` +
+      handCheck(),
+    ...rescores.map(rescoreLine),
     `- **Not scored for grounding**: an output whose detected language (a stopword heuristic) differs from its story's is skipped, because word overlap cannot see a translation. The one-page same-model summary answered ${(() => {
       const n = rowsOf('baseline_same').filter((r) => stories.get(r.storyId)?.lang === 'es' && r.prov?.lang?.output === 'en').length;
       return n === spanishStories ? `all ${spanishStories}` : `${n} of the ${spanishStories}`;
@@ -326,23 +356,33 @@ function render(final: ResultsFile, sweep: ResultsFile | null, adj: Adjudication
 
   // ---- appendix B
   if (sv?.rounds.length) {
+    const checks = [
+      ...sv.rounds.map((r) => ({ name: `Round ${r.round}`, from: 'one-page summaries', v: r })),
+      ...(sv.shortCard ? [{ name: 'Short cards', from: 'short-card baselines', v: sv.shortCard }] : []),
+    ];
     md.push('## Appendix B: grounding-rule validation', '');
-    md.push('20 random sentences the rule flags as not grounded and 20 it passes, from the plain summaries, judged by hand against the story (grounded = the story states, or translates to, everything the sentence claims; boilerplate, headers and added advice are not grounded).', '');
+    md.push(
+      'Each check draws random sentences the rule flags as not grounded and as many it passes (seeded, `eval/support-sample.ts`), judged by hand against the story (grounded = the story states, or translates to, everything the sentence claims; boilerplate, template text and added advice are not grounded).',
+      '',
+    );
     md.push(
       table(
-        ['Round', 'Rule', 'Seed', 'Flagged that really add something', 'Passed that really are grounded'],
-        sv.rounds.map((r) => {
-          const x = prec(r);
-          return [r.round, r.rule, r.seed, `${x.p}/${x.pn} (${pct(x.p, x.pn)})`, `${x.c}/${x.cn} (${pct(x.c, x.cn)})`];
+        ['Check', 'Drawn from', 'Rule', 'Seed', 'Flagged that really add something', 'Passed that really are grounded'],
+        checks.map(({ name, from, v }) => {
+          const x = checkCounts(v);
+          return [name, from, v.rule, v.seed, `${fr(x.flagged)} (${pct(x.flagged.n, x.flagged.of)})`, `${fr(x.passed)} (${pct(x.passed.n, x.passed.of)})`];
         }),
       ),
       '',
-      'Round 1 missed the 80% target: its false flags were translations, close paraphrases and short label lines. The rule was revised once (language check, one-third threshold, short lines ignored) and checked again on a fresh sample (round 2).',
+      'Round 1 missed the 80% target: its false flags were translations, close paraphrases and short label lines. The rule was revised once (language check, one-third threshold, short lines ignored) and checked again on a fresh sample (round 2). Rounds 1 and 2 judged title lines ("Sunday Care Summary — Jonah (age 4)") as not grounded, so they counted toward precision. ' +
+        (sv.shortCard
+          ? 'Title lines are not claims, and the short cards open with one, so the rule was revised again to skip them (v3, see "Rule change after the run" above) and checked on a fresh sample drawn from the short-card baselines only, under v3. That check is the one the public short-card numbers cite.'
+          : ''),
       '',
     );
-    for (const r of sv.rounds) {
-      md.push(`<details><summary>Round ${r.round} judgments</summary>`, '');
-      for (const s of r.samples) md.push(`- ${s.flagged}, ${s.grounded ? 'grounded' : 'not grounded'} · ${s.storyId} · "${s.sentence}" — ${s.note}`);
+    for (const { name, v } of checks) {
+      md.push(`<details><summary>${name} judgments</summary>`, '');
+      for (const s of v.samples) md.push(`- ${s.flagged}, ${s.grounded ? 'grounded' : 'not grounded'} · ${s.system} · ${s.storyId} · "${s.sentence}" — ${s.note}`);
       md.push('', '</details>', '');
     }
   }

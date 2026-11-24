@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { contentKeys, outputSentences, provenance, sentenceSupport, supportOf, unsaidLabelFamilies, wordCount } from '../../eval/metrics';
+import { contentKeys, isTitleLine, outputClaims, outputSentences, provenance, sentenceSupport, supportOf, unsaidLabelFamilies, wordCount } from '../../eval/metrics';
 import { aggregateProvenance, type Row } from '../../eval/score';
 import { rng, sample } from '../../eval/support-sample';
 
@@ -21,6 +21,43 @@ describe('support rule', () => {
   });
   test('sentences come from markdown without carrying headings or leads', () => {
     expect(outputSentences('## Safety\n\nOnly these people:\n- Sara (mom)\n- Ruth\n\nHe bolts. He hides!')).toEqual(['Safety', 'Only these people:', 'Sara (mom)', 'Ruth', 'He bolts.', 'He hides!']);
+  });
+  test('title and heading lines are not claims (rule v3)', () => {
+    const t = (text: string, kind: 'heading' | 'row' | 'item' | 'text', first = false) => isTitleLine({ text, kind }, first, 'Leo');
+    // markdown headings and bold-only heading lines
+    expect(t('About Leo and his Sunday morning', 'heading')).toBe(true);
+    // the first line, when it does not end like a sentence
+    expect(t("Here's a short card for the volunteer:", 'text', true)).toBe(true);
+    expect(t('Child Care Summary: Elias, Age 9', 'text', true)).toBe(true);
+    expect(t('Leo loves dinosaurs and anything with wheels.', 'text', true)).toBe(false);
+    // any line without closing punctuation that has the child's name with an age or card / volunteer / Sunday words
+    expect(t('Leo, age 6 — Sunday Volunteer Card', 'text')).toBe(true);
+    expect(t('Tarjeta para el voluntario: Leo (6 años)', 'text')).toBe(true);
+    expect(t('Leo (6)', 'text')).toBe(true);
+    // ...but not a sentence, a line with two sentences, a line without the name, a list item or a table row
+    expect(t('Leo, age 6, loves Sunday songs.', 'text')).toBe(false);
+    expect(t('Leo is 6. He loves Sunday songs', 'text')).toBe(false);
+    expect(t('Pickup and Safety: Please Read First', 'text')).toBe(false);
+    expect(t('Leo loves the Sunday songs', 'item')).toBe(false);
+    expect(t('Leo: 6 years', 'row')).toBe(false);
+  });
+  test('outputClaims marks title lines; supportOf skips them', () => {
+    const out = [
+      '**Leo, age 6 — Sunday Volunteer Card**',
+      '',
+      'Leo loves dinosaurs and anything with wheels.',
+      '',
+      '## What helps him feel safe at church',
+      '',
+      'Offer him a sensory fidget toy and a weighted blanket during snack time.',
+    ].join('\n');
+    expect(outputClaims(out, 'Leo').map((c) => c.title)).toEqual([true, false, true, false]);
+    expect(supportOf(out, STORY).map((x) => [x.sentence, x.supported])).toEqual([
+      ['Leo loves dinosaurs and anything with wheels.', true],
+      ['Offer him a sensory fidget toy and a weighted blanket during snack time.', false],
+    ]);
+    // A plain first line without a closing mark is a title, so the card's first claim must end like a sentence.
+    expect(supportOf('Volunteer notes for this morning at Fernbrook\nOffer him a sensory fidget toy and a weighted blanket.', STORY)).toHaveLength(1);
   });
   test('supportOf counts per sentence', () => {
     const s = supportOf('Leo loves dinosaurs and anything with wheels. Offer him a sensory fidget toy and a weighted blanket during snack time.', STORY);

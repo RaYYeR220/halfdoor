@@ -32,9 +32,13 @@ describe('landing', () => {
     expect(text).toContain('35 in English, 25 in Spanish, each with a hidden answer key');
     expect(text).toContain('Halfdoor 157 of 157 (after the parent confirms the safety prompts). A plain AI summary kept them too: 157 of 157.');
     expect(text).toContain(
-      'A prompted short card: 29 of 54 (Claude Sonnet 5.5) and 23 of 51 (same model as Halfdoor). Halfdoor: 3 of 58, and every line shows the words it came from.',
+      'A prompted short card: 28 of 54 (Claude Sonnet 5.5) and 13 of 51 (same model as Halfdoor). Halfdoor: 3 of 58, and every line shows the words it came from.',
     );
-    expect(text).toContain('hand-checked precision 85%');
+    expect(text).toContain("a card's title doesn't count");
+    expect(text).toContain(
+      'By hand, on a random sample of short-card sentences: 13 of 15 the rule flagged really added something, and 14 of 15 it passed really came from the parent. It errs both ways, so the counts are approximate.',
+    );
+    expect(text).not.toMatch(/if anything, low|lean low/);
     expect(text).not.toContain('{{');
   });
 
