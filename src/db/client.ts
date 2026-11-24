@@ -15,6 +15,10 @@ let current: Db | null = null;
  * split a pipelined query across backends: one backend then waits for the rest of the message forever and the
  * query never answers (pages stream forever, or another query gets its statement timeout). Short connect/idle
  * timeouts suit serverless instances and keep a dead or stalled pooler connection from holding the pool.
+ *
+ * No per-query timeout is set here: postgres.js 4 has none client-side (only connect/idle/max-lifetime), and the
+ * `connection: { statement_timeout }` startup parameter is not accepted by the transaction pooler. The guard is the
+ * database role's own `statement_timeout = 15s` (set in Supabase), which cancels a stalled query server-side.
  */
 export function getDb(): Db {
   if (!current) {
