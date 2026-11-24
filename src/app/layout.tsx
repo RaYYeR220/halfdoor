@@ -17,15 +17,15 @@ export const metadata: Metadata = {
   metadataBase: SITE_URL,
   title: { default: 'Halfdoor', template: '%s · Halfdoor' },
   description: DESCRIPTION,
-  // public/og.png is the hero's unlocked key frame at 1200×630 (Leo's card, open at check-in).
+  // public/og.jpg is the hero's unlocked key frame at 1200×630 (Leo's card, open at check-in).
   openGraph: {
     type: 'website',
     siteName: 'Halfdoor',
     title: SOCIAL_TITLE,
     description: DESCRIPTION,
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: "Halfdoor: Leo's card on the buddy's phone, made from his mom's own words, unlocked at check-in." }],
+    images: [{ url: '/og.jpg', width: 1200, height: 630, alt: "Halfdoor: Leo's card on the buddy's phone, made from his mom's own words, unlocked at check-in." }],
   },
-  twitter: { card: 'summary_large_image', title: SOCIAL_TITLE, description: DESCRIPTION, images: ['/og.png'] },
+  twitter: { card: 'summary_large_image', title: SOCIAL_TITLE, description: DESCRIPTION, images: ['/og.jpg'] },
 };
 
 export const viewport: Viewport = {
