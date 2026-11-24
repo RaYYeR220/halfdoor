@@ -73,9 +73,12 @@ describe('adjudicate', () => {
 });
 
 describe('formatting', () => {
-  test('usd: 4 decimals below $1, 2 above, the same rule for every row', () => {
+  test('usd: 4 decimals below $0.10, 2 from $0.10 up, the same rule for every row', () => {
     expect(usd(0.0114)).toBe('$0.0114');
-    expect(usd(0.43)).toBe('$0.4300');
+    expect(usd(0.0999)).toBe('$0.0999');
+    expect(usd(0.1)).toBe('$0.10');
+    expect(usd(0.43)).toBe('$0.43');
+    expect(usd(0.6025)).toBe('$0.60');
     expect(usd(12.345)).toBe('$12.35');
   });
   test('plural counts facts and stories exactly', () => {
@@ -145,7 +148,7 @@ describe('doc values from a small run', () => {
     expect(v['stories-es']).toBe('1');
     expect(reusesCall('halfdoor_net')).toBe(true);
     expect(reusesCall('halfdoor')).toBe(false);
-    expect(v['eval-cost']).toBe('$0.4200'); // halfdoor 0.02 + baseline 0.40; the safety-net row re-scores the same card
+    expect(v['eval-cost']).toBe('$0.42'); // halfdoor 0.02 + baseline 0.40; the safety-net row re-scores the same card
     expect(v['halfdoor-cost-per-story']).toBe('$0.0100');
   });
 

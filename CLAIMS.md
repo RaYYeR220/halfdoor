@@ -56,7 +56,7 @@ Every public statement Halfdoor makes, with how to check it.
 
 ### The evaluation
 
-Reproduce with `pnpm eval` (model calls are cached in `eval/.cache/`, so a re-run is free; the full run cost <!-- eval:eval-cost -->$0.6025<!-- /eval:eval-cost --> at Venice list prices), then `pnpm eval:render`. Results: [`eval/results/final.json`](eval/results/final.json), method and every output: [`eval/results/summary.md`](eval/results/summary.md). Numbers below are after hand review of every automatic flag ([`adjudication.json`](eval/results/adjudication.json)).
+Reproduce with `pnpm eval` (model calls are cached in `eval/.cache/`, so a re-run is free; the full run cost <!-- eval:eval-cost -->$0.60<!-- /eval:eval-cost --> at Venice list prices), then `pnpm eval:render`. Results: [`eval/results/final.json`](eval/results/final.json), method and every output: [`eval/results/summary.md`](eval/results/summary.md). Numbers below are after hand review of every automatic flag ([`adjudication.json`](eval/results/adjudication.json)).
 
 | Claim | Number |
 |---|---|

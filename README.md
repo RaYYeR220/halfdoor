@@ -146,7 +146,7 @@ pnpm test:e2e                # the whole Sunday in a browser, with recorded mode
 pnpm eval                    # the evaluation (paid model calls)
 ```
 
-`pnpm eval` caches every model call in `eval/.cache/`, so re-runs are free, and `--max-usd` (default $5) stops it before it spends more. The run behind the numbers above cost <!-- eval:eval-cost -->$0.6025<!-- /eval:eval-cost --> at Venice list prices. Try `--limit 2` first.
+`pnpm eval` caches every model call in `eval/.cache/`, so re-runs are free, and `--max-usd` (default $5) stops it before it spends more. The run behind the numbers above cost <!-- eval:eval-cost -->$0.60<!-- /eval:eval-cost --> at Venice list prices. Try `--limit 2` first.
 
 ## Honest limits
 

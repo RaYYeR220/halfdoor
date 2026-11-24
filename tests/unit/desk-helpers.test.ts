@@ -76,6 +76,9 @@ describe('AI ledger', () => {
     expect(formatUsd(0.00003)).toBe('<$0.0001');
     expect(formatUsd(0.00726)).toBe('$0.0073');
     expect(formatUsd(1.5)).toBe('$1.50');
+    expect(formatUsd(0.0999)).toBe('$0.0999');
+    expect(formatUsd(0.1)).toBe('$0.10');
+    expect(formatUsd(0.6025)).toBe('$0.60');
     expect(formatUsd(Number.NaN)).toBe('$0');
   });
 });

@@ -97,7 +97,8 @@ export function ledgerTotals(rows: readonly Pick<LedgerRow, 'e2ee' | 'ok' | 'tok
 export function formatUsd(n: number): string {
   if (!Number.isFinite(n) || n <= 0) return '$0';
   if (n < 0.0001) return '<$0.0001';
-  return `$${n < 1 ? n.toFixed(4) : n.toFixed(2)}`;
+  // Fractions of a cent need 4 decimals; from $0.10 up, cents are enough.
+  return `$${n < 0.1 ? n.toFixed(4) : n.toFixed(2)}`;
 }
 
 // ---------------------------------------------------------------- note sentences

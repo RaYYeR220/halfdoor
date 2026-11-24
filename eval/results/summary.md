@@ -99,9 +99,9 @@ Flagged sentences from each baseline, three per system, chosen at random (seeded
 | Halfdoor card | 7.1 s | 20.5 s | $0.0114 | $0.0002 |
 | Halfdoor card + safety net accepted | 7.1 s | 20.5 s | $0.0114 | $0.0002 |
 | Plain summary, same enclave model | 19.1 s | 63.4 s | $0.0100 | $0.0002 |
-| Plain summary, Claude Sonnet 5.5 | 6.7 s | 13.1 s | $0.4301 | $0.0072 |
+| Plain summary, Claude Sonnet 5.5 | 6.7 s | 13.1 s | $0.43 | $0.0072 |
 | Short card prompt, same enclave model | 4.4 s | 10.8 s | $0.0041 | $0.0001 |
-| Short card prompt, Claude Sonnet 5.5 | 2.6 s | 3.5 s | $0.1469 | $0.0024 |
+| Short card prompt, Claude Sonnet 5.5 | 2.6 s | 3.5 s | $0.15 | $0.0024 |
 
 Cost from the usage each response reports, at Venice list prices (`src/lib/venice/prices.ts`). The two Halfdoor rows share one model call per story.
 

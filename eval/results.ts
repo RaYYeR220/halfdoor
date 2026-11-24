@@ -73,8 +73,8 @@ export function adjudicate(f: ResultsFile, adj: Adjudication): Map<string, Adjud
 export const pct = (a: number, b: number) => (b === 0 ? 'n/a' : `${((100 * a) / b).toFixed(1)}%`);
 export const frac = (a: number, b: number) => `${pct(a, b)} (${a}/${b})`;
 export const sec = (ms: number) => `${(ms / 1000).toFixed(1)} s`;
-/** Dollars: 4 decimals below $1 (per-story costs are fractions of a cent), 2 above. */
-export const usd = (x: number) => `$${Math.abs(x) < 1 ? x.toFixed(4) : x.toFixed(2)}`;
+/** Dollars: 4 decimals below $0.10 (per-story costs are fractions of a cent), 2 from $0.10 up. */
+export const usd = (x: number) => `$${Math.abs(x) < 0.1 ? x.toFixed(4) : x.toFixed(2)}`;
 export const num = (x: number, d = 1) => x.toFixed(d);
 export const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
