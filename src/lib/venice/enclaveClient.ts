@@ -17,6 +17,11 @@ export type EnclaveChatOpts = {
   signal?: AbortSignal;
   /** Called once the quote binding AND Intel's signature passed, right before encrypting (quote.signature === 'verified'). */
   onAttestation?: (a: AttestationSummary) => void;
+  /**
+   * Progress only: the quote binding passed and Intel's signature check is starting (quote.signature === 'pending').
+   * Fires only for the call that runs a fresh check (never for a reused one); nothing is encrypted at this point.
+   */
+  onBinding?: (a: AttestationSummary) => void;
   /** Node variant (eval): call Venice directly with this key. Absent = browser, via our two routes. */
   node?: NodeAccess;
   fetchImpl?: typeof fetch;
@@ -136,6 +141,7 @@ async function attestFresh(opts: EnclaveChatOpts, f: typeof fetch, base: string)
   if (!attRes.ok) throw new EnclaveError(`attestation_request_failed_${attRes.status}`);
   const raw = (await attRes.json()) as Record<string, unknown>;
   const bound = checkAttestation(raw, nonce, opts.model); // binding; throws on mismatch
+  opts.onBinding?.(bound);
 
   // Binding alone is forgeable (anyone can build a quote with our nonce and their key): fail closed on the signature.
   let r: QuoteSignatureResult;

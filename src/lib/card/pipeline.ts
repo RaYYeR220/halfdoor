@@ -22,6 +22,8 @@ export class StoryLengthError extends Error {
 export type PipelineOpts = {
   model: string;
   onAttestation?: (a: AttestationSummary) => void;
+  /** Progress only: the quote binding passed, Intel's signature check is running (see EnclaveChatOpts.onBinding). */
+  onBinding?: (a: AttestationSummary) => void;
   signal?: AbortSignal;
   /** Injectable for tests; production default is enclaveChat. */
   chat?: EnclaveChat;
@@ -88,7 +90,7 @@ export async function draftCard(
   const chat = opts.chat ?? enclaveChat;
   const { system, user } = buildCardPrompt(story, childName);
   const call = (u: string) =>
-    chat({ model: opts.model, purpose: 'card', system, user: u, signal: opts.signal, onAttestation: opts.onAttestation, node: opts.node });
+    chat({ model: opts.model, purpose: 'card', system, user: u, signal: opts.signal, onAttestation: opts.onAttestation, onBinding: opts.onBinding, node: opts.node });
 
   let res = await call(user);
   let parsed = parseDraft(res.text);
@@ -149,7 +151,7 @@ export async function translateCard(card: VerifiedCard, opts: PipelineOpts & { c
   const chat = opts.chat ?? enclaveChat;
   const { system, user } = buildTranslatePrompt(card.items, opts.childName);
   const res = await chat({
-    model: opts.model, purpose: 'translate', system, user, signal: opts.signal, onAttestation: opts.onAttestation, node: opts.node,
+    model: opts.model, purpose: 'translate', system, user, signal: opts.signal, onAttestation: opts.onAttestation, onBinding: opts.onBinding, node: opts.node,
   });
 
   let byId: Map<string, string>;

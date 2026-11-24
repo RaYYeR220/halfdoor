@@ -154,6 +154,8 @@ export type EnclaveCopy = {
   limits: string;
   /** One-line claim for PRIVACY / CLAIMS docs. */
   claim: string;
+  /** The same claim in plain words, for the line under a parent's writing box. */
+  short: string;
 };
 
 export const ENCLAVE_COPY: EnclaveCopy = {
@@ -178,6 +180,8 @@ export const ENCLAVE_COPY: EnclaveCopy = {
   limits: HONEST_LIMITS,
   claim:
     "Your browser checks that the enclave's key and your one-time nonce are sealed inside an Intel TDX quote from a non-debug enclave and verifies Intel's signature chain on that quote; nothing is sent unless both checks pass.",
+  short:
+    "Before anything is sent, your browser checks that the enclave's key and your one-time code are sealed in an Intel TDX report and verifies Intel's signature on it. If either check fails, nothing is sent.",
 };
 
 export const ENCLAVE_COPY_ES: EnclaveCopy = {
@@ -203,6 +207,8 @@ export const ENCLAVE_COPY_ES: EnclaveCopy = {
   limits: HONEST_LIMITS_ES,
   claim:
     'Su navegador comprueba que la clave del enclave y su código de un solo uso están sellados en un informe Intel TDX de un enclave sin modo de depuración y verifica la cadena de firmas de Intel en ese informe; no se envía nada si alguna de las dos comprobaciones falla.',
+  short:
+    'Antes de enviar nada, su navegador comprueba que la clave del enclave y su código de un solo uso están sellados en un informe Intel TDX y verifica la firma de Intel en ese informe. Si alguna de las dos comprobaciones falla, no se envía nada.',
 };
 
 /** The signature line for a summary, in the viewer's language. */

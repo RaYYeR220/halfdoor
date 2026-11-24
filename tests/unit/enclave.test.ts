@@ -163,6 +163,37 @@ describe('enclaveChat quote checks', () => {
     expect(Buffer.from(slow.mock.calls[0][0] as Uint8Array).toString('hex')).toBe(boundAttestation(nonce).intel_quote);
   });
 
+  test('onBinding reports the passed binding while the signature is still pending, before anything is encrypted', async () => {
+    let finish!: (r: QuoteSignatureResult) => void;
+    const slow = vi.fn<(q: Uint8Array) => Promise<QuoteSignatureResult>>(() => new Promise((r) => (finish = r)));
+    const onBinding = vi.fn();
+    const onAtt = vi.fn();
+    const { f, calls } = okChat();
+    captured.keys = null;
+    const p = enclaveChat(opts({ fetchImpl: f, verifyQuote: slow, onBinding, onAttestation: onAtt }));
+    await vi.waitFor(() => expect(onBinding).toHaveBeenCalledOnce());
+    const bound = onBinding.mock.calls[0][0] as AttestationSummary;
+    expect(bound.quote.signature).toBe('pending');
+    expect(bound.binding).toMatchObject({ addressMatches: true, nonceMatches: true, debug: false });
+    expect(onAtt).not.toHaveBeenCalled();
+    expect(captured.keys).toBeNull(); // no client key yet: nothing encrypted
+    expect(calls.some((c) => c.url.includes('chat'))).toBe(false);
+    finish(VERIFIED);
+    await p;
+    expect(onAtt).toHaveBeenCalledOnce();
+    // A second call in the window reuses the verified check: no binding step to report.
+    const again = vi.fn();
+    await enclaveChat(opts({ fetchImpl: f, onBinding: again }));
+    expect(again).not.toHaveBeenCalled();
+  });
+
+  test('a failed binding never reports onBinding', async () => {
+    const onBinding = vi.fn();
+    const { f } = okNodeChat({ intel_quote: REAL.intel_quote });
+    await expect(enclaveChat(opts({ node, fetchImpl: f, onBinding }))).rejects.toMatchObject({ code: 'quote_binding_failed' });
+    expect(onBinding).not.toHaveBeenCalled();
+  });
+
   test.each([
     ['browser', false],
     ['node', true],

@@ -96,6 +96,17 @@ describe('draftCard', () => {
     for (const it of card.items) for (const q of it.quotes) expect(LEO.slice(q.span.start, q.span.end)).toBe(q.text);
     expect(card.items[1].text).toContain('EpiPen');
   });
+  test('progress callbacks reach the enclave call (draft and translation)', async () => {
+    const draft: DraftCard = { items: [{ section: 'loves', text: 'loves trains', quotes: ['loves trains'] }], tags: [] };
+    const chat = vi.fn().mockResolvedValue({ text: JSON.stringify(draft), attestation: A, usage: null });
+    const onBinding = vi.fn();
+    const onAttestation = vi.fn();
+    const { card } = await draftCard(LEO, 'Leo', { model: 'e2ee-x', chat, onBinding, onAttestation });
+    expect(chat.mock.calls[0][0]).toMatchObject({ onBinding, onAttestation, purpose: 'card' });
+    const tr = vi.fn().mockResolvedValue({ text: '{"translations":[]}', attestation: A, usage: null });
+    await translateCard(card, { model: 'e2ee-x', chat: tr, childName: 'Leo', onBinding });
+    expect(tr.mock.calls[0][0]).toMatchObject({ onBinding, purpose: 'translate' });
+  });
 });
 
 describe('verbatim safety text keeps the original wording', () => {
