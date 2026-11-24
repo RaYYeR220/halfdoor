@@ -8,7 +8,8 @@ import { fixtureChat, type EnclaveReplay } from '@/lib/venice/fixtureChat';
 const ChatContext = createContext<EnclaveChat | undefined>(undefined);
 
 export function EnclaveFixtureProvider({ replay, children }: { replay: EnclaveReplay | null; children: ReactNode }) {
-  const chat = useMemo(() => (replay ? fixtureChat(replay) : undefined), [replay]);
+  // The NODE_ENV test is inlined at build time, so production bundles drop the replay code entirely.
+  const chat = useMemo(() => (process.env.NODE_ENV !== 'production' && replay ? fixtureChat(replay) : undefined), [replay]);
   return <ChatContext value={chat}>{children}</ChatContext>;
 }
 
