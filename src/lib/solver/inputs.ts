@@ -19,9 +19,12 @@ const ATTENDANCE_WINDOW = 5 * WEEK + 24 * 3600_000;
 export const NEW_FAMILY_NOTE = 'New family — confirm which service';
 
 export async function solveService(churchId: string, service: Service, includeChildIds: string[] = []) {
-  const [people, cards, all, blockouts, checkins] = await Promise.all([
-    listPeople(churchId), listCards(churchId), listAssignmentsInChurch(churchId), listBlockouts(churchId), listCheckinsInChurch(churchId),
-  ]);
+  // Sequential on purpose: parallel reads through the small pooler pool can stall it.
+  const people = await listPeople(churchId);
+  const cards = await listCards(churchId);
+  const all = await listAssignmentsInChurch(churchId);
+  const blockouts = await listBlockouts(churchId);
+  const checkins = await listCheckinsInChurch(churchId);
   const settled = all.filter((a) => a.status !== 'proposed');
   const decidedHere = new Set(settled.filter((a) => a.serviceId === service.id).map((a) => a.childId));
 

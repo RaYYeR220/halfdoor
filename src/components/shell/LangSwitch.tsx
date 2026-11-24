@@ -37,7 +37,8 @@ export function LangSwitch() {
           aria-pressed={lang === o.lang}
           onClick={() => choose(o.lang)}
           className={cx(
-            'relative h-9 min-w-11 rounded-pill px-3 text-13 font-medium transition-[background-color,color] duration-200 ease-out',
+            // 36px to the eye inside the 44px track; the hit area is the full 44px.
+            "relative h-9 min-w-11 rounded-pill px-3 text-13 font-medium transition-[background-color,color] duration-200 ease-out after:absolute after:inset-x-0 after:-inset-y-1 after:content-['']",
             lang === o.lang ? 'bg-ink text-surface' : 'text-ink-muted hover:text-ink',
           )}
         >

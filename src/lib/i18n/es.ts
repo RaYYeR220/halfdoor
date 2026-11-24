@@ -74,6 +74,7 @@ export const es: Record<MessageKey, string> = {
   'enclave.checking': 'Comprobando el enclave. No se envía nada hasta que la comprobación sea correcta.',
   'enclave.provider': 'Proveedor',
   'enclave.hardware': 'Hardware',
+  'enclave.hardwareGeneric': 'TEE (el proveedor no lo especifica)',
   'enclave.sealed': 'Clave + código de un solo uso',
   'enclave.sealedOk': 'Sellados en el informe',
   'enclave.signature': 'Firma de Intel',

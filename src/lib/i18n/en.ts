@@ -73,6 +73,7 @@ export const en = {
   'enclave.checking': 'Checking the enclave. Nothing is sent until the check passes.',
   'enclave.provider': 'Provider',
   'enclave.hardware': 'Hardware',
+  'enclave.hardwareGeneric': 'TEE (not specified by the provider)',
   'enclave.sealed': 'Key + one-time code',
   'enclave.sealedOk': 'Sealed in the report',
   'enclave.signature': 'Intel signature',

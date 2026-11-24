@@ -1,6 +1,20 @@
 @import "tailwindcss";
 
 /*
+ * General Sans comes from Fontshare's CDN at runtime (see app/layout.tsx); nothing is fetched at build time and no
+ * font files live in the repo. Until it arrives, and if it never does, Arial is shown scaled to General Sans'
+ * metrics so the swap barely moves the layout.
+ */
+@font-face {
+  font-family: "General Sans Fallback";
+  src: local("Arial"), local("ArialMT");
+  size-adjust: 101.11%;
+  ascent-override: 99.89%;
+  descent-override: 23.74%;
+  line-gap-override: 9.89%;
+}
+
+/*
  * Halfdoor tokens. Values are copied from the approved landing (final-1B-3Bcolors); contrast notes are on ground
  * #f6f4ef unless said otherwise. Every colour in the app comes from here: Tailwind's default palette, radii and
  * shadows are switched off below so nothing off-system can slip in.
@@ -40,6 +54,8 @@
   --focus: #a3335f;
   --ease: cubic-bezier(0.16, 1, 0.3, 1); /* 160-240ms ease-out, no bounce */
 
+  --font-face: "General Sans", "General Sans Fallback", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
   --shell-h: 60px;              /* top bar height on wide screens */
   --guide-w: 368px;             /* demo guide panel */
 }
@@ -74,7 +90,7 @@
   --color-transparent: transparent;
   --color-current: currentColor;
 
-  --font-sans: var(--font-general-sans), system-ui, sans-serif;
+  --font-sans: var(--font-face);
   --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
 
   /* Type scale 13 / 15 / 17 (body minimum) / 20 / 24 / 32 / 44 */
@@ -118,7 +134,7 @@
   body {
     background: var(--ground);
     color: var(--ink);
-    font-family: var(--font-general-sans), system-ui, sans-serif;
+    font-family: var(--font-face);
     font-size: 17px;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;

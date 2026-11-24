@@ -9,12 +9,15 @@ export type Db = PgDatabase<any, typeof schema>;
 
 let current: Db | null = null;
 
-/** Lazy: the transaction pooler (Supavisor) needs `prepare: false`. */
+/**
+ * Lazy: the transaction pooler (Supavisor) needs `prepare: false`. Short connect/idle timeouts suit serverless
+ * instances and keep a dead or stalled pooler connection from holding the pool.
+ */
 export function getDb(): Db {
   if (!current) {
     const url = process.env.DATABASE_URL;
     if (!url) throw new Error('DATABASE_URL is not set');
-    current = drizzle(postgres(url, { prepare: false, max: 5 }), { schema }) as unknown as Db;
+    current = drizzle(postgres(url, { prepare: false, max: 5, connect_timeout: 10, idle_timeout: 20 }), { schema }) as unknown as Db;
   }
   return current;
 }

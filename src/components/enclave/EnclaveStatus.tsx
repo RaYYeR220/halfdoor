@@ -71,7 +71,7 @@ export function EnclaveStatus({ value, lang = 'en', className }: Props) {
     <Frame className={className} lang={lang} pill={pill}>
       <dl className="grid grid-cols-1 gap-x-4 text-15 sm:grid-cols-[minmax(0,10.5rem)_minmax(0,1fr)]">
         <Row k={t(lang, 'enclave.provider')}>{s.provider}</Row>
-        <Row k={t(lang, 'enclave.hardware')}>{s.hardware ?? 'Intel TDX'}</Row>
+        <Row k={t(lang, 'enclave.hardware')}>{s.hardware ?? t(lang, 'enclave.hardwareGeneric')}</Row>
         <Row k={t(lang, 'enclave.sealed')}>
           <span className="inline-flex items-start gap-1.5 text-ok-ink">
             <Icon name="check" size={13} className="mt-[5px] shrink-0" />
