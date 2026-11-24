@@ -51,7 +51,7 @@ Every public statement Halfdoor makes, with how to check it.
 | Patterns are counts over past Sundays, not AI. | [`tests/unit/patterns.test.ts`](tests/unit/patterns.test.ts) |
 | The parent, buddy and room pages exist in English and Spanish with the same strings. | [`tests/unit/i18n.test.ts`](tests/unit/i18n.test.ts) |
 | The whole Sunday works through the real UI: card, review, match, check-in, buddy phone, checkout, note home. An open locked card unlocks within 10 s of the check-in (6.5 s measured) and locks again at checkout. | `pnpm test:e2e`, [`tests/e2e/sunday.spec.ts`](tests/e2e/sunday.spec.ts) (prints the unlock time) |
-| 552 unit tests pass. | `pnpm test` |
+| 588 unit tests pass. | `pnpm test` |
 | The end-to-end test seam can't be on in a production build. | [`tests/unit/test-seam.test.ts`](tests/unit/test-seam.test.ts) |
 
 ### The evaluation
