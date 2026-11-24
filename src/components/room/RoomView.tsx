@@ -3,7 +3,7 @@
 // their card, in the parent's exact words. Nothing else of a card ever reaches this page. Children appear with the
 // heartbeat after check-in and leave the list (and this page's memory) at checkout.
 import { useId, useRef, useState } from 'react';
-import { pickService } from '@/lib/buddy/live';
+import { nextTryAt, pickService, safetyRetryDue } from '@/lib/buddy/live';
 import type { ChildName, LiveService } from '@/lib/buddy/types';
 import type { CardItem } from '@/lib/card/schema';
 import type { Heartbeat } from '@/lib/checkins/types';
@@ -24,7 +24,11 @@ type Safety =
   | { status: 'noCard' }
   | { status: 'notReady' }
   | { status: 'failed' };
-type Entry = { session: string; code: string | null; inAt: string; safety: Safety };
+/** `tries`/`nextTryAt`: denied or failed reads in a row and when to ask again; `inflight`: a read is on its way. */
+type Entry = { session: string; code: string | null; inAt: string; safety: Safety; tries: number; nextTryAt?: number; inflight: boolean };
+
+/** A read that hangs counts as failed and is asked again on the backoff. */
+const READ_TIMEOUT_MS = 20_000;
 
 type Props = { services: LiveService[]; roster: ChildName[]; clock: DeskClock; initialService: string | null; viewerId: string };
 
@@ -71,18 +75,25 @@ function RoomLive({ service, names, clock, viewerId }: { service: LiveService; n
   const [entries, setEntries] = useState<Record<string, Entry>>({});
   const [first, setFirst] = useState(false);
   const [switched, setSwitched] = useState(false);
-  const [announce, setAnnounce] = useState('');
+  // The counter makes a repeated sentence ("Leo checked in" after a re-check-in) announce again.
+  const [announce, setAnnounce] = useState({ text: '', n: 0 });
   const sessions = useRef<Record<string, string | null>>({});
   // One card read at a time: a full room checking in at once shouldn't flood the server's small database pool.
   const queue = useRef<Promise<void>>(Promise.resolve());
   const nameOf = (id: string) => names.find((n) => n.id === id);
   const fmt = (iso: string) => timeLabel(new Date(iso), null, { lang, tz: clock.tz, shiftMs: clock.shiftMs });
 
+  /** The read's answer. Anything but the lines themselves is asked again on the backoff while the child stays in. */
   const setSafety = (id: string, session: string, safety: Safety) =>
-    setEntries((cur) => (cur[id]?.session === session ? { ...cur, [id]: { ...cur[id], safety } } : cur));
+    setEntries((cur) => {
+      const e = cur[id];
+      if (e?.session !== session) return cur;
+      const tries = safety.status === 'ok' ? 0 : e.tries + 1;
+      return { ...cur, [id]: { ...e, safety, tries, inflight: false, nextTryAt: safety.status === 'ok' ? undefined : nextTryAt(tries, Date.now()) } };
+    });
 
   const loadSafety = async (id: string, session: string) => {
-    const res = await fetch(`/api/cards/${id}?service=${service.id}&scope=safety`, { cache: 'no-store' }).catch(() => null);
+    const res = await fetch(`/api/cards/${id}?service=${service.id}&scope=safety`, { cache: 'no-store', signal: AbortSignal.timeout(READ_TIMEOUT_MS) }).catch(() => null);
     const body = res?.ok ? ((await res.json().catch(() => null)) as { locked: true; reason: string } | { locked: false; card: { items: CardItem[]; lang: string } } | null) : null;
     if (sessions.current[id] !== session) return;
     if (res?.status === 404) return setSafety(id, session, { status: 'noCard' });
@@ -111,18 +122,24 @@ function RoomLive({ service, names, clock, viewerId }: { service: LiveService; n
         if (n && !c) said.push(t('room.left', { name: n.firstName }));
       }
     }
+    const now = Date.now();
     for (const c of inNow.values()) {
       const e = next[c.childId];
-      if (e && e.safety.status !== 'failed') continue;
-      next[c.childId] = { session: c.checkedInAt, code: c.securityCode, inAt: c.checkedInAt, safety: { status: 'loading' } };
-      sessions.current[c.childId] = c.checkedInAt;
-      const n = nameOf(c.childId);
-      if (!e && n) said.push(t('room.arrived', { name: n.firstName }));
       const session = c.checkedInAt;
+      if (!e) {
+        // Newly in: read the safety lines.
+        next[c.childId] = { session, code: c.securityCode, inAt: c.checkedInAt, safety: { status: 'loading' }, tries: 0, inflight: true };
+        const n = nameOf(c.childId);
+        if (n) said.push(t('room.arrived', { name: n.firstName }));
+      } else if (safetyRetryDue({ status: e.safety.status, inflight: e.inflight, nextTryAt: e.nextTryAt }, now)) {
+        // Still in, and the last read can have changed ("not ready", "no card", an error): ask again, keeping what is shown.
+        next[c.childId] = { ...e, inflight: true };
+      } else continue;
+      sessions.current[c.childId] = session;
       queue.current = queue.current.then(() => (sessions.current[c.childId] === session ? loadSafety(c.childId, session) : undefined));
     }
     setEntries(next);
-    if (said.length) setAnnounce(said.join('. '));
+    if (said.length) setAnnounce((a) => ({ text: said.join('. '), n: a.n + 1 }));
   };
   const pulse = useHeartbeat(service.id, onBeat);
 
@@ -140,7 +157,8 @@ function RoomLive({ service, names, clock, viewerId }: { service: LiveService; n
         <HeartbeatIndicator status={pulse.status} lastAt={pulse.lastAt} count={pulse.count} />
       </div>
       <p role="status" aria-live="polite" className="sr-only">
-        {announce}
+        {announce.text}
+        {announce.n % 2 ? '\u200b' : ''}
       </p>
 
       {switched ? (

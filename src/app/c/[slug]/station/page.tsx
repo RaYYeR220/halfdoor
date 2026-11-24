@@ -22,6 +22,7 @@ async function Content({
 }: { params: Promise<{ slug: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const { slug } = await params;
   const { church } = await requireViewer(slug);
+  // Same test as POST /api/station's `viewer.sandbox`: resolveViewer sets it to `church.mode === 'sandbox'`.
   if (church.mode !== 'sandbox') {
     return (
       <div className="mx-auto max-w-[56ch]">

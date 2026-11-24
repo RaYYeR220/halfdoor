@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { currentStepIndex, diffBeat, pickService, presenceOf, type Held } from '@/lib/buddy/live';
+import {
+  RETRY_FAST_MS, RETRY_SLOW_MS, currentStepIndex, diffBeat, nextTryAt, pickService, presenceOf, retryDue, safetyRetryDue, windowClosed, windowEndsAt,
+  type Held,
+} from '@/lib/buddy/live';
 import type { CheckinStatus } from '@/lib/checkins/types';
 
 const IN_AT = '2026-11-22T15:02:00.000Z';
@@ -109,5 +112,60 @@ describe('pickService', () => {
     expect(pickService([nine, eleven], now(-90), null)?.id).toBe('nine');
     expect(pickService([nine, eleven], now(400), null)?.id).toBe('eleven');
     expect(pickService([], now(0), null)).toBeNull();
+  });
+});
+
+describe('retry backoff (buddy phone and room view)', () => {
+  const T = Date.parse('2026-11-22T15:10:00Z');
+
+  it('asks again with every heartbeat (8 s) for five tries, then every 30 s', () => {
+    // Due a little early: heartbeats land on an 8 s rhythm, not to the millisecond.
+    for (let failures = 1; failures <= 5; failures++) {
+      const at = nextTryAt(failures, T);
+      expect(at).toBeLessThanOrEqual(T + RETRY_FAST_MS);
+      expect(at).toBeGreaterThan(T + RETRY_FAST_MS - 2000);
+    }
+    for (const failures of [6, 7, 20]) {
+      const at = nextTryAt(failures, T);
+      expect(at).toBeLessThanOrEqual(T + RETRY_SLOW_MS);
+      expect(at).toBeGreaterThan(T + RETRY_SLOW_MS - 2000);
+    }
+  });
+
+  it('retryDue: no time set is due; otherwise from that time on', () => {
+    expect(retryDue(undefined, T)).toBe(true);
+    expect(retryDue(T + 1, T)).toBe(false);
+    expect(retryDue(T, T)).toBe(true);
+  });
+
+  it('diffBeat waits for the retry time of a retryable lock', () => {
+    const later = nextTryAt(6, T);
+    const held: Record<string, Held> = { leo: { phase: 'locked', session: IN_AT, retry: true, nextTryAt: later } };
+    // The next heartbeat (8 s on) is too early after the sixth failure...
+    expect(diffBeat(held, [row('leo')], ['leo'], T + 8000)).toEqual([]);
+    // ...the one after the 30 s mark asks again.
+    expect(diffBeat(held, [row('leo')], ['leo'], T + 32_000)).toEqual([{ kind: 'unlock', childId: 'leo', session: IN_AT, code: 'K7RD', inAt: IN_AT }]);
+    // A checkout and a fresh check-in are never held back by the old backoff.
+    expect(diffBeat(held, [row('leo', { checkedInAt: '2026-11-22T15:40:00.000Z' })], ['leo'], T + 8000)).toHaveLength(1);
+  });
+
+  it('room view: re-reads "not ready", "no card" and errors on the backoff, never a good read or one in flight', () => {
+    expect(safetyRetryDue({ status: 'notReady', inflight: false }, T)).toBe(true);
+    expect(safetyRetryDue({ status: 'noCard', inflight: false, nextTryAt: T - 1 }, T)).toBe(true);
+    expect(safetyRetryDue({ status: 'failed', inflight: false, nextTryAt: T + 5000 }, T)).toBe(false);
+    expect(safetyRetryDue({ status: 'notReady', inflight: true }, T)).toBe(false);
+    expect(safetyRetryDue({ status: 'ok', inflight: false }, T)).toBe(false);
+    expect(safetyRetryDue({ status: 'loading', inflight: false }, T)).toBe(false);
+  });
+});
+
+describe('client-side expiry at the window end', () => {
+  const service = { startsAt: '2026-11-22T15:00:00.000Z', endsAt: '2026-11-22T16:15:00.000Z' };
+  it('the window closes 30 min after the service ends', () => {
+    expect(windowEndsAt(service)).toBe(Date.parse('2026-11-22T16:45:00.000Z'));
+    expect(windowClosed(service, Date.parse('2026-11-22T16:44:59.000Z'))).toBe(false);
+    expect(windowClosed(service, Date.parse('2026-11-22T16:45:00.000Z'))).toBe(true);
+    // Before the service is not "closed" (the window has not opened yet; that one can still clear).
+    expect(windowClosed(service, Date.parse('2026-11-22T14:00:00.000Z'))).toBe(false);
   });
 });

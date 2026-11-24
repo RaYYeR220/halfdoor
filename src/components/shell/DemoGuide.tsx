@@ -83,6 +83,7 @@ export function DemoGuide({ slug, personas, current, samId }: Props) {
   const [stale, setStale] = useState(false);
   const [pendingStep, setPendingStep] = useState<number | null>(null);
   const { go, isPending } = useSwitchPersona(current);
+  const quietPill = useQuietPill();
 
   // Check now and after each navigation (the hidden pill shows progress too); while the guide is open, again 5 s
   // after each answer. One request at a time, so a slow database never piles polls up; a hidden tab skips its turn.
@@ -144,18 +145,25 @@ export function DemoGuide({ slug, personas, current, samId }: Props) {
   };
 
   if (collapsed) {
+    // On phones the pill shrinks to its progress ring (a 44px button) once the page is scrolled or a text field has
+    // focus, so it never sits on the words being read or typed. Screen readers hear the same name either way.
+    const hideOnPhone = quietPill ? 'max-lg:sr-only' : undefined;
     return (
       <button
         id={`${panelId}-show`}
         type="button"
         aria-expanded={false}
         onClick={() => toggle(false)}
-        className="fixed right-4 bottom-4 z-30 flex h-11 items-center gap-2.5 rounded-pill border border-hairline-strong bg-surface pr-4 pl-3 text-15 font-medium text-ink transition-[border-color] duration-200 ease-out hover:border-hairline-emphasis lg:right-6 lg:bottom-6 print:hidden"
+        className={cx(
+          'fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-30 flex h-11 items-center gap-2.5 rounded-pill border border-hairline-strong bg-surface pr-4 pl-3 text-15 font-medium text-ink',
+          'transition-[border-color] duration-200 ease-out hover:border-hairline-emphasis lg:right-6 lg:bottom-6 print:hidden',
+          quietPill && 'max-lg:w-11 max-lg:justify-center max-lg:gap-0 max-lg:px-0',
+        )}
       >
         <ProgressRing done={doneCount} total={STEPS.length} />
-        <span>{t('guide.title')}</span>
-        <span className="text-13 font-normal text-ink-muted tabular">{progress}</span>
-        <Icon name="chevronUp" className="text-ink-muted" />
+        <span className={hideOnPhone}>{t('guide.title')}</span>
+        <span className={cx('text-13 font-normal text-ink-muted tabular', hideOnPhone)}>{progress}</span>
+        <Icon name="chevronUp" className={cx('shrink-0 text-ink-muted', quietPill && 'max-lg:hidden')} />
         <span className="sr-only">{t('guide.show')}</span>
       </button>
     );
@@ -300,6 +308,34 @@ export function DemoGuide({ slug, personas, current, samId }: Props) {
       </footer>
     </aside>
   );
+}
+
+/** Text fields: where a floating control must not sit while someone types. */
+function isTextField(el: Element | null): boolean {
+  if (!el) return false;
+  if (el instanceof HTMLTextAreaElement || (el instanceof HTMLElement && el.isContentEditable)) return true;
+  return el instanceof HTMLInputElement && !['checkbox', 'radio', 'button', 'submit', 'reset', 'range', 'color', 'file'].includes(el.type);
+}
+
+/** The page is scrolled away from its top, or a text field has focus: the phone pill goes quiet. */
+function useQuietPill(): boolean {
+  const [scrolled, setScrolled] = useState(false);
+  const [typing, setTyping] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    // After focusout the next element isn't focused yet; read activeElement on the next tick.
+    const onFocus = () => setTimeout(() => setTyping(isTextField(document.activeElement)), 0);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('focusin', onFocus);
+    document.addEventListener('focusout', onFocus);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('focusin', onFocus);
+      document.removeEventListener('focusout', onFocus);
+    };
+  }, []);
+  return scrolled || typing;
 }
 
 function Marker({ n, done, next }: { n: number; done: boolean; next: boolean }) {

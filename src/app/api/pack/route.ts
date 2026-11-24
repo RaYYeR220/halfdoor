@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server';
-import { insertAccess } from '@/db/repo/access';
 import { getCardForChild } from '@/db/repo/cards';
 import { getLessonInChurch } from '@/db/repo/lessons';
 import { getServiceInChurch } from '@/db/repo/services';
 import { UUID, childInChurch, fail, requireViewer } from '@/lib/access/api';
-import { evaluateGate } from '@/lib/access/read';
+import { evaluateGate, logSessionRead } from '@/lib/access/read';
 import { TAGS, type Tag } from '@/lib/card/schema';
 import { parseSteps } from '@/lib/note/server';
 import { adaptationsFor } from '@/lib/schedule/adapt';
@@ -48,9 +47,10 @@ export async function GET(req: Request) {
   if (!lesson) return fail('no_lesson', 404);
 
   const steps = parseSteps(lesson);
-  // The pack is derived from the card's tags, so a buddy's read is audited like a card read (open until the gate closes).
-  if (viewer.role === 'buddy' && cardId && reason) {
-    await insertAccess({ cardId, childId, serviceId, viewerId: viewer.personId, role: 'buddy', reason, openedAt: new Date(), closedAt: null });
+  // The pack is derived from the card's tags, so a buddy's read is audited like a card read (open until the gate
+  // closes; part of the same session entry when the card is already open).
+  if (viewer.role === 'buddy' && cardId && reason === 'checked_in') {
+    await logSessionRead(viewer, cardId, childId, serviceId, reason, new Date());
   }
   const chips = adaptationsFor(tags, steps);
   return NextResponse.json({

@@ -60,12 +60,26 @@ export async function openCard(
   if (!church) return { kind: 'not_found' };
   const view = buildCardView(card, ev.childFirstName, church.wrappedDek, viewer.role, result.scope);
   // Parent and director reads are instantaneous; buddy/leader entries stay open until the gate closes.
-  const session = result.reason === 'checked_in' || result.reason === 'room_safety';
-  await insertAccess({
-    cardId: card.id, childId, serviceId: session ? serviceId : null, viewerId: viewer.personId, role: viewer.role, reason: result.reason,
-    openedAt: now, closedAt: session ? null : now,
-  });
+  if (result.reason === 'checked_in' || result.reason === 'room_safety') await logSessionRead(viewer, card.id, childId, serviceId, result.reason, now);
+  else {
+    await insertAccess({
+      cardId: card.id, childId, serviceId: null, viewerId: viewer.personId, role: viewer.role, reason: result.reason, openedAt: now, closedAt: now,
+    });
+  }
   return { kind: 'open', card: view };
+}
+
+/**
+ * A buddy's or room leader's read while the gate is open. One entry per session: while this viewer already has an open
+ * entry for this child at this service, a re-read (the phone checking the gate again, the picture schedule) is part
+ * of it, so the family's log reads "Priya opened Leo's card · 9:02 – 10:14" once, not once per request.
+ */
+export async function logSessionRead(
+  viewer: Viewer, cardId: string, childId: string, serviceId: string | null, reason: 'checked_in' | 'room_safety', now: Date,
+): Promise<void> {
+  const open = (await listOpenAccess(viewer.personId)).some((e) => e.childId === childId && e.serviceId === serviceId);
+  if (open) return;
+  await insertAccess({ cardId, childId, serviceId, viewerId: viewer.personId, role: viewer.role, reason, openedAt: now, closedAt: null });
 }
 
 

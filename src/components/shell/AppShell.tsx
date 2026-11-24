@@ -63,7 +63,7 @@ function Frame({ churchName, sandbox, personas, current, viewer, guide, children
       </TopBar>
 
       <div className="flex flex-1 items-stretch">
-        <main id="content" tabIndex={-1} className="min-w-0 flex-1 px-4 pt-6 pb-28 outline-none md:px-8 md:pt-8 lg:pb-16 print:p-0">
+        <main id="content" tabIndex={-1} className="min-w-0 flex-1 px-4 pt-6 pb-[calc(7rem+env(safe-area-inset-bottom))] outline-none md:px-8 md:pt-8 lg:pb-16 print:p-0">
           {children}
         </main>
         {guide && <DemoGuide slug={guide.slug} personas={personas} current={current} samId={guide.samId} />}

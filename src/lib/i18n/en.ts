@@ -632,6 +632,7 @@ export const en = {
   'buddy.chip.waiting': "Waiting for the kids' team",
   'buddy.chip.noCard': 'No card yet',
   'buddy.chip.window': 'Locked · opens 30 min before',
+  'buddy.chip.closed': 'Locked · service over',
   'buddy.chip.elsewhere': 'Locked · checked in elsewhere',
   'buddy.chip.error': 'Locked · trying again',
 
@@ -641,11 +642,13 @@ export const en = {
   'buddy.locked.waiting': "The kids' team is still reading {name}'s card. It opens here once they have, while {name} is checked in.",
   'buddy.locked.noCard': "{name}'s family hasn't written a card yet. Ask the kids' team what to know today.",
   'buddy.locked.window': "{name}'s card opens 30 minutes before the service starts.",
+  'buddy.locked.closed': "The service is over, so {name}'s card locked and was cleared from this phone.",
   'buddy.locked.elsewhere': '{name} is checked in at another service, so the card stays locked here.',
   'buddy.locked.error': "Couldn't open {name}'s card just now. Trying again with the next check.",
 
   'buddy.announce.unlocked': "{name}'s card unlocked · checked in {time}",
   'buddy.announce.locked': "{name}'s card locked · checked out {time}",
+  'buddy.announce.closed': "{name}'s card locked · the service is over",
   'buddy.announce.lockedPlain': "{name}'s card locked",
 
   'buddy.tabs': "{name}'s card, schedule and moments",

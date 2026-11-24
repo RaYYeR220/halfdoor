@@ -131,6 +131,12 @@
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
   }
+  /* Phones and tablets: the demo guide's pill floats at the bottom; focus scrolling stops short of it. */
+  @media (max-width: 1023.98px) {
+    html {
+      scroll-padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+    }
+  }
   body {
     background: var(--ground);
     color: var(--ink);

@@ -5,7 +5,7 @@
 // picture schedule, the moments. Nothing about a card is ever server-rendered here.
 import { useEffect, useEffectEvent, useId, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { currentStepIndex, diffBeat, presenceOf, type Presence } from '@/lib/buddy/live';
+import { currentStepIndex, diffBeat, nextTryAt, presenceOf, windowClosed, windowEndsAt, type Presence } from '@/lib/buddy/live';
 import type { BuddyChild, BuddyService, MomentRow } from '@/lib/buddy/types';
 import type { CardView } from '@/lib/card/view';
 import type { CheckinStatus, Heartbeat } from '@/lib/checkins/types';
@@ -30,21 +30,27 @@ import { UnlockedCard, usableTranslation } from './UnlockedCard';
 import { useHeartbeat } from './useHeartbeat';
 
 type PackState = { status: 'loading' } | { status: 'ok'; pack: Pack } | { status: 'none' } | { status: 'failed' };
-/** Why a checked-in child's card still said no: under review, window not open, checked in elsewhere, or an error. */
-type LockWhy = 'waiting' | 'no_card' | 'window' | 'elsewhere' | 'error';
+/**
+ * Why a checked-in child's card still said no: under review, window not open yet, the service is over (window
+ * closed), checked in elsewhere, or an error.
+ */
+type LockWhy = 'waiting' | 'no_card' | 'window' | 'closed' | 'elsewhere' | 'error';
 type Live =
   | { phase: 'none' }
-  | { phase: 'locked'; session: string | null; retry: boolean; why: LockWhy | null; settle: boolean }
+  | { phase: 'locked'; session: string | null; retry: boolean; why: LockWhy | null; settle: boolean; tries: number; nextTryAt?: number }
   | { phase: 'opening'; session: string }
   | { phase: 'open'; session: string; card: CardView; pack: PackState; moments: MomentRow[] | null };
 
 const NONE: Live = { phase: 'none' };
 
+/** A read that hangs counts as failed (and is retried) rather than leaving the card "opening" forever. */
+const READ_TIMEOUT_MS = 20_000;
+
 type PackFetch = Exclude<PackState, { status: 'loading' }> | { status: 'denied'; reason: unknown };
 
 /** GET /api/pack, as data: no state is touched here. 403 = the gate closed (the card must lock). */
 async function fetchPack(serviceId: string, childId: string, lang: Lang): Promise<PackFetch> {
-  const res = await fetch(`/api/pack?service=${serviceId}&child=${childId}&lang=${lang}`, { cache: 'no-store' }).catch(() => null);
+  const res = await fetch(`/api/pack?service=${serviceId}&child=${childId}&lang=${lang}`, { cache: 'no-store', signal: AbortSignal.timeout(READ_TIMEOUT_MS) }).catch(() => null);
   if (res?.status === 403) return { status: 'denied', reason: (await res.json().catch(() => null))?.reason };
   const pack = res?.ok ? ((await res.json().catch(() => null)) as Pack | null) : null;
   if (pack) return { status: 'ok', pack };
@@ -57,10 +63,14 @@ const WHY: Record<string, LockWhy | null> = {
   other_service: 'elsewhere',
   checked_out: null,
   not_checked_in: null,
+  // A re-read that finds the card gone (deleted by the family) or the person no longer allowed.
+  not_found: 'no_card',
+  forbidden: 'error',
 };
-const whyOf = (reason: unknown): LockWhy | null => (typeof reason === 'string' && reason in WHY ? WHY[reason] : 'error');
-/** A denial that can clear by itself (review done, window opens) is retried on the next check; a checkout is final. */
-const retryable = (reason: unknown) => reason !== 'checked_out' && reason !== 'other_service';
+/** Every open card is read again through the gate every 4th heartbeat (~32 s), to catch a gate closed server-side. */
+const RECHECK_EVERY = 4;
+/** setTimeout's ceiling; a window end further out than this is not scheduled. */
+const MAX_TIMER_MS = 2_147_000_000;
 
 type Me = { id: string; firstName: string };
 type Props = { me: Me; services: BuddyService[]; clock: DeskClock; initialService: string | null; initialChild: string | null };
@@ -149,7 +159,10 @@ function ServiceLive({ service, me, clock, initialChild, onSwitched }: { service
   const [selected, setSelected] = useState(kids.some((k) => k.id === initialChild) ? (initialChild as string) : kids[0].id);
   const [live, setLive] = useState<Record<string, Live>>({});
   const [checkins, setCheckins] = useState<CheckinStatus[] | null>(null);
-  const [announce, setAnnounce] = useState('');
+  // A counter beside the words: the same sentence twice in a row (locked, unlocked, locked) is still announced.
+  const [announce, setAnnounce] = useState({ text: '', n: 0 });
+  const say = (text: string) => setAnnounce((a) => ({ text, n: a.n + 1 }));
+  const beats = useRef(0);
   // The check-in each child's open (or opening) card belongs to. Async answers for any other check-in are dropped.
   const sessions = useRef<Record<string, string | null>>({});
 
@@ -161,16 +174,30 @@ function ServiceLive({ service, me, clock, initialChild, onSwitched }: { service
       return l?.phase === 'open' && l.session === session ? { ...cur, [id]: patch(l) } : cur;
     });
 
-  const lock = (id: string, session: string | null, why: LockWhy | null, settle: boolean, retry: boolean) => {
+  /** `tries`: denied reads of this check-in in a row; a retryable lock waits 8 s five times, then 30 s (lib/buddy/live). */
+  const lock = (id: string, session: string | null, why: LockWhy | null, settle: boolean, retry: boolean, tries = 0) => {
     sessions.current[id] = null;
-    put(id, { phase: 'locked', session, retry, why, settle });
+    put(id, { phase: 'locked', session, retry, why, settle, tries, ...(retry ? { nextTryAt: nextTryAt(tries, Date.now()) } : {}) });
+  };
+
+  /** The gate's reason in this page's terms. Outside the window after the service means over, not "not yet". */
+  const whyOf = (reason: unknown): LockWhy | null => {
+    if (reason === 'outside_window') return windowClosed(service, Date.now()) ? 'closed' : 'window';
+    return typeof reason === 'string' && reason in WHY ? WHY[reason] : 'error';
+  };
+  /** A denial that can clear by itself (review done, window opens) is asked again; a checkout or a closed window is final. */
+  const retryable = (why: LockWhy | null, reason: unknown) => why !== 'closed' && reason !== 'checked_out' && reason !== 'other_service';
+  const triesOf = (id: string, session: string) => {
+    const l = live[id];
+    return l?.phase === 'locked' && l.session === session ? l.tries : 0;
   };
 
   /** Any read answered "locked" (403): wipe now, don't wait for the next heartbeat. */
   const denied = (child: BuddyChild, session: string, reason: unknown) => {
     const wasOpen = sessions.current[child.id] === session;
-    lock(child.id, session, whyOf(reason), true, retryable(reason));
-    if (wasOpen) setAnnounce(t('buddy.announce.lockedPlain', { name: child.firstName }));
+    const why = whyOf(reason);
+    lock(child.id, session, why, true, retryable(why, reason), 1);
+    if (wasOpen) say(t(why === 'closed' ? 'buddy.announce.closed' : 'buddy.announce.lockedPlain', { name: child.firstName }));
   };
 
   const applyPack = (child: BuddyChild, session: string, r: PackFetch) => {
@@ -181,7 +208,7 @@ function ServiceLive({ service, me, clock, initialChild, onSwitched }: { service
   const loadPack = async (child: BuddyChild, session: string, packLang: Lang) => applyPack(child, session, await fetchPack(service.id, child.id, packLang));
 
   const loadMoments = async (child: BuddyChild, session: string) => {
-    const res = await fetch(`/api/moments?service=${service.id}&child=${child.id}`, { cache: 'no-store' }).catch(() => null);
+    const res = await fetch(`/api/moments?service=${service.id}&child=${child.id}`, { cache: 'no-store', signal: AbortSignal.timeout(READ_TIMEOUT_MS) }).catch(() => null);
     if (sessions.current[child.id] !== session) return;
     if (res?.status === 403) return denied(child, session, (await res.json().catch(() => null))?.reason);
     const body = res?.ok ? ((await res.json().catch(() => null)) as { moments: MomentRow[] } | null) : null;
@@ -193,19 +220,35 @@ function ServiceLive({ service, me, clock, initialChild, onSwitched }: { service
     const cur = live[child.id];
     const retry = cur?.phase === 'locked' && cur.session === session;
     if (retry && sessions.current[child.id] === session) return; // that retry is still on its way
+    // The service is over: nothing to ask the server, the window will not open again.
+    if (windowClosed(service, Date.now())) return lock(child.id, session, 'closed', false, false);
+    const tries = triesOf(child.id, session) + 1;
     sessions.current[child.id] = session;
     // A retry of the same check-in (card still under review, window not open) keeps its locked face: no flicker.
     if (!retry) put(child.id, { phase: 'opening', session });
-    const res = await fetch(`/api/cards/${child.id}?service=${service.id}&scope=full`, { cache: 'no-store' }).catch(() => null);
+    const res = await fetch(`/api/cards/${child.id}?service=${service.id}&scope=full`, { cache: 'no-store', signal: AbortSignal.timeout(READ_TIMEOUT_MS) }).catch(() => null);
     const body = res?.ok ? ((await res.json().catch(() => null)) as { locked: true; reason: string } | { locked: false; card: CardView } | null) : null;
     if (sessions.current[child.id] !== session) return;
-    if (!res || (!res.ok && res.status !== 404) || (res.ok && !body)) return lock(child.id, session, 'error', false, true);
-    if (res.status === 404) return lock(child.id, session, 'no_card', false, true);
-    if (!body || body.locked) return lock(child.id, session, whyOf(body?.reason), false, retryable(body?.reason));
+    if (!res || (!res.ok && res.status !== 404) || (res.ok && !body)) return lock(child.id, session, 'error', false, true, tries);
+    if (res.status === 404) return lock(child.id, session, 'no_card', false, true, tries);
+    if (!body || body.locked) {
+      const why = whyOf(body?.reason);
+      return lock(child.id, session, why, false, retryable(why, body?.reason), tries);
+    }
     put(child.id, { phase: 'open', session, card: body.card, pack: { status: 'loading' }, moments: null });
-    setAnnounce(t('buddy.announce.unlocked', { name: child.firstName, time: fmt(inAt) }));
+    say(t('buddy.announce.unlocked', { name: child.firstName, time: fmt(inAt) }));
     void loadPack(child, session, lang);
     void loadMoments(child, session);
+  };
+
+  const recheck = async (child: BuddyChild, session: string) => {
+    const res = await fetch(`/api/cards/${child.id}?service=${service.id}&scope=full`, { cache: 'no-store', signal: AbortSignal.timeout(READ_TIMEOUT_MS) }).catch(() => null);
+    if (!res || sessions.current[child.id] !== session) return; // offline: the heartbeat and the window end still apply
+    if (res.status === 404 || res.status === 403) return denied(child, session, res.status === 404 ? 'not_found' : 'forbidden');
+    const body = res.ok ? ((await res.json().catch(() => null)) as { locked: true; reason: string } | { locked: false; card: CardView } | null) : null;
+    if (!body || sessions.current[child.id] !== session) return;
+    if (body.locked) return denied(child, session, body.reason);
+    patchOpen(child.id, session, (l) => ({ ...l, card: body.card }));
   };
 
   const onBeat = (hb: Heartbeat) => {
@@ -216,19 +259,46 @@ function ServiceLive({ service, me, clock, initialChild, onSwitched }: { service
       return;
     }
     setCheckins(hb.checkins);
-    for (const e of diffBeat(live, hb.checkins, kids.map((k) => k.id))) {
+    const events = diffBeat(live, hb.checkins, kids.map((k) => k.id), Date.now());
+    for (const e of events) {
       const child = kids.find((k) => k.id === e.childId);
       if (!child) continue;
       if (e.kind === 'lock') {
         const cur = live[e.childId] ?? NONE;
         lock(e.childId, cur.phase === 'none' ? null : cur.session, null, true, false);
-        setAnnounce(e.outAt ? t('buddy.announce.locked', { name: child.firstName, time: fmt(e.outAt) }) : t('buddy.announce.lockedPlain', { name: child.firstName }));
+        say(e.outAt ? t('buddy.announce.locked', { name: child.firstName, time: fmt(e.outAt) }) : t('buddy.announce.lockedPlain', { name: child.firstName }));
       } else {
         void open(child, e.session, e.inAt);
       }
     }
+    // Every 4th beat, cards that stay open are read again through the gate: an assignment withdrawn, a card sent back
+    // for changes or any other server-side close locks the phone without waiting for a checkout.
+    beats.current += 1;
+    if (beats.current % RECHECK_EVERY === 0) {
+      const changed = new Set(events.map((e) => e.childId));
+      for (const k of kids) {
+        const l = live[k.id];
+        if (l?.phase === 'open' && !changed.has(k.id)) void recheck(k, l.session);
+      }
+    }
   };
   const pulse = useHeartbeat(service.id, onBeat);
+
+  // The window closes 30 min after the service ends: an open card locks then, whether or not a checkout came through.
+  const expire = useEffectEvent(() => {
+    for (const k of kids) {
+      const l = live[k.id];
+      if (l?.phase !== 'open' && l?.phase !== 'opening') continue;
+      lock(k.id, l.session, 'closed', true, false);
+      if (l.phase === 'open') say(t('buddy.announce.closed', { name: k.firstName }));
+    }
+  });
+  useEffect(() => {
+    const ms = windowEndsAt(service) - Date.now();
+    if (ms > MAX_TIMER_MS) return;
+    const id = setTimeout(() => expire(), Math.max(0, ms));
+    return () => clearTimeout(id);
+  }, [service]);
 
   // The schedule follows the page's language: a pack in the other language is fetched again.
   const stalePacks = useEffectEvent(() =>
@@ -282,7 +352,8 @@ function ServiceLive({ service, me, clock, initialChild, onSwitched }: { service
         <HeartbeatIndicator status={pulse.status} lastAt={pulse.lastAt} count={pulse.count} />
       </div>
       <p role="status" aria-live="polite" className="sr-only">
-        {announce}
+        {announce.text}
+        {announce.n % 2 ? '\u200b' : ''}
       </p>
 
       {multi && (
@@ -341,6 +412,7 @@ function statusOf(child: BuddyChild, l: Live, p: Presence | null, t: Translate, 
       waiting: ['buddy.chip.waiting', 'buddy.locked.waiting'],
       no_card: ['buddy.chip.noCard', 'buddy.locked.noCard'],
       window: ['buddy.chip.window', 'buddy.locked.window'],
+      closed: ['buddy.chip.closed', 'buddy.locked.closed'],
       elsewhere: ['buddy.chip.elsewhere', 'buddy.locked.elsewhere'],
       error: ['buddy.chip.error', 'buddy.locked.error'],
     };

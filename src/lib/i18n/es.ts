@@ -633,6 +633,7 @@ export const es: Record<MessageKey, string> = {
   'buddy.chip.waiting': 'Esperando al equipo de niños',
   'buddy.chip.noCard': 'Aún sin tarjeta',
   'buddy.chip.window': 'Bloqueada · abre 30 min antes',
+  'buddy.chip.closed': 'Bloqueada · el servicio terminó',
   'buddy.chip.elsewhere': 'Bloqueada · registrado en otro servicio',
   'buddy.chip.error': 'Bloqueada · reintentando',
 
@@ -642,11 +643,13 @@ export const es: Record<MessageKey, string> = {
   'buddy.locked.waiting': 'El equipo de niños todavía está leyendo la tarjeta de {name}. Se abrirá aquí cuando terminen, mientras {name} esté registrado.',
   'buddy.locked.noCard': 'La familia de {name} todavía no ha escrito una tarjeta. Pregunte al equipo de niños qué conviene saber hoy.',
   'buddy.locked.window': 'La tarjeta de {name} se abre 30 minutos antes de que empiece el servicio.',
+  'buddy.locked.closed': 'El servicio terminó, así que la tarjeta de {name} se bloqueó y se borró de este teléfono.',
   'buddy.locked.elsewhere': '{name} está registrado en otro servicio, así que la tarjeta sigue bloqueada aquí.',
   'buddy.locked.error': 'No se pudo abrir la tarjeta de {name} ahora. Se volverá a intentar en la próxima revisión.',
 
   'buddy.announce.unlocked': 'Tarjeta de {name} desbloqueada · entrada {time}',
   'buddy.announce.locked': 'Tarjeta de {name} bloqueada · salida {time}',
+  'buddy.announce.closed': 'Tarjeta de {name} bloqueada · el servicio terminó',
   'buddy.announce.lockedPlain': 'Tarjeta de {name} bloqueada',
 
   'buddy.tabs': 'Tarjeta, horario y momentos de {name}',

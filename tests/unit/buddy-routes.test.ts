@@ -7,6 +7,7 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { setDbForTests, type Db } from '@/db/client';
 import * as schema from '@/db/schema';
 import { createSandbox } from '@/db/sandbox';
+import { listAccessForChild } from '@/db/repo/access';
 import { insertAssignments } from '@/db/repo/assignments';
 import { listPeople } from '@/db/repo/people';
 import { listServices } from '@/db/repo/services';
@@ -19,6 +20,8 @@ vi.mock('@/lib/auth/viewer', async (orig) => ({ ...(await orig<typeof import('@/
 
 import * as todayRoute from '@/app/api/buddy/today/route';
 import * as momentsRoute from '@/app/api/moments/route';
+import * as cardRoute from '@/app/api/cards/[childId]/route';
+import * as packRoute from '@/app/api/pack/route';
 
 beforeAll(async () => {
   process.env.MASTER_KEY = randomBytes(32).toString('base64');
@@ -140,5 +143,35 @@ describe('GET /api/moments (buddy)', () => {
     await stationAction(w.churchId, w.nine.id, leo, 'out', new Date());
     h.viewer = w.as('Priya', 'buddy');
     expect(await (await list()).json()).toEqual({ error: 'forbidden', reason: 'checked_out' });
+  });
+});
+
+describe('one access entry per buddy session', () => {
+  it('re-reads of an open card (the phone re-checking the gate, the picture schedule) fold into the open entry', async () => {
+    const w = await world();
+    const leo = w.p('Leo').id;
+    await insertAssignments([{ serviceId: w.nine.id, childId: leo, buddyId: w.p('Priya').id, status: 'approved' }]);
+    const card = () => cardRoute.GET(get(`/api/cards/${leo}?service=${w.nine.id}&scope=full`), { params: Promise.resolve({ childId: leo }) } as never);
+    const pack = () => packRoute.GET(get(`/api/pack?service=${w.nine.id}&child=${leo}&lang=en`));
+    const buddyRows = async () => (await listAccessForChild(leo)).filter((e) => e.role === 'buddy' && e.serviceId === w.nine.id);
+
+    await stationAction(w.churchId, w.nine.id, leo, 'in', new Date());
+    h.viewer = w.as('Priya', 'buddy');
+    expect((await (await card()).json()).locked).toBe(false);
+    expect((await pack()).status).toBe(200);
+    expect((await (await card()).json()).locked).toBe(false);
+    expect((await (await card()).json()).locked).toBe(false);
+    let rows = await buddyRows();
+    expect(rows).toHaveLength(1);
+    expect(rows[0].closedAt).toBeNull();
+
+    // Checkout closes it; a new check-in is a new session and a new entry.
+    await stationAction(w.churchId, w.nine.id, leo, 'out', new Date());
+    expect((await (await card()).json()).locked).toBe(true);
+    await stationAction(w.churchId, w.nine.id, leo, 'in', new Date());
+    expect((await (await card()).json()).locked).toBe(false);
+    rows = await buddyRows();
+    expect(rows).toHaveLength(2);
+    expect(rows.filter((e) => e.closedAt === null)).toHaveLength(1);
   });
 });
