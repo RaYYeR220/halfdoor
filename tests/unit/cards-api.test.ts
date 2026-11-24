@@ -90,6 +90,32 @@ describe('GET /api/cards/:childId: the buddy gate', () => {
     expect(log[0].closedAt).not.toBeNull();
   });
 
+  it('checkout itself closes the buddy and room-leader sessions at the checkout time; other children stay open', async () => {
+    const w = await world();
+    const leo = w.p('Leo').id;
+    await insertAssignments([{ serviceId: w.service.id, childId: w.p('Ana').id, buddyId: w.p('Marco').id, status: 'approved' }]);
+    h.viewer = w.as('Hannah', 'director');
+    await station(w, 'Leo', 'in');
+    await station(w, 'Ana', 'in');
+    h.viewer = w.as('Priya', 'buddy');
+    expect((await (await getCard(leo, `?service=${w.service.id}`)).json()).locked).toBe(false);
+    h.viewer = w.as('Tom', 'leader');
+    expect((await (await getCard(leo, `?service=${w.service.id}&scope=safety`)).json()).locked).toBe(false);
+    h.viewer = w.as('Marco', 'buddy');
+    expect((await (await getCard(w.p('Ana').id, `?service=${w.service.id}`)).json()).locked).toBe(false);
+
+    h.viewer = w.as('Hannah', 'director');
+    const before = Date.now();
+    await station(w, 'Leo', 'out');
+    const sessions = (await listAccessForChild(leo)).filter((e) => e.reason === 'checked_in' || e.reason === 'room_safety');
+    expect(sessions.map((e) => e.role).sort()).toEqual(['buddy', 'leader']);
+    for (const e of sessions) {
+      expect(e.closedAt).not.toBeNull();
+      expect(e.closedAt!.getTime()).toBeGreaterThanOrEqual(before);
+    }
+    expect((await listAccessForChild(w.p('Ana').id)).filter((e) => e.reason === 'checked_in')).toEqual([expect.objectContaining({ closedAt: null })]);
+  });
+
   it('heartbeat closes the buddy\'s open entry once the child is out', async () => {
     const w = await world();
     const leo = w.p('Leo').id;
@@ -178,6 +204,26 @@ describe('GET /api/cards/:childId: the buddy gate', () => {
 });
 
 describe('auth and tenancy', () => {
+  it('a refused viewer gets the same answer whether or not the child has a card', async () => {
+    const w = await world();
+    const sam = w.p('Sam').id;
+    expect(await getCardForChild(w.churchId, sam)).toBeUndefined();
+    const q = `?service=${w.service.id}`;
+    // An unassigned buddy: not_assigned for a child with a card and for one without.
+    h.viewer = w.as('Marco', 'buddy');
+    expect(await (await getCard(sam, q)).json()).toEqual({ locked: true, reason: 'not_assigned' });
+    expect(await (await getCard(w.p('Leo').id, q)).json()).toEqual({ locked: true, reason: 'not_assigned' });
+    // A parent of another child: 403 either way.
+    h.viewer = w.as('Maria', 'parent');
+    expect((await getCard(sam)).status).toBe(403);
+    // A room leader before check-in: the check-in answer, not "no card".
+    h.viewer = w.as('Tom', 'leader');
+    expect(await (await getCard(sam, `${q}&scope=safety`)).json()).toEqual({ locked: true, reason: 'not_checked_in' });
+    // Someone the gate lets in learns there is no card.
+    h.viewer = w.as('Hannah', 'director');
+    expect((await getCard(sam)).status).toBe(404);
+  });
+
   it('401 without a viewer, 403 for the wrong role, 404 for a bad id', async () => {
     const w = await world();
     expect((await getCard(w.p('Leo').id)).status).toBe(401);

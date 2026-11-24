@@ -37,6 +37,19 @@ export async function closeAccess(ids: string[], at: Date): Promise<void> {
   await getDb().update(cardAccessLog).set({ closedAt: at }).where(and(inArray(cardAccessLog.id, ids), isNull(cardAccessLog.closedAt)));
 }
 
+/** Checkout: every still-open buddy or room-leader session on this child at this service ends at `at`. */
+export async function closeSessionsAtCheckout(childId: string, serviceId: string, at: Date): Promise<void> {
+  await getDb()
+    .update(cardAccessLog)
+    .set({ closedAt: at })
+    .where(and(
+      eq(cardAccessLog.childId, childId),
+      eq(cardAccessLog.serviceId, serviceId),
+      inArray(cardAccessLog.reason, ['checked_in', 'room_safety']),
+      isNull(cardAccessLog.closedAt),
+    ));
+}
+
 /** Log for a child that survives deleting the card (card_id becomes null, tombstone rows say 'deleted'). */
 export async function listAccessForChild(childId: string): Promise<AccessEntry[]> {
   return getDb().select().from(cardAccessLog).where(eq(cardAccessLog.childId, childId)).orderBy(cardAccessLog.openedAt);

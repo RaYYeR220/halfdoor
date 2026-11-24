@@ -31,7 +31,7 @@ export async function GET(req: Request) {
   if (viewer.role === 'buddy') {
     const ev = await evaluateGate(viewer, childId, serviceId, 'full', new Date());
     if (!ev) return fail('not_found', 404);
-    if (!ev.result.allowed) return NextResponse.json({ error: 'forbidden', reason: ev.result.reason }, { status: 403 });
+    if (!ev.allowed) return NextResponse.json({ error: 'forbidden', reason: ev.result.reason }, { status: 403 });
     // A card being updated opens with its safety lines only: its supports (the tags) wait for the director too.
     tags = ev.result.scope === 'full' ? (ev.card.tags as Tag[]) : [];
     cardId = ev.card.id;

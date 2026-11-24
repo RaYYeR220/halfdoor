@@ -10,18 +10,27 @@ import type { Viewer } from '@/lib/auth/viewer';
 import { buildCardView, type CardView } from '@/lib/card/view';
 import { canReadCard, type GateResult, type Scope } from './gate';
 
-export type Evaluated = { card: CardRow; childFirstName: string; result: GateResult };
+type Allowed = Extract<GateResult, { allowed: true }>;
+type Denied = Extract<GateResult, { allowed: false }>;
 
-/** null = no such child/card/service IN THIS CHURCH (callers answer 404). */
+/** `card` is null only on a denial: the gate's answer comes before whether a card exists. */
+export type Evaluated =
+  | { allowed: true; card: CardRow; childFirstName: string; result: Allowed }
+  | { allowed: false; card: CardRow | null; childFirstName: string; result: Denied };
+
+/**
+ * null = no such child/service IN THIS CHURCH, or no card for a viewer the gate would let in (callers answer 404).
+ * A viewer the gate refuses gets the refusal whether or not the child has a card, so a refused buddy, leader or
+ * parent can't learn that a card exists (an assigned buddy can still tell a card under review from none).
+ */
 export async function evaluateGate(
   viewer: Viewer, childId: string, serviceId: string | null, scope: Scope, now: Date,
 ): Promise<Evaluated | null> {
   const child = await getPersonInChurch(viewer.churchId, childId);
   if (!child || child.role !== 'child') return null;
-  const card = await getCardForChild(viewer.churchId, childId);
-  if (!card) return null;
   const service = serviceId ? (await getServiceInChurch(viewer.churchId, serviceId)) ?? null : null;
   if (serviceId && !service) return null;
+  const card = (await getCardForChild(viewer.churchId, childId)) ?? null;
 
   const needsContext = viewer.role === 'buddy' || viewer.role === 'leader';
   const parentIds = viewer.role === 'parent' ? (await listHouseholdLinks([childId])).map((l) => l.parentId) : [];
@@ -30,8 +39,10 @@ export async function evaluateGate(
     ? ((service ? await getLatestCheckin(service.id, childId) : undefined) ?? (await getLatestCheckinInChurch(viewer.churchId, childId)) ?? null)
     : null;
 
-  const result = canReadCard({ viewer, card, parentIds, service, assignment, checkin, now, scope });
-  return { card, childFirstName: child.firstName, result };
+  // No card: judge an acknowledged stand-in, so the answer is the one a real card would get on every other ground.
+  const result = canReadCard({ viewer, card: card ?? { childId, status: 'acknowledged' }, parentIds, service, assignment, checkin, now, scope });
+  if (!result.allowed) return { allowed: false, card, childFirstName: child.firstName, result };
+  return card ? { allowed: true, card, childFirstName: child.firstName, result } : null;
 }
 
 export type OpenResult =
@@ -46,8 +57,8 @@ export async function openCard(
 ): Promise<OpenResult> {
   const ev = await evaluateGate(viewer, childId, serviceId, scope, now);
   if (!ev) return { kind: 'not_found' };
-  const { card, result } = ev;
-  if (!result.allowed) {
+  if (!ev.allowed) {
+    const { result } = ev;
     if (result.reason === 'role') return { kind: 'forbidden' };
     // Close exactly this viewer's openings of this child at this service (none when no service was named).
     if (serviceId) {
@@ -56,6 +67,7 @@ export async function openCard(
     }
     return { kind: 'locked', reason: result.reason };
   }
+  const { card, result } = ev;
   const church = await getChurch(viewer.churchId);
   if (!church) return { kind: 'not_found' };
   const view = buildCardView(card, ev.childFirstName, church.wrappedDek, viewer.role, result.scope);
@@ -93,7 +105,7 @@ export async function closeStaleAccess(viewer: Viewer, now: Date): Promise<void>
     const key = `${e.childId}|${e.serviceId}`;
     if (!verdicts.has(key)) {
       const ev = await evaluateGate(viewer, e.childId, e.serviceId, viewer.role === 'leader' ? 'safety' : 'full', now);
-      verdicts.set(key, !!ev?.result.allowed);
+      verdicts.set(key, !!ev?.allowed);
     }
     if (!verdicts.get(key)) stale.push(e.id);
   }

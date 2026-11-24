@@ -24,7 +24,7 @@ export async function GET(req: Request) {
   if (!(await childInChurch(viewer, childId))) return fail('not_found', 404);
   const ev = await evaluateGate(viewer, childId, serviceId, 'full', new Date());
   if (!ev) return fail('not_found', 404);
-  if (!ev.result.allowed) return NextResponse.json({ error: 'forbidden', reason: ev.result.reason }, { status: 403 });
+  if (!ev.allowed) return NextResponse.json({ error: 'forbidden', reason: ev.result.reason }, { status: 403 });
   const church = await getChurch(viewer.churchId);
   if (!church) return fail('not_found', 404);
   const rows = (await listMoments(serviceId)).filter((m) => m.childId === childId && m.buddyId === viewer.personId);
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
   // Same rule as reading the card: assigned, checked in, inside the window.
   const ev = await evaluateGate(viewer, childId, serviceId, 'full', now);
   if (!ev) return fail('not_found', 404);
-  if (!ev.result.allowed) return NextResponse.json({ error: 'forbidden', reason: ev.result.reason }, { status: 403 });
+  if (!ev.allowed) return NextResponse.json({ error: 'forbidden', reason: ev.result.reason }, { status: 403 });
   const service = await getServiceInChurch(viewer.churchId, serviceId);
   const church = await getChurch(viewer.churchId);
   if (!service || !church) return fail('not_found', 404);

@@ -1,5 +1,6 @@
 // "Simulated check-in station" for sandboxes: stands in for Planning Center Check-Ins.
 import { randomInt } from 'node:crypto';
+import { closeSessionsAtCheckout } from '@/db/repo/access';
 import { getOpenCheckin, insertCheckin, updateCheckin } from '@/db/repo/checkins';
 import { bumpRetention } from '@/lib/access/retention';
 import { CODE_ALPHABET, CODE_LENGTH, type StationAction } from './types';
@@ -23,5 +24,8 @@ export async function stationAction(churchId: string, serviceId: string, childId
   }
   if (!open) return { ok: false, error: 'not_in' };
   await updateCheckin(open.id, { checkedOutAt: now });
+  // The family's log reads "opened 9:02 – 10:14": the buddy's and the room's sessions end at checkout, not at the
+  // next time a phone happens to ask.
+  await closeSessionsAtCheckout(childId, serviceId, now);
   return { ok: true, securityCode: open.securityCode, in: false };
 }
