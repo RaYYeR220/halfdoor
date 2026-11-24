@@ -271,6 +271,7 @@ export function DemoGuide({ slug, personas, current, samId }: Props) {
         {/* A full page load: /demo makes a new sandbox church and lands on the desk as Hannah. */}
         <a
           href="/demo"
+          rel="nofollow"
           className="-ml-2 inline-flex min-h-11 items-center gap-2 rounded-pill px-2 text-15 font-medium whitespace-nowrap text-ink-2 transition-colors duration-200 ease-out hover:text-ink"
           aria-describedby={`${panelId}-reset`}
         >

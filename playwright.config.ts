@@ -25,6 +25,8 @@ export default defineConfig({
     baseURL: `http://localhost:${PORT}`,
     channel: 'chromium',
     viewport: { width: 1440, height: 900 },
+    // A desktop Chrome user agent: /demo serves headless browsers the static "open in a browser" page (lib/demo/bots).
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
     actionTimeout: 30_000,
     navigationTimeout: 120_000,
     trace: 'retain-on-failure',

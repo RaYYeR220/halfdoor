@@ -17,7 +17,7 @@ export function Nav({ repoUrl, ref }: Props) {
         <a href="#measured">Measured</a>
         {repoUrl && <a href={repoUrl}>Source code</a>}
       </nav>
-      <a className="btn btn-quiet" href="/demo">
+      <a className="btn btn-quiet" href="/demo" rel="nofollow">
         Try the demo church
       </a>
     </header>

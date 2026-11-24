@@ -25,7 +25,7 @@ describe('landing', () => {
 
   test('the demo links are plain anchors (the route makes a sandbox; never prefetched)', () => {
     const nav = renderToStaticMarkup(createElement(Nav, { repoUrl: null }));
-    expect(nav).toContain('<a class="btn btn-quiet" href="/demo">');
+    expect(nav).toContain('<a class="btn btn-quiet" href="/demo" rel="nofollow">');
   });
 
   test('Measured renders the eval claims with the numbers from final.json', () => {

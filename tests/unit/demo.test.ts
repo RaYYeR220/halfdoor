@@ -9,6 +9,8 @@ import * as schema from '@/db/schema';
 import { GET, HEAD } from '@/app/demo/route';
 import { clientIp } from '@/lib/auth/clientIp';
 import { createSandboxReserved } from '@/db/sandbox';
+import robots from '@/app/robots';
+import { BOT_UA, isBot } from '@/lib/demo/bots';
 
 let db: ReturnType<typeof drizzle>;
 beforeAll(async () => {
@@ -93,5 +95,46 @@ describe('createSandboxReserved', () => {
     expect(results.filter((r) => r !== null)).toHaveLength(2);
     const rows = await db.select().from(schema.churches);
     expect(rows.filter((c) => c.creatorHash === h)).toHaveLength(5);
+  });
+});
+
+describe('who counts as a bot at /demo', () => {
+  test('crawlers, unfurlers, monitors, command-line tools, scripts and headless browsers', () => {
+    const bots = [
+      'Slackbot-LinkExpanding 1.0', 'facebookexternalhit/1.1', 'Twitterbot/1.0', 'Mozilla/5.0 (compatible; Discordbot/2.0)', 'LinkedInBot/1.0',
+      'WhatsApp/2.23', 'TelegramBot (like TwitterBot)', 'Googlebot/2.1', 'bingbot/2.0', 'Mozilla/5.0 (compatible; Yahoo! Slurp)',
+      'Baiduspider/2.0', 'ia_archiver crawler', 'Mozilla/5.0 (compatible; Google-InspectionTool) preview', 'node-fetch/1.0',
+      'UptimeRobot/2.0', 'Pingdom.com_bot', 'Site24x7 monitor', 'curl/8.4.0', 'Wget/1.21', 'python-requests/2.31', 'Python-urllib/3.11',
+      'Go-http-client/1.1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/138.0.0.0 Safari/537.36',
+      'Scrapy/2.11', 'Apache-HttpClient/4.5.14', 'okhttp-bot',
+    ];
+    for (const ua of bots) expect(isBot(ua), ua).toBe(true);
+    expect(isBot(null)).toBe(false);
+  });
+  test('people in browsers are not bots', () => {
+    const people = [
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15',
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
+      'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Mobile Safari/537.36',
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0',
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0',
+    ];
+    for (const ua of people) expect(BOT_UA.test(ua), ua).toBe(false);
+  });
+  test('a script or headless browser gets the static page and creates nothing', async () => {
+    const before = await count();
+    for (const ua of ['curl/8.4.0', 'python-requests/2.31', 'Mozilla/5.0 HeadlessChrome/138.0.0.0']) {
+      const r = await get({ 'user-agent': ua, 'x-forwarded-for': '192.0.2.50' });
+      expect(r.status).toBe(200);
+      expect(await r.text()).toContain('Open in a browser to try the demo church');
+    }
+    expect(await count()).toBe(before);
+  });
+});
+
+describe('robots.txt', () => {
+  test('the landing page is open; demo churches, their pages, the API and personal links are not', () => {
+    expect(robots()).toEqual({ rules: { userAgent: '*', allow: '/', disallow: ['/demo', '/c/', '/api/', '/p/', '/b/'] } });
   });
 });

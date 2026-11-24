@@ -12,14 +12,14 @@ export function Footer({ repoUrl }: { repoUrl: string | null }) {
             <BrandMark />
             Halfdoor
           </Link>
-          <a className="btn btn-cta" href="/demo">
+          <a className="btn btn-cta" href="/demo" rel="nofollow">
             Try the demo church <ArrowRight />
           </a>
         </div>
         <p className="fict">Fernbrook Community Church is a fictional demo church with sample data.</p>
         <p className="fict">Built for the AI for Church Hackathon 2026.</p>
         <nav className="foot-links" aria-label="Footer">
-          <a href="/demo">Demo church</a>
+          <a href="/demo" rel="nofollow">Demo church</a>
           <a href="#privacy">Privacy</a>
           {repoUrl && <a href={repoUrl}>Source code</a>}
           <span className="credit">{en['pack.sheet.arasaac']}</span>

@@ -64,7 +64,7 @@ export function Hero({ repoUrl }: { repoUrl: string | null }) {
           came from; safety lines are copied word for word.<span className="m-hide"> Parents see who opened it and when.</span>
         </p>
         <div className="ctas rise d3" ref={ctas}>
-          <a className="btn btn-cta" href="/demo">
+          <a className="btn btn-cta" href="/demo" rel="nofollow">
             Try the demo church <ArrowRight />
           </a>
           <a className="btn btn-line" href="#how">
