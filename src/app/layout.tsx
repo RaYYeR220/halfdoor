@@ -1,9 +1,31 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
+const DESCRIPTION = "Halfdoor hands a parent's own words to the volunteer buddy, only while the child is checked in.";
+const SOCIAL_TITLE = 'Halfdoor — every child, known at the door';
+
+/** Absolute base for social image URLs. Unset: Next uses the Vercel production/preview URL, or localhost. */
+const SITE_URL = (() => {
+  try {
+    return process.env.APP_URL ? new URL(process.env.APP_URL) : undefined;
+  } catch {
+    return undefined;
+  }
+})();
+
 export const metadata: Metadata = {
+  metadataBase: SITE_URL,
   title: { default: 'Halfdoor', template: '%s · Halfdoor' },
-  description: "Halfdoor hands a parent's own words to the volunteer buddy, only while the child is checked in.",
+  description: DESCRIPTION,
+  // public/og.png is the hero's unlocked key frame at 1200×630 (Leo's card, open at check-in).
+  openGraph: {
+    type: 'website',
+    siteName: 'Halfdoor',
+    title: SOCIAL_TITLE,
+    description: DESCRIPTION,
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: "Halfdoor: Leo's card on the buddy's phone, made from his mom's own words, unlocked at check-in." }],
+  },
+  twitter: { card: 'summary_large_image', title: SOCIAL_TITLE, description: DESCRIPTION, images: ['/og.png'] },
 };
 
 export const viewport: Viewport = {
