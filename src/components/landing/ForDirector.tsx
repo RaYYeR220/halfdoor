@@ -1,7 +1,6 @@
 const MATCHES: [kid: string, buddy: string, reason: string | null][] = [
   ['Leo, 7', 'Priya', 'Same buddy as the last 3 Sundays'],
   ['Ana, 5', 'Marco', 'Speaks Spanish'],
-  ['Malik, 9', 'Grace', null],
   ['Theo, 4', 'Ruth', 'Medical'],
 ];
 
@@ -36,6 +35,12 @@ export function ForDirector() {
                 <span>{reason && <span className="pill quiet">{reason}</span>}</span>
               </li>
             ))}
+            <li className="gap">
+              <span className="kid">Malik, 9</span>
+              <span className="msg">
+                <span className="pill quiet">Waiting for your review</span>His card needs your review before a match.
+              </span>
+            </li>
             <li className="gap">
               <span className="kid">Ivy, 10</span>
               <span className="msg">

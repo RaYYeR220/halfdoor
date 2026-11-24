@@ -72,6 +72,7 @@ In plain terms: we check that the key belongs to a genuine Intel TDX enclave tha
 | Venice | Ciphertext, the model name, token counts, timing and size. For the picture schedule only: the lesson text, sent to Claude Sonnet 5.5 through Venice's standard API. The lesson carries no child data. | Anything an enclave request carries in plain text |
 | The enclave | The request in plain text while it runs: the story with the child's first name replaced (other names the parent wrote stay), card lines to translate, or a child's moments for the note home | The child's first name |
 | Phala PCCS | The browser's IP address when it fetches public Intel data | Any child data: "No child data is sent to it." |
+| Fontshare (font CDN) | Every visitor's IP address when a page loads its font (General Sans) | Any child data, or anything typed on the page |
 
 ## The AI ledger
 

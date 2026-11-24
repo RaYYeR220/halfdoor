@@ -1,5 +1,8 @@
 import { ENCLAVE_COPY, HONEST_LIMITS } from '@/lib/crypto/attestation';
 
+/** Like the PCCS note: the page's font comes from a third-party CDN that sees the visitor's IP address. */
+export const FONT_NOTE = "The page's font loads from Fontshare's CDN, which sees your IP address. No child data is sent to it.";
+
 /**
  * 2 · Private by design. The enclave sentences are the app's own ENCLAVE_COPY / HONEST_LIMITS, so the landing never
  * claims more than the parent page does: "checks", never "proven" or "no one can read".
@@ -12,7 +15,7 @@ export function Privacy() {
           <h2 id="privacy-h">Private by design</h2>
           <ul className="facts">
             <li>
-              The parent&apos;s story is encrypted in their browser and read only inside a hardware-sealed enclave. {ENCLAVE_COPY.short}
+              The parent&apos;s story is encrypted in their browser and sent only to a hardware-sealed enclave. {ENCLAVE_COPY.short}
             </li>
             <li>Halfdoor&apos;s server never stores the raw story — only the card the parent approved, encrypted at rest.</li>
             <li>Nothing is ever sent automatically.</li>
@@ -21,6 +24,7 @@ export function Privacy() {
           </ul>
           <p className="limits">{HONEST_LIMITS}</p>
           <p className="limits">{ENCLAVE_COPY.pccsNote}</p>
+          <p className="limits">{FONT_NOTE}</p>
         </div>
         <div>
           <div className="frag">

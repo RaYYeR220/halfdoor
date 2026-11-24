@@ -2,6 +2,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { Faq } from '@/components/landing/Faq';
+import { ForDirector } from '@/components/landing/ForDirector';
 import { Footer } from '@/components/landing/Footer';
 import { CARD_VALUES, LINES, MARIA } from '@/components/landing/heroField';
 import { Measured } from '@/components/landing/Measured';
@@ -49,6 +50,9 @@ describe('landing', () => {
     expect(text).toContain(ENCLAVE_COPY.short);
     expect(text).toContain(HONEST_LIMITS);
     expect(text).toContain(ENCLAVE_COPY.pccsNote);
+    expect(text).toContain("The page's font loads from Fontshare's CDN, which sees your IP address. No child data is sent to it.");
+    expect(text).toContain('sent only to a hardware-sealed enclave');
+    expect(text).not.toContain('read only inside');
     expect(text).not.toMatch(/proven|no one can/i);
   });
 
@@ -58,6 +62,12 @@ describe('landing', () => {
     expect(text).toContain('The live connection is not part of this demo: a clearly labelled simulated check-in station stands in for Check-Ins.');
     expect(text).not.toMatch(/Works with|open and close the card\.|can be scheduled into/);
     expect(html(createElement(HowItWorks))).not.toContain('Planning Center Check-Ins');
+  });
+
+  test('the director mock matches the demo: Malik waits for review, he is not matched', () => {
+    const text = html(createElement(ForDirector));
+    expect(text).toMatch(/Malik, 9\s*Waiting for your review\s*His card needs your review before a match\./);
+    expect(text).not.toMatch(/Malik, 9\s*Grace/);
   });
 
   test('FAQ names the models from the app constants', () => {
