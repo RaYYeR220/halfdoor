@@ -208,9 +208,12 @@ async function seed(churchId: string, wrappedDek: string, T: number, opts: Build
 
 }
 
-/** Deletes expired sandboxes (everything under them cascades). Returns how many went. */
-export async function purgeExpiredSandboxes(now: Date = new Date()): Promise<number> {
-  const expired = await listExpiredSandboxes(now);
+/** At most this many sandboxes are deleted per /demo visit, so one visit never pays for a long backlog. */
+export const PURGE_BATCH = 25;
+
+/** Deletes expired sandboxes, oldest first, at most `limit` (everything under them cascades). Returns how many went. */
+export async function purgeExpiredSandboxes(now: Date = new Date(), limit = PURGE_BATCH): Promise<number> {
+  const expired = await listExpiredSandboxes(now, limit);
   for (const c of expired) await deleteChurch(c.id);
   return expired.length;
 }

@@ -6,7 +6,7 @@ import { migrate } from 'drizzle-orm/pglite/migrator';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { setDbForTests, type Db } from '@/db/client';
 import * as schema from '@/db/schema';
-import { createSandbox, purgeExpiredSandboxes } from '@/db/sandbox';
+import { PURGE_BATCH, createSandbox, purgeExpiredSandboxes } from '@/db/sandbox';
 import { CARDS } from '@/db/seed/fernbrook';
 import { getCard, listCards } from '@/db/repo/cards';
 import { getChurch, getChurchBySlug } from '@/db/repo/churches';
@@ -167,5 +167,22 @@ describe('purgeExpiredSandboxes', () => {
     expect(await listPeople(old.churchId)).toHaveLength(0);
     expect(await listCards(old.churchId)).toHaveLength(0);
     expect(await getChurch(keep.churchId)).toBeDefined();
+  });
+  it('deletes at most a batch per call, oldest expiry first', async () => {
+    const db = (await import('@/db/client')).getDb();
+    const { eq, and, lt } = await import('drizzle-orm');
+    await purgeExpiredSandboxes(); // start from no backlog
+    const made = [await createSandbox(), await createSandbox(), await createSandbox()];
+    for (const [i, m] of made.entries()) {
+      await db.update(schema.churches).set({ expiresAt: new Date(Date.now() - (10 - i) * 1000) }).where(eq(schema.churches.id, m.churchId));
+    }
+    expect(PURGE_BATCH).toBe(25);
+    expect(await purgeExpiredSandboxes(new Date(), 2)).toBe(2);
+    expect(await getChurch(made[0].churchId)).toBeUndefined(); // the two that expired first
+    expect(await getChurch(made[1].churchId)).toBeUndefined();
+    expect(await getChurch(made[2].churchId)).toBeDefined();
+    expect(await purgeExpiredSandboxes(new Date(), 2)).toBe(1);
+    const left = await db.select().from(schema.churches).where(and(eq(schema.churches.mode, 'sandbox'), lt(schema.churches.expiresAt, new Date())));
+    expect(left).toHaveLength(0);
   });
 });

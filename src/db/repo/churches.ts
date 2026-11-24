@@ -26,8 +26,14 @@ export async function insertChurch(values: NewChurch): Promise<Church> {
   return row;
 }
 
-export async function listExpiredSandboxes(now: Date): Promise<Church[]> {
-  return getDb().select().from(churches).where(and(eq(churches.mode, 'sandbox'), lt(churches.expiresAt, now)));
+/** Expired sandboxes, oldest expiry first, at most `limit`. */
+export async function listExpiredSandboxes(now: Date, limit: number): Promise<Pick<Church, 'id'>[]> {
+  return getDb()
+    .select({ id: churches.id })
+    .from(churches)
+    .where(and(eq(churches.mode, 'sandbox'), lt(churches.expiresAt, now)))
+    .orderBy(churches.expiresAt)
+    .limit(limit);
 }
 
 /** People, cards, services and the rest go with it via ON DELETE CASCADE. */
