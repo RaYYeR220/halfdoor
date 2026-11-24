@@ -45,3 +45,5 @@ next-env.d.ts
 eval/.cache/
 /test-results/
 /playwright-report/
+
+.vercel
