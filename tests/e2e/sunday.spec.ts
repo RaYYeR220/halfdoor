@@ -122,59 +122,66 @@ test('a whole Sunday: card, review, match, check-in, buddy phone, checkout, note
     await expect(ivyGap).toContainText("Ivy needs a buddy with AAC experience at 11:00 — Dana's inclusion training expired");
   });
 
-  await test.step('5. The guide opens the station on Sam; Hannah checks him in', async () => {
-    await guideStep(page, 4).click();
-    await page.waitForURL(/\/station\?service=[0-9a-f-]+&child=[0-9a-f-]+$/);
-    // Names are exact and scoped to the page: the guide's own buttons read "Go to step 4: Check Sam in, as Hannah".
-    const station = page.locator('main');
-    await station.getByRole('button', { name: 'Check Sam in', exact: true }).click();
-    await expect(station.getByRole('button', { name: 'Check Sam out', exact: true })).toBeVisible();
-    await expect(page.getByText(/^Sam checked in · code [A-Z0-9]+$/)).toBeVisible();
-  });
-
   // The buddy's phone is another browser (its own "viewing as" cookie), so the front desk stays Hannah's.
   const phoneContext = await browser.newContext({ baseURL, viewport: { width: 1280, height: 900 } });
-  await phoneContext.addCookies(await page.context().cookies());
-  const phone = await phoneContext.newPage();
+  try {
+    await phoneContext.addCookies(await page.context().cookies());
+    const phone = await phoneContext.newPage();
 
-  await test.step("6. The guide's step 5 opens the phone of the buddy matched at Sam's check-in service; the card unlocks", async () => {
-    await phone.goto(`/c/${slug}/desk`);
-    const step5 = guideStep(phone, 5);
-    await expect(step5).toBeEnabled({ timeout: 60_000 });
-    await expect(step5).toHaveAccessibleName(new RegExp(`, as ${buddy}$`));
-    await step5.click();
-    await phone.waitForURL(/\/buddy\/[0-9a-f-]+\?service=[0-9a-f-]+&child=[0-9a-f-]+$/);
-    await expect(phone.getByRole('button', { name: `Switch person, now ${buddy}, Buddy`, exact: true })).toBeVisible();
+    await test.step("5. The guide's step 5 opens the phone of the buddy matched at Sam's service: the card is locked", async () => {
+      await phone.goto(`/c/${slug}/desk`);
+      const step5 = guideStep(phone, 5);
+      await expect(step5).toBeEnabled({ timeout: 60_000 });
+      await expect(step5).toHaveAccessibleName(new RegExp(`, as ${buddy}$`));
+      await step5.click();
+      await phone.waitForURL(/\/buddy\/[0-9a-f-]+\?service=[0-9a-f-]+&child=[0-9a-f-]+$/);
+      await expect(phone.getByRole('button', { name: `Switch person, now ${buddy}, Buddy`, exact: true })).toBeVisible();
+      await expect(phone.getByRole('heading', { name: 'Sam', exact: true }).first()).toBeVisible({ timeout: 60_000 });
+      // Not checked in yet: the locked card is on screen and no safety line has reached the phone.
+      await expect(phone.getByText('Locked until Sam is checked in').first()).toBeVisible({ timeout: 30_000 });
+      await expect(phone.getByText(/tree nuts/)).toHaveCount(0);
+    });
 
-    // From the moment the phone shows Sam, the card opens within 10 s (Sam is already checked in).
-    await expect(phone.getByRole('heading', { name: 'Sam', exact: true }).first()).toBeVisible({ timeout: 60_000 });
-    const t0 = Date.now();
-    await expect(phone.getByText(/^Unlocked · checked in /).first()).toBeVisible({ timeout: 10_000 });
-    log(`card unlocked ${ms(t0)} ms after the phone showed Sam`);
-    const banner = phone.getByRole('region', { name: /^Safety · / });
-    await expect(banner).toBeVisible();
-    await expect(banner).toContainText('allergic to tree nuts');
-    await expect(banner).toContainText('Only me (Jordan) or Aunt Lena may pick Sam up.');
+    await test.step('6. The guide opens the station on Sam; Hannah checks him in and the open locked card unlocks live', async () => {
+      await guideStep(page, 4).click();
+      await page.waitForURL(/\/station\?service=[0-9a-f-]+&child=[0-9a-f-]+$/);
+      // Names are exact and scoped to the page: the guide's own buttons read "Go to step 4: Check Sam in, as Hannah".
+      const station = page.locator('main');
+      const t0 = Date.now();
+      await station.getByRole('button', { name: 'Check Sam in', exact: true }).click();
+      await expect(station.getByRole('button', { name: 'Check Sam out', exact: true })).toBeVisible();
+      await expect(page.getByText(/^Sam checked in · code [A-Z0-9]+$/)).toBeVisible();
+      // The signature moment: the phone that was already open unlocks on its own, within 10 s of the check-in.
+      const confirmed = Date.now();
+      await expect(phone.getByText(/^Unlocked · checked in /).first()).toBeVisible({ timeout: 10_000 });
+      log(`open locked card unlocked ${ms(confirmed)} ms after the check-in was confirmed (${ms(t0)} ms after the click)`);
+      const banner = phone.getByRole('region', { name: /^Safety · / });
+      await expect(banner).toBeVisible();
+      await expect(banner).toContainText('allergic to tree nuts');
+      await expect(banner).toContainText('Only me (Jordan) or Aunt Lena may pick Sam up.');
 
-    await phone.getByRole('tab', { name: 'Moments', exact: true }).click();
-    await phone.getByRole('group', { name: 'During' }).getByRole('button', { name: /^Worship/ }).click();
-    await phone.getByRole('button', { name: 'Good moment', exact: true }).click();
-    await expect(phone.getByText('Good moment saved', { exact: true }).first()).toBeVisible();
-  });
+      await phone.getByRole('tab', { name: 'Moments', exact: true }).click();
+      await phone.getByRole('group', { name: 'During' }).getByRole('button', { name: /^Worship/ }).click();
+      await phone.getByRole('button', { name: 'Good moment', exact: true }).click();
+      await expect(phone.getByText('Good moment saved', { exact: true }).first()).toBeVisible();
+    });
 
-  await test.step('7. Checkout at the station locks the card on the phone and clears it', async () => {
-    await guideStep(page, 6).click();
-    await page.waitForURL(/\/station\?/);
-    const station = page.locator('main');
-    await station.getByRole('button', { name: 'Check Sam out', exact: true }).click();
-    await expect(station.getByRole('button', { name: 'Check Sam in', exact: true })).toBeVisible();
-    await expect(station.getByText(/^Checked out /)).toBeVisible();
-    const t0 = Date.now();
-    await expect(phone.getByText(/^Locked · checked out /).first()).toBeVisible({ timeout: 30_000 });
-    log(`card locked ${ms(t0)} ms after checkout`);
-    await expect(phone.getByText(/tree nuts/)).toHaveCount(0);
+    await test.step('7. Checkout at the station locks the card on the phone and clears it', async () => {
+      await guideStep(page, 6).click();
+      await page.waitForURL(/\/station\?/);
+      const station = page.locator('main');
+      await station.getByRole('button', { name: 'Check Sam out', exact: true }).click();
+      await expect(station.getByRole('button', { name: 'Check Sam in', exact: true })).toBeVisible();
+      await expect(station.getByText(/^Checked out /)).toBeVisible();
+      const t0 = Date.now();
+      await expect(phone.getByText(/^Locked · checked out /).first()).toBeVisible({ timeout: 30_000 });
+      log(`card locked ${ms(t0)} ms after checkout`);
+      await expect(phone.getByText(/tree nuts/)).toHaveCount(0);
+    });
+
+  } finally {
     await phoneContext.close();
-  });
+  }
 
   await test.step('8. Hannah drafts the note home from the logged moment and approves it', async () => {
     await guideStep(page, 7).click();
