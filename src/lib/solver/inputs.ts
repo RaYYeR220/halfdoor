@@ -49,10 +49,16 @@ export async function solveService(churchId: string, service: Service, includeCh
   for (const p of people.filter((x) => x.role === 'child')) {
     const card = cardOf.get(p.id);
     if (!card || !card.supportLevel || card.supportLevel === 'none') continue;
-    if (card.status === 'parent_approved') { waitingForReview.push({ childId: p.id, name: p.firstName }); continue; }
+    // A card waiting for review is listed only where the child is expected, like everyone else: a regular of this
+    // service, a family with no check-in history yet, or a child the director added by hand.
+    const expected = !everCheckedIn.has(p.id) || regulars.has(p.id) || forced.has(p.id);
+    if (card.status === 'parent_approved') {
+      if (expected) waitingForReview.push({ childId: p.id, name: p.firstName });
+      continue;
+    }
     if (card.status !== 'acknowledged' || decidedHere.has(p.id)) continue;
     if (!everCheckedIn.has(p.id)) newFamily.add(p.id); // no history anywhere: expected at every service
-    else if (!regulars.has(p.id) && !forced.has(p.id)) { notExpected.push({ childId: p.id, name: p.firstName }); continue; }
+    else if (!expected) { notExpected.push({ childId: p.id, name: p.firstName }); continue; }
     children.push({
       id: p.id, name: p.firstName, supportLevel: card.supportLevel, tags: card.tags as Tag[], gender: p.gender, lastBuddyIds: history(p.id),
     });

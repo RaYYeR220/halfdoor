@@ -14,6 +14,7 @@ import { insertMoments } from '@/db/repo/moments';
 import { listPeople } from '@/db/repo/people';
 import { listServices } from '@/db/repo/services';
 import type { Viewer } from '@/lib/auth/viewer';
+import { AttestationSummarySchema } from '@/lib/venice/teeProxy';
 import { loadPatternsBoard } from '@/lib/desk/patterns';
 import { loadNotesBoard, loadPackChildren, loadUpcoming } from '@/lib/desk/server';
 import type { ChildRow, Ledger } from '@/lib/desk/types';
@@ -133,6 +134,34 @@ describe('GET /api/ledger', () => {
     });
     expect(body.rows[1]).toMatchObject({ e2ee: false, attestation: null, attestationRaw: null });
     expect(body.totals).toMatchObject({ calls: 2, e2ee: 1, plain: 1, tokensIn: 1600, tokensOut: 520, costUsd: 0.005972, running: 0, failed: 0 });
+  });
+});
+
+describe('GET /api/ledger: the attestation record holds public facts only', () => {
+  it('whatever a browser sends, only the schema\'s public fields are stored and shown; no key material beyond the enclave public key', async () => {
+    const w = await world();
+    const reported = {
+      verified: true, nonceOk: true, provider: 'near-ai', hardware: 'intel-tdx', model: 'e2ee-deepseek-v4-flash',
+      signingAddress: '0xabc', modelPublicKey: '04' + 'b'.repeat(128), checkedAt: '2026-11-24T10:00:00.000Z', reused: false, ageMs: 0,
+      binding: { addressMatches: true, nonceMatches: true, paddingZero: true, debug: false, teeType: 129, mrtd: 'c'.repeat(96) },
+      quote: {
+        mrtd: 'c'.repeat(96), mrtdShort: `${'c'.repeat(16)}…`, tdAttributes: '0'.repeat(16), signature: 'verified',
+        signatureSource: 'live', signatureCheckedIn: 'browser', tcbStatus: 'UpToDate', clientPrivateKey: 'leak',
+      },
+      // A tampered or buggy client could add anything; none of it may reach the ledger.
+      privateKey: 'deadbeef', clientPrivateKey: 'deadbeef', apiKey: 'sk-test', secret: 'x', story: 'Leo is allergic to peanuts',
+    };
+    // /api/tee/chat stores the attestation as ChatBody parsed it (attestationForLedger), i.e. through this schema.
+    const stored = AttestationSummarySchema.parse(reported);
+    await insertAiCall({ churchId: w.churchId, purpose: 'note', model: 'e2ee-deepseek-v4-flash', e2ee: true, attestation: stored, costUsd: '0.0001', ok: true });
+    h.viewer = w.as('Hannah', 'director');
+    const { body } = await ledger();
+    const raw = body.rows[0].attestationRaw as Record<string, unknown> & { quote: Record<string, unknown> };
+    expect(Object.keys(raw).every((k) => k in AttestationSummarySchema.shape)).toBe(true);
+    expect(Object.keys(raw.quote).every((k) => k in AttestationSummarySchema.shape.quote.shape)).toBe(true);
+    const json = JSON.stringify(body);
+    for (const bad of ['privateKey', 'PrivateKey', 'apiKey', 'secret', 'sk-test', 'deadbeef', 'peanuts']) expect(json).not.toContain(bad);
+    expect(raw.modelPublicKey).toBe(reported.modelPublicKey); // the enclave's public key is a public fact
   });
 });
 

@@ -16,7 +16,9 @@ export function parseSteps(lesson: Pick<LessonRow, 'steps'>): Step[] {
     const segment = segmentOfStep({ key: s.key, segment: (SEGMENTS as readonly unknown[]).includes(s.segment) ? (s.segment as Segment) : null }) ?? 'transition';
     const load = (SENSORY_LOADS as readonly unknown[]).includes(s.sensoryLoad) ? (s.sensoryLoad as SensoryLoad) : 'med';
     return [{
-      key: s.key, label: typeof s.label === 'string' ? s.label : s.key, segment, sensoryLoad: load,
+      key: s.key, label: typeof s.label === 'string' ? s.label : s.key,
+      ...(typeof s.labelEs === 'string' && s.labelEs.trim() ? { labelEs: s.labelEs } : {}),
+      segment, sensoryLoad: load,
       minutes: typeof s.minutes === 'number' ? s.minutes : 5,
     }];
   });

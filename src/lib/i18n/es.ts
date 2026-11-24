@@ -346,6 +346,7 @@ export const es: Record<MessageKey, string> = {
   'desk.drawer.approvedBy': 'Aprobada por {who} · {date}',
   'desk.drawer.version': 'Versión {n}',
   'desk.drawer.loading': 'Abriendo la tarjeta…',
+  'desk.drawer.loaded': 'La tarjeta de {name} está abierta.',
   'desk.drawer.error': 'La tarjeta no se abrió. Cierre esto e inténtelo de nuevo.',
   'desk.drawer.noneTitle': 'Todavía no hay tarjeta de {name}',
   'desk.drawer.noneBody': 'Aún no hay nada de {parent}. La tarjeta de {name} aparecerá aquí cuando esté aprobada.',

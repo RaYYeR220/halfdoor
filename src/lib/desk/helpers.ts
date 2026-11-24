@@ -121,3 +121,17 @@ export function flagRuns(text: string, lang: 'en' | 'es'): FlagRun[] {
   if (at < text.length) out.push({ text: text.slice(at), flagged: false });
   return out;
 }
+
+/**
+ * Which judgment words are flagged in which sentence, as one string. The director's "I've reviewed the flagged words"
+ * tick holds for this exact set: editing, adding or removing a flagged word (or the sentence holding it) asks again.
+ */
+export function flagSignature(sentences: readonly { text: string }[], lang: 'en' | 'es'): string {
+  return sentences
+    .map((s, i) => {
+      const words = flagRuns(s.text, lang).filter((r) => r.flagged).map((r) => r.text.toLowerCase());
+      return words.length ? `${i}:${words.join(',')}` : '';
+    })
+    .filter(Boolean)
+    .join('|');
+}

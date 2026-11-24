@@ -12,7 +12,7 @@ import { insertAssignments } from '@/db/repo/assignments';
 import { listAiCalls } from '@/db/repo/aiCalls';
 import { listAccess } from '@/db/repo/access';
 import { getCardForChild } from '@/db/repo/cards';
-import { updateLesson } from '@/db/repo/lessons';
+import { getLessonInChurch, updateLesson } from '@/db/repo/lessons';
 import { listLessons } from '@/db/repo/lessons';
 import { listPeople } from '@/db/repo/people';
 import { listServices } from '@/db/repo/services';
@@ -227,7 +227,19 @@ describe('GET /api/pack', () => {
     expect(out.lang).toBe('es');
     expect(out.socialStory[0]).toBe('Primero, entramos a la iglesia.');
     expect(out.steps.find((s: { key: string }) => s.key === 'worship').chips[0].label).toBe('Ofrece audífonos');
+    expect(out.steps.map((s: { label: string }) => s.label)).toEqual(['Llegada', 'Alabanza', 'Historia bíblica', 'Merienda', 'Manualidad', 'Hora de irse']);
+    const en = await (await pack(w, 'Leo')).json();
+    expect(en.steps.map((s: { label: string }) => s.label)).toEqual(['Arrive', 'Worship', 'Bible story', 'Snack', 'Craft', 'Pickup']);
     expect((await (await pack(w, 'Leo', '&lang=fr')).json()).lang).toBe('en');
+  });
+  it('a lesson stored without Spanish labels shows the English ones on a Spanish page', async () => {
+    const w = await world();
+    h.viewer = w.as('Hannah', 'director');
+    const lesson = (await getLessonInChurch(w.churchId, w.service.lessonId!))!;
+    await updateLesson(lesson.id, { steps: (lesson.steps as { labelEs?: string }[]).map(({ labelEs: _es, ...x }) => (void _es, x)) });
+    const out = await (await pack(w, 'Leo', '&lang=es')).json();
+    expect(out.steps.map((s: { label: string }) => s.label)).toEqual(['Arrive', 'Worship', 'Bible story', 'Snack', 'Craft', 'Pickup']);
+    expect(out.socialStory[0]).toBe('Primero, entramos a la iglesia.');
   });
   it('a buddy needs the gate: 403 until the child is checked in, then 200, then 403 after check-out', async () => {
     const w = await world();

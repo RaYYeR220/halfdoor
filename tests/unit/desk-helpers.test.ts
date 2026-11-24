@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  filterCounts, filterOf, flagRuns, formatUsd, ledgerTotals, reasonChip, sortChildren, toLedgerAttestation,
+  filterCounts, filterOf, flagRuns, flagSignature, formatUsd, ledgerTotals, reasonChip, sortChildren, toLedgerAttestation,
 } from '@/lib/desk/helpers';
 import { upcomingServices } from '@/lib/desk/server';
 import type { Service } from '@/db/repo/services';
@@ -91,6 +91,20 @@ describe('flagRuns', () => {
     // Whole words only: "badge" is not "bad".
     expect(flagRuns('She got a badge.', 'en').some((r) => r.flagged)).toBe(false);
     expect(flagRuns('Tuvo un berrinche corto.', 'es').filter((r) => r.flagged).map((r) => r.text)).toEqual(['berrinche']);
+  });
+});
+
+describe('flagSignature', () => {
+  it('changes whenever the flagged words change, and only then', () => {
+    const base = [{ text: 'Worship was loud and he had a meltdown.' }, { text: 'Craft went well.' }];
+    const sig = flagSignature(base, 'en');
+    expect(sig).toBe('0:meltdown');
+    expect(flagSignature([{ text: 'Worship was very loud and he had a Meltdown!' }, { text: 'Craft went really well.' }], 'en')).toBe(sig); // same words
+    expect(flagSignature([{ text: 'Worship was loud and he had a meltdown and a tantrum.' }, base[1]], 'en')).not.toBe(sig); // one added
+    expect(flagSignature([{ text: 'Worship was loud; headphones helped.' }, base[1]], 'en')).toBe(''); // edited away
+    expect(flagSignature([base[1], base[0]], 'en')).not.toBe(sig); // moved to another sentence
+    expect(flagSignature([base[1]], 'en')).toBe(''); // its sentence removed
+    expect(flagSignature([{ text: 'Tuvo un berrinche.' }], 'es')).toBe('0:berrinche');
   });
 });
 

@@ -6,7 +6,7 @@ import { useEffect, useEffectEvent, useId, useRef, useState } from 'react';
 import type { AttestationSummary } from '@/lib/crypto/attestation';
 import { ENCLAVE_COPY } from '@/lib/crypto/attestation';
 import { cx } from '@/lib/cx';
-import { flagRuns } from '@/lib/desk/helpers';
+import { flagRuns, flagSignature } from '@/lib/desk/helpers';
 import type { DeskClock, DeskService, NoteChild } from '@/lib/desk/types';
 import type { MessageKey } from '@/lib/i18n';
 import { useT } from '@/lib/i18n/client';
@@ -66,7 +66,8 @@ export function NoteComposer({ service, child, clock, onSaved }: Props) {
   const [saved, setSaved] = useState<Saved | null>(child.note);
   const [draft, setDraft] = useState<Draft>({ kind: 'idle' });
   const [editing, setEditing] = useState<number | null>(null);
-  const [reviewedFlags, setReviewedFlags] = useState(false);
+  /** The flagged-word set the director ticked as reviewed; any change to that set clears the tick. */
+  const [reviewedFor, setReviewedFor] = useState<string | null>(null);
   const [saving, setSaving] = useState<'draft' | 'approve' | null>(null);
   const [saveError, setSaveError] = useState<MessageKey | null>(null);
   const [lit, setLit] = useState<string | null>(null);
@@ -106,7 +107,9 @@ export function NoteComposer({ service, child, clock, onSaved }: Props) {
   const moments = context && context !== 'error' ? context.moments : [];
   const lang = context && context !== 'error' ? context.lang : 'en';
   const byId = new Map(moments.map((m) => [m.id, m]));
-  const flagged = (sentences ?? []).some((s) => flagRuns(s.text, lang).some((r) => r.flagged));
+  const flagSig = flagSignature(sentences ?? [], lang);
+  const flagged = flagSig !== '';
+  const reviewedFlags = flagged && reviewedFor === flagSig;
   const approved = saved?.status === 'approved';
   /** An approved note reads as sent: no edit controls until the director chooses to change it. */
   const [unlocked, setUnlocked] = useState(false);
@@ -139,7 +142,7 @@ export function NoteComposer({ service, child, clock, onSaved }: Props) {
       if (ctrl.signal.aborted) return;
       setSentences(note.sentences.map((s) => ({ text: s.text, evidence: s.evidence })));
       setDraft({ kind: 'ready', attestation, dropped: note.dropped.length });
-      setReviewedFlags(false);
+      setReviewedFor(null);
       setEditing(null);
       setAnnounce(t('desk.note.drafted'));
     } catch (e) {
@@ -275,7 +278,7 @@ export function NoteComposer({ service, child, clock, onSaved }: Props) {
                 <input
                   type="checkbox"
                   checked={reviewedFlags}
-                  onChange={(e) => setReviewedFlags(e.target.checked)}
+                  onChange={(e) => setReviewedFor(e.target.checked ? flagSig : null)}
                   className="mt-[3px] size-[18px] shrink-0 accent-[var(--accent-hover)]"
                 />
                 <span className="text-15 text-accent-ink text-pretty">

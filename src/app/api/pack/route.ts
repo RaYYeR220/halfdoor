@@ -55,7 +55,7 @@ export async function GET(req: Request) {
   const chips = adaptationsFor(tags, steps);
   return NextResponse.json({
     steps: steps.map((s) => ({
-      key: s.key, label: s.label, segment: s.segment, minutes: s.minutes, pictogramUrl: pictogramUrl(SEGMENT_PICTOGRAM[s.segment]),
+      key: s.key, label: lang === 'es' ? (s.labelEs ?? s.label) : s.label, segment: s.segment, minutes: s.minutes, pictogramUrl: pictogramUrl(SEGMENT_PICTOGRAM[s.segment]),
       chips: chips.filter((c) => c.stepKey === s.key).map((c) => ({ chip: c.chip, label: c.label[lang], pictogramUrl: pictogramUrl(CHIP_PICTOGRAM[c.chip]) })),
     })),
     socialStory: socialStory(steps, chips, lang),

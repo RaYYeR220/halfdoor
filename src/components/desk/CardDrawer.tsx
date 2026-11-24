@@ -56,7 +56,10 @@ export function CardDrawer({ child, clock, onClose, onChanged }: Props) {
       .then(async (res) => {
         if (res.status === 404) return setLoad({ kind: 'none' });
         const body = (await res.json().catch(() => null)) as { locked?: boolean; card?: CardView } | null;
-        setLoad(res.ok && body?.card ? { kind: 'card', card: body.card } : { kind: 'error' });
+        if (res.ok && body?.card) {
+          setLoad({ kind: 'card', card: body.card });
+          setAnnounce(t('desk.drawer.loaded', { name: child.firstName }));
+        } else setLoad({ kind: 'error' });
       })
       .catch((e) => {
         if ((e as { name?: string })?.name !== 'AbortError') setLoad({ kind: 'error' });

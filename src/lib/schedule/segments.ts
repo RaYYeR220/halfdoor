@@ -6,7 +6,15 @@ export const SENSORY_LOADS = ['low', 'med', 'high'] as const;
 export type SensoryLoad = (typeof SENSORY_LOADS)[number];
 
 /** A step of a lesson as stored and shown: explicit segment and sensory load. */
-export type Step = { key: string; label: string; segment: Segment; sensoryLoad: SensoryLoad; minutes: number };
+export type Step = {
+  key: string;
+  label: string;
+  /** Spanish label for pages in Spanish; absent on older lessons (the English label is shown). */
+  labelEs?: string;
+  segment: Segment;
+  sensoryLoad: SensoryLoad;
+  minutes: number;
+};
 
 /**
  * Curated ARASAAC pictogram per segment, pinned (id: ARASAAC keyword). Each was checked to return a 200 PNG.

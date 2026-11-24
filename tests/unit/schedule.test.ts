@@ -65,6 +65,27 @@ describe('step labels (the only model prose in the pack)', () => {
   });
 });
 
+describe('Spanish step labels (labelEs)', () => {
+  const withEs = (labelEs: string | undefined) => draft({ steps: steps.map((x, i) => (i === 0 ? { ...x, labelEs } : { ...x })) });
+  it('the fixture lesson carries plain Spanish labels for every step', () => {
+    expect(steps.map((s) => s.labelEs)).toEqual(['Llegada', 'Alabanza', 'Historia bíblica', 'Merienda', 'Manualidad', 'Hora de irse']);
+    for (const s of steps) expect(labelOk(s.labelEs!)).toBe(true);
+  });
+  it('are held to the same rules as the English labels, and stored normalized', () => {
+    const ok = verifyLesson(SOURCE, withEs('  Llegada  '));
+    expect(ok.ok && ok.lesson.steps[0].labelEs).toBe('Llegada');
+    for (const bad of ['visita www.evil.com', 'uno dos tres cuatro cinco seis siete', 'ｈｔｔｐｓ：//x', '   ']) {
+      expect(verifyLesson(SOURCE, withEs(bad))).toMatchObject({ ok: false, errors: expect.arrayContaining(['bad_label']) });
+    }
+  });
+  it('are optional: a draft without them verifies and keeps English only', () => {
+    const plain = draft({ steps: steps.map(({ labelEs: _es, ...x }) => (void _es, { ...x })) });
+    const r = verifyLesson(SOURCE, plain);
+    expect(r.ok).toBe(true);
+    expect(r.ok && r.lesson.steps.every((x) => !('labelEs' in x))).toBe(true);
+  });
+});
+
 describe('adaptationsFor', () => {
   it('noise_sensitive gives headphones on the worship step only', () => {
     const a = adaptationsFor(['noise_sensitive'], steps);

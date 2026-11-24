@@ -95,6 +95,19 @@ describe('POST /api/assignments/solve', () => {
       'Priya is serving on the worship team at 11:00',
     ]);
     expect(r.notExpected.map((x) => x.name)).toEqual(['Ana', 'Leo']);
+    expect(r.waitingForReview).toEqual([]); // Malik's card waits for review, but he comes at 9:00, not 11:00
+  });
+
+  it('a card waiting for review shows where the child is expected: a family with no history everywhere, others by hand', async () => {
+    const w = await world();
+    const [kid] = await insertPeople([{ churchId: w.churchId, role: 'child', firstName: 'Noor', gender: 'f' }]);
+    await insertCard({ churchId: w.churchId, childId: kid.id, status: 'parent_approved', lang: 'en', supportLevel: 'parts', itemsEnc: 'x', tags: [] });
+    const nine = (await (await solve(w)).json()) as Full;
+    const eleven = (await (await solve(w, w.eleven)).json()) as Full;
+    expect(nine.waitingForReview.map((x) => x.name).sort()).toEqual(['Malik', 'Noor']);
+    expect(eleven.waitingForReview.map((x) => x.name)).toEqual(['Noor']);
+    const added = (await (await solve(w, w.eleven, { includeChildIds: [w.p('Malik').id] })).json()) as Full;
+    expect(added.waitingForReview.map((x) => x.name).sort()).toEqual(['Malik', 'Noor']);
   });
 
   it('includeChildIds adds a child who is not expected, and rejects junk', async () => {

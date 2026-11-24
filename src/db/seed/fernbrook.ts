@@ -182,12 +182,12 @@ export const LESSON = {
   verseText:
     ['For unto us a child is born,', 'unto us a son is given,', 'and the government will be upon His shoulders.', 'And He will be called', 'Wonderful Counselor, Mighty God,', 'Everlasting Father, Prince of Peace.'].join(String.fromCharCode(10)),
   steps: [
-    { key: 'arrive', label: 'Arrive', segment: 'arrive', sensoryLoad: 'low', minutes: 5 },
-    { key: 'worship', label: 'Worship', segment: 'worship', sensoryLoad: 'high', minutes: 15 },
-    { key: 'story', label: 'Bible story', segment: 'story', sensoryLoad: 'med', minutes: 15 },
-    { key: 'snack', label: 'Snack', segment: 'snack', sensoryLoad: 'med', minutes: 10 },
-    { key: 'craft', label: 'Craft', segment: 'craft', sensoryLoad: 'low', minutes: 15 },
-    { key: 'pickup', label: 'Pickup', segment: 'pickup', sensoryLoad: 'med', minutes: 5 },
+    { key: 'arrive', label: 'Arrive', labelEs: 'Llegada', segment: 'arrive', sensoryLoad: 'low', minutes: 5 },
+    { key: 'worship', label: 'Worship', labelEs: 'Alabanza', segment: 'worship', sensoryLoad: 'high', minutes: 15 },
+    { key: 'story', label: 'Bible story', labelEs: 'Historia bíblica', segment: 'story', sensoryLoad: 'med', minutes: 15 },
+    { key: 'snack', label: 'Snack', labelEs: 'Merienda', segment: 'snack', sensoryLoad: 'med', minutes: 10 },
+    { key: 'craft', label: 'Craft', labelEs: 'Manualidad', segment: 'craft', sensoryLoad: 'low', minutes: 15 },
+    { key: 'pickup', label: 'Pickup', labelEs: 'Hora de irse', segment: 'pickup', sensoryLoad: 'med', minutes: 5 },
   ],
 };
 

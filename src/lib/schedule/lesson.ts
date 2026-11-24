@@ -15,6 +15,8 @@ export const LessonDraft = z.object({
   steps: z.array(z.object({
     key: z.string().min(1).max(40),
     label: z.string().min(1).max(40),
+    /** The same label in Spanish for Spanish-speaking homes' pages. Optional: older drafts have none (English is shown). */
+    labelEs: z.string().min(1).max(40).optional(),
     segment: z.enum(SEGMENTS),
     sensoryLoad: z.enum(SENSORY_LOADS),
     minutes: z.number().int().min(1).max(60),
@@ -36,10 +38,11 @@ export const LESSON_JSON_SCHEMA = {
       items: {
         type: 'object',
         additionalProperties: false,
-        required: ['key', 'label', 'segment', 'sensoryLoad', 'minutes'],
+        required: ['key', 'label', 'labelEs', 'segment', 'sensoryLoad', 'minutes'],
         properties: {
           key: { type: 'string' },
           label: { type: 'string' },
+          labelEs: { type: 'string' },
           segment: { type: 'string', enum: [...SEGMENTS] },
           sensoryLoad: { type: 'string', enum: [...SENSORY_LOADS] },
           minutes: { type: 'integer' },
@@ -55,7 +58,7 @@ export const LESSON_SYSTEM_PROMPT = [
   'You restructure a children\'s ministry lesson plan into a visual schedule. You never write teaching, doctrine, stories or advice.',
   'Return JSON only, matching the schema.',
   '- title: the lesson\'s own title, or a short plain one drawn from its text.',
-  '- steps: the lesson\'s activities in order, between 3 and 12. Each step has: key (lowercase letters and underscores, unique), label (at most 6 words, plain), segment (exactly one of: ' + SEGMENTS.join(', ') + '), sensoryLoad (low, med or high: how loud, crowded or stimulating it is for a child), minutes (whole number 1 to 60, from the lesson or a sensible estimate).',
+  '- steps: the lesson\'s activities in order, between 3 and 12. Each step has: key (lowercase letters and underscores, unique), label (at most 6 words, plain), labelEs (the same label in plain, natural Spanish, at most 6 words), segment (exactly one of: ' + SEGMENTS.join(', ') + '), sensoryLoad (low, med or high: how loud, crowded or stimulating it is for a child), minutes (whole number 1 to 60, from the lesson or a sensible estimate).',
   '- bigIdeaQuote: copy the lesson\'s big-idea sentence EXACTLY, character for character, from the lesson text. Do not reword it.',
   '- verseRef: the key Bible reference named in the lesson (for example "Isaiah 9:6"), or null when none is named. Never quote verse text.',
 ].join('\n');
@@ -156,7 +159,8 @@ export function verifyLesson(source: string, d: LessonDraft): { ok: true; lesson
   const span = locateQuote(source, d.bigIdeaQuote);
   if (!span) errors.push('big_idea_not_in_lesson');
   if (new Set(d.steps.map((s) => s.key)).size !== d.steps.length) errors.push('duplicate_step_key');
-  if (d.steps.some((x) => !labelOk(x.label))) errors.push('bad_label');
+  // Both languages reach a child's page, so both are held to the same rules.
+  if (d.steps.some((x) => !labelOk(x.label) || (x.labelEs !== undefined && !labelOk(x.labelEs)))) errors.push('bad_label');
   const totalMinutes = d.steps.reduce((n, s) => n + s.minutes, 0);
   if (totalMinutes > MAX_LESSON_MINUTES) errors.push('total_minutes_over_120');
   if (errors.length > 0 || !span) return { ok: false, errors };
@@ -164,7 +168,7 @@ export function verifyLesson(source: string, d: LessonDraft): { ok: true; lesson
     ok: true,
     lesson: {
       title: d.title.trim(),
-      steps: d.steps.map((s) => ({ ...s, label: normalizeLabel(s.label) })),
+      steps: d.steps.map(({ labelEs, ...s }) => ({ ...s, label: normalizeLabel(s.label), ...(labelEs !== undefined ? { labelEs: normalizeLabel(labelEs) } : {}) })),
       // The church's own words, as they stand in the source (not the model's copy).
       bigIdeaQuote: source.slice(span.start, span.end),
       bigIdeaSpan: span,

@@ -345,6 +345,7 @@ export const en = {
   'desk.drawer.approvedBy': 'Approved by {who} · {date}',
   'desk.drawer.version': 'Version {n}',
   'desk.drawer.loading': 'Opening the card…',
+  'desk.drawer.loaded': "{name}'s card is open.",
   'desk.drawer.error': 'The card didn\'t open. Close this and try again.',
   'desk.drawer.noneTitle': 'No card for {name} yet',
   'desk.drawer.noneBody': 'Nothing from {parent} yet. {name}\'s card shows up here once it\'s approved.',
