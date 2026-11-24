@@ -620,6 +620,7 @@ export const en = {
   'live.offline': 'Not checking',
 
   'buddy.title': 'Your kids this Sunday',
+  'buddy.openStation': 'Open the check-in station in a new tab',
   'buddy.services': 'Your services today',
   'buddy.kids': 'Your kids',
   'buddy.empty.title': 'No kids matched with you yet',

@@ -42,7 +42,7 @@ At the **Simulated check-in station**, click **Check in** next to Sam.
 - **Schedule:** Now / Next pictograms to show Sam.
 - **Moments:** pick a part of the morning and tap **Good moment**.
 
-*Want to watch it unlock?* Open step 5 before step 4: the phone shows **"Locked until Sam is checked in"**. Open a second tab at the same address, replace `buddy/…` (up to the `?`) with `station`, and press **Check in** there. Anyone in the demo church can play the front desk. The first tab unlocks on its own within about 8 seconds, one check-in poll (6.5 s in our end-to-end test).
+*Want to watch it unlock?* Open step 5 before step 4: the phone shows **"Locked until Sam is checked in"**. Click **Open the check-in station in a new tab** under the heading, and press **Check in** next to Sam there. Anyone in the demo church can play the front desk. Back on the first tab, the card unlocks on its own within about 8 seconds, one check-in poll (6.5 s in our end-to-end test).
 
 **6. Check Sam out** (Go).
 Click **Check out**, then click step 5 again.

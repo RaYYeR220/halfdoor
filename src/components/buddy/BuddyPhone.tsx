@@ -73,9 +73,17 @@ const RECHECK_EVERY = 4;
 const MAX_TIMER_MS = 2_147_000_000;
 
 type Me = { id: string; firstName: string };
-type Props = { me: Me; services: BuddyService[]; clock: DeskClock; initialService: string | null; initialChild: string | null };
+type Props = {
+  me: Me;
+  services: BuddyService[];
+  clock: DeskClock;
+  initialService: string | null;
+  initialChild: string | null;
+  /** Demo churches only: the simulated station, so one person can check a child in and watch the card unlock. */
+  stationHref?: string | null;
+};
 
-export function BuddyPhone({ me, services, clock, initialService, initialChild }: Props) {
+export function BuddyPhone({ me, services, clock, initialService, initialChild, stationHref }: Props) {
   const t = useT();
   const [serviceId, setServiceId] = useState(initialService ?? services[0]?.id ?? null);
   const [switched, setSwitched] = useState(false);
@@ -84,6 +92,7 @@ export function BuddyPhone({ me, services, clock, initialService, initialChild }
   return (
     <div className="mx-auto w-full max-w-[640px]">
       <h1 className="text-32 font-medium text-balance text-ink">{t('buddy.title')}</h1>
+      {stationHref && <StationLink href={stationHref} />}
       {switched ? (
         <SwitchedBack me={me} onBack={() => setSwitched(false)} />
       ) : services.length === 0 || !service ? (
@@ -116,6 +125,24 @@ export function BuddyPhone({ me, services, clock, initialService, initialChild }
         </>
       )}
     </div>
+  );
+}
+
+/** A quiet link to the demo's check-in station, in a new tab: check a child in there and this phone unlocks live. */
+export function StationLink({ href }: { href: string }) {
+  const t = useT();
+  return (
+    <p className="mt-1.5 text-15">
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener"
+        className="inline-flex min-h-11 items-center gap-1.5 text-ink-muted underline decoration-hairline-strong underline-offset-4 transition-colors duration-200 ease-out hover:text-ink"
+      >
+        {t('buddy.openStation')}
+        <Icon name="arrowRight" size={14} />
+      </a>
+    </p>
   );
 }
 

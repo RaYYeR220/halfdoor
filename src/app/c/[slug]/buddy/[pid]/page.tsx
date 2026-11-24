@@ -41,6 +41,7 @@ async function Content({
       clock={clock}
       initialService={pickService(services, now, one(sp.service))?.id ?? null}
       initialChild={one(sp.child)}
+      stationHref={church.mode === 'sandbox' ? `/c/${slug}/station` : null}
     />
   );
 }

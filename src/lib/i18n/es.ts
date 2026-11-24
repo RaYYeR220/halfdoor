@@ -621,6 +621,7 @@ export const es: Record<MessageKey, string> = {
   'live.offline': 'Sin revisar',
 
   'buddy.title': 'Sus niños este domingo',
+  'buddy.openStation': 'Abrir la estación de registro en una pestaña nueva',
   'buddy.services': 'Sus servicios de hoy',
   'buddy.kids': 'Sus niños',
   'buddy.empty.title': 'Todavía no tiene niños asignados',

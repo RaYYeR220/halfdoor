@@ -1,6 +1,7 @@
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
+import { StationLink } from '@/components/buddy/BuddyPhone';
 import { UnlockedCard } from '@/components/buddy/UnlockedCard';
 import type { CardView } from '@/lib/card/view';
 import { translator } from '@/lib/i18n';
@@ -29,5 +30,15 @@ describe('buddy card while it is being updated', () => {
   });
   test('an acknowledged card shows no such note', () => {
     expect(text(card('acknowledged'))).not.toContain('Full card is being updated');
+  });
+});
+
+describe('buddy page in a demo church', () => {
+  test('a quiet link opens the check-in station in a new tab', () => {
+    const html = renderToStaticMarkup(createElement(StationLink, { href: '/c/fernbrook-x/station' }));
+    expect(html).toContain('href="/c/fernbrook-x/station"');
+    expect(html).toContain('target="_blank"');
+    expect(html).toContain('rel="noopener"');
+    expect(html).toContain('Open the check-in station in a new tab');
   });
 });
