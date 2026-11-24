@@ -7,11 +7,10 @@ import type { Church } from '@/db/repo/churches';
 import { listNotesForChild } from '@/db/repo/notes';
 import { listPeople, type Person } from '@/db/repo/people';
 import { listServices, type Service } from '@/db/repo/services';
-import { readAccessLog } from '@/lib/access/log';
+import { loggedToday, readAccessLog } from '@/lib/access/log';
 import { buildCardView } from '@/lib/card/view';
 import { demoClockShift } from '@/lib/demo/clock';
 import { openJson } from '@/lib/crypto/atrest';
-import { startOfZonedDay } from '@/lib/time/zoned';
 import type { AccessRow, ChildPageData, MatchInfo, NoteView } from './types';
 
 const REASONS = new Set<AccessRow['reason']>(['checked_in', 'director', 'parent', 'room_safety', 'deleted']);
@@ -60,8 +59,7 @@ export function pickMatch(
 
 /** Whether this viewer's opening of the card is already logged today (church time zone). */
 export function viewedToday(entries: readonly Pick<AccessEntry, 'viewerId' | 'reason' | 'openedAt'>[], viewerId: string, now: Date, tz: string): boolean {
-  const since = startOfZonedDay(now, tz).getTime();
-  return entries.some((e) => e.viewerId === viewerId && e.reason === 'parent' && e.openedAt.getTime() >= since);
+  return loggedToday(entries, viewerId, 'parent', now, tz);
 }
 
 /**

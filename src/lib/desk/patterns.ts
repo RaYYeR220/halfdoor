@@ -8,6 +8,8 @@ import { listMomentsForChild, type Moment } from '@/db/repo/moments';
 import { listPeople } from '@/db/repo/people';
 import { listServices, type Service } from '@/db/repo/services';
 import type { CardItem } from '@/lib/card/schema';
+import { directorMayRead } from '@/lib/access/gate';
+import { logDirectorRead } from '@/lib/access/log';
 import { openJson } from '@/lib/crypto/atrest';
 import { stepsFor, type LessonStep } from '@/lib/note/server';
 import { patterns, segmentOfStep, type Pattern } from '@/lib/patterns';
@@ -38,14 +40,17 @@ export async function patternInputs(churchId: string, childId: string, now: numb
 /**
  * For each child with at least one pattern: the pattern, and every service where the child had that segment
  * with what was logged in it (good moments included, and what helped, from the card). Children in name order.
+ * Reading a card's lines here is a director read of that card: logged once per director, child and day.
  */
-export async function loadPatternsBoard(church: Church, now: Date): Promise<ChildPatterns[]> {
+export async function loadPatternsBoard(church: Church, now: Date, directorId: string): Promise<ChildPatterns[]> {
   const children = (await listPeople(church.id)).filter((p) => p.role === 'child').sort((a, b) => a.firstName.localeCompare(b.firstName));
   const out: ChildPatterns[] = [];
   for (const child of children) {
     const input = await patternInputs(church.id, child.id, now.getTime());
     if (input.patterns.length === 0) continue;
-    const card = await getCardForChild(church.id, child.id);
+    const found = await getCardForChild(church.id, child.id);
+    const card = found && directorMayRead(found.status) ? found : undefined; // a draft stays with the parent
+    if (card) await logDirectorRead(church, directorId, card, now);
     const items = new Map((card ? openJson<CardItem[]>(church.wrappedDek, card.itemsEnc) : []).map((i) => [i.id, i.text]));
     const views: PatternView[] = input.patterns.map((p) => {
       const services = input.services

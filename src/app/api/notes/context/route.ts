@@ -6,13 +6,18 @@ import { listPeople } from '@/db/repo/people';
 import { listMoments } from '@/db/repo/moments';
 import { getServiceInChurch } from '@/db/repo/services';
 import { UUID, childInChurch, fail, requireViewer } from '@/lib/access/api';
+import { directorMayRead } from '@/lib/access/gate';
+import { logDirectorRead } from '@/lib/access/log';
 import { redactName } from '@/lib/card/prompts';
 import type { CardItem } from '@/lib/card/schema';
 import { openJson } from '@/lib/crypto/atrest';
 import type { MomentView } from '@/lib/note/schema';
 import { stepsFor } from '@/lib/note/server';
 
-/** The director's browser drafts the note itself (enclave), so it needs the moments, decrypted. Nothing else of the card. */
+/**
+ * The director's browser drafts the note itself (enclave), so it needs the moments, decrypted, and the card lines that
+ * helped. Nothing else of the card. Decrypting those lines is a director read of the card, logged once per day.
+ */
 export async function GET(req: Request) {
   const viewer = await requireViewer(['director']);
   if (viewer instanceof NextResponse) return viewer;
@@ -25,7 +30,9 @@ export async function GET(req: Request) {
   const church = await getChurch(viewer.churchId);
   if (!child || !service || !church) return fail('not_found', 404);
 
-  const card = await getCardForChild(viewer.churchId, childId);
+  const found = await getCardForChild(viewer.churchId, childId);
+  const card = found && directorMayRead(found.status) ? found : undefined; // a draft stays with the parent
+  if (card) await logDirectorRead(church, viewer.personId, card, new Date());
   const items = new Map((card ? openJson<CardItem[]>(church.wrappedDek, card.itemsEnc) : []).map((i) => [i.id, i.text]));
   const steps = new Map(stepsFor(await listLessons(viewer.churchId), service).map((s) => [s.key, s.label]));
   // A buddy's free text may name other children; they never reach the model.
@@ -41,5 +48,5 @@ export async function GET(req: Request) {
       ...(m.noteEnc ? { note: scrub(openJson<string>(church.wrappedDek, m.noteEnc)) } : {}),
       at: m.at.toISOString(),
     }));
-  return NextResponse.json({ childFirstName: child.firstName, lang: card?.lang === 'es' ? 'es' : 'en', moments });
+  return NextResponse.json({ childFirstName: child.firstName, lang: found?.lang === 'es' ? 'es' : 'en', moments });
 }

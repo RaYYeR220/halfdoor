@@ -17,7 +17,16 @@ export type GateInput = {
 
 export type GateResult =
   | { allowed: true; reason: 'checked_in' | 'director' | 'parent' | 'room_safety'; scope: Scope }
-  | { allowed: false; reason: 'not_acknowledged' | 'not_assigned' | 'not_checked_in' | 'checked_out' | 'outside_window' | 'other_service' | 'wrong_church' | 'role' };
+  | { allowed: false; reason: 'not_acknowledged' | 'draft' | 'not_assigned' | 'not_checked_in' | 'checked_out' | 'outside_window' | 'other_service' | 'wrong_church' | 'role' };
+
+/**
+ * A card being updated: the parent re-approved an edit (waiting for the director again) or the director sent it back.
+ * Mid-service the team keeps its safety lines; the full card waits for the director's acknowledgement.
+ */
+export const isUpdating = (status: CardStatus) => status === 'parent_approved' || status === 'returned';
+
+/** The director reads every card the parent has approved at least once; a draft stays with the parent. */
+export const directorMayRead = (status: CardStatus) => status !== 'draft';
 
 /** One definition of "this buddy is on this child at this service": match, same service, not merely proposed. */
 export function isActiveAssignmentFor(
@@ -54,20 +63,22 @@ export function canReadCard(i: GateInput): GateResult {
     case 'parent':
       return i.parentIds.includes(viewer.personId) ? { allowed: true, reason: 'parent', scope } : { allowed: false, reason: 'role' };
     case 'director':
-      return { allowed: true, reason: 'director', scope };
+      return directorMayRead(card.status) ? { allowed: true, reason: 'director', scope } : { allowed: false, reason: 'draft' };
     case 'buddy': {
       const a = i.assignment;
       if (!i.service || !isActiveAssignmentFor(a, viewer.personId, i.service.id)) {
         return { allowed: false, reason: 'not_assigned' };
       }
       // Only after assignment: an unassigned buddy must not learn whether a card is acknowledged.
-      if (card.status !== 'acknowledged') return { allowed: false, reason: 'not_acknowledged' };
+      if (card.status !== 'acknowledged' && !isUpdating(card.status)) return { allowed: false, reason: 'not_acknowledged' };
       const problem = checkinProblem(i);
-      return problem ? { allowed: false, reason: problem } : { allowed: true, reason: 'checked_in', scope };
+      if (problem) return { allowed: false, reason: problem };
+      // A card being updated keeps its safety lines on the phone; the rest waits for the director.
+      return { allowed: true, reason: 'checked_in', scope: isUpdating(card.status) ? 'safety' : scope };
     }
     case 'leader': {
-      // The room leader sees the safety items of any parent-approved card in the room, never the rest.
-      if (card.status !== 'acknowledged' && card.status !== 'parent_approved') return { allowed: false, reason: 'not_acknowledged' };
+      // The room leader sees the safety items of any card the parent approved (also while it is being updated), never the rest.
+      if (card.status !== 'acknowledged' && !isUpdating(card.status)) return { allowed: false, reason: 'not_acknowledged' };
       const problem = checkinProblem(i);
       return problem ? { allowed: false, reason: problem } : { allowed: true, reason: 'room_safety', scope: 'safety' };
     }

@@ -11,7 +11,7 @@ import { LESSON } from '@/db/seed/fernbrook';
 import { insertAssignments } from '@/db/repo/assignments';
 import { listAiCalls } from '@/db/repo/aiCalls';
 import { listAccess } from '@/db/repo/access';
-import { getCardForChild } from '@/db/repo/cards';
+import { getCardForChild, updateCard } from '@/db/repo/cards';
 import { getLessonInChurch, updateLesson } from '@/db/repo/lessons';
 import { listLessons } from '@/db/repo/lessons';
 import { listPeople } from '@/db/repo/people';
@@ -254,6 +254,19 @@ describe('GET /api/pack', () => {
     await checkIn(w, 'Leo', 'out');
     h.viewer = w.as('Priya', 'buddy');
     expect((await pack(w, 'Leo')).status).toBe(403);
+  });
+  it("a card being updated: the buddy's pack keeps the steps but drops the supports until the director reads it", async () => {
+    const w = await world();
+    await insertAssignments([{ serviceId: w.service.id, childId: w.p('Leo').id, buddyId: w.p('Priya').id, status: 'approved' }]);
+    await checkIn(w, 'Leo', 'in');
+    const card = (await getCardForChild(w.churchId, w.p('Leo').id))!;
+    h.viewer = w.as('Priya', 'buddy');
+    const chips = async () => ((await (await pack(w, 'Leo')).json()).steps as { chips: unknown[] }[]).flatMap((s) => s.chips);
+    expect((await chips()).length).toBeGreaterThan(0);
+    await updateCard(card.id, { status: 'returned' });
+    const res = await pack(w, 'Leo');
+    expect(res.status).toBe(200);
+    expect(await chips()).toEqual([]);
   });
   it('parents, anonymous and other churches are refused; no linked lesson is 404', async () => {
     const w = await world();

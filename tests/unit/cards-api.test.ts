@@ -129,14 +129,28 @@ describe('GET /api/cards/:childId: the buddy gate', () => {
     expect(await (await getCard(w.p('Leo').id, `?service=${w.service.id}`)).json()).toEqual({ locked: true, reason: 'other_service' });
   });
 
-  it('a card the director has not acknowledged stays locked', async () => {
+  it('a card being updated opens with its safety lines only; a draft stays locked', async () => {
     const w = await world();
     const card = (await getCardForChild(w.churchId, w.p('Leo').id))!;
-    await updateCard(card.id, { status: 'parent_approved' });
     h.viewer = w.as('Hannah', 'director');
     await station(w, 'Leo', 'in');
+    for (const status of ['parent_approved', 'returned'] as const) {
+      await updateCard(card.id, { status });
+      h.viewer = w.as('Priya', 'buddy');
+      const body = await (await getCard(w.p('Leo').id, `?service=${w.service.id}`)).json();
+      expect(body.locked).toBe(false);
+      expect(body.card.status).toBe(status);
+      expect(body.card.items.length).toBeGreaterThan(0);
+      expect(body.card.items.every((i: { section: string }) => i.section === 'safety')).toBe(true);
+      expect(body.card.teamNotes).toBeUndefined();
+      h.viewer = w.as('Tom', 'leader');
+      expect((await (await getCard(w.p('Leo').id, `?service=${w.service.id}&scope=safety`)).json()).locked).toBe(false);
+    }
+    await updateCard(card.id, { status: 'draft' });
     h.viewer = w.as('Priya', 'buddy');
     expect(await (await getCard(w.p('Leo').id, `?service=${w.service.id}`)).json()).toEqual({ locked: true, reason: 'not_acknowledged' });
+    h.viewer = w.as('Hannah', 'director');
+    expect(await (await getCard(w.p('Leo').id)).json()).toEqual({ locked: true, reason: 'draft' });
   });
 
   it('the room leader gets safety items only, and no team notes', async () => {

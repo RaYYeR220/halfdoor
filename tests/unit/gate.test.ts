@@ -41,9 +41,18 @@ describe('canReadCard: buddy', () => {
     expect(canReadCard(base({ now: at(start, -30) })).allowed).toBe(true);
     expect(canReadCard(base({ now: at(end, 30) })).allowed).toBe(true);
   });
-  it('not acknowledged denies, whatever else is true', () => {
-    for (const status of ['draft', 'parent_approved', 'returned', 'archived'] as const) {
+  it('a draft or archived card denies, whatever else is true', () => {
+    for (const status of ['draft', 'archived'] as const) {
       expect(canReadCard(base({ card: { childId: 'kid', status } }))).toEqual({ allowed: false, reason: 'not_acknowledged' });
+    }
+  });
+  it('a card being updated (re-approved or sent back) keeps its safety lines mid-service, never the full card', () => {
+    for (const status of ['parent_approved', 'returned'] as const) {
+      expect(canReadCard(base({ card: { childId: 'kid', status } }))).toEqual({ allowed: true, reason: 'checked_in', scope: 'safety' });
+      // every other condition still holds
+      expect(canReadCard(base({ card: { childId: 'kid', status }, checkin: null }))).toEqual({ allowed: false, reason: 'not_checked_in' });
+      expect(canReadCard(base({ card: { childId: 'kid', status }, now: at(end, 31) }))).toEqual({ allowed: false, reason: 'outside_window' });
+      expect(canReadCard(base({ card: { childId: 'kid', status }, assignment: null }))).toEqual({ allowed: false, reason: 'not_assigned' });
     }
   });
   it('an unassigned buddy gets not_assigned even for an unacknowledged card (no ack leak)', () => {
@@ -71,13 +80,25 @@ describe('canReadCard: parent, director, leader', () => {
     const v = { churchId: 'c', personId: 'stranger', role: 'parent' as const, sandbox: true };
     expect(canReadCard(base({ viewer: v }))).toEqual({ allowed: false, reason: 'role' });
   });
-  it('director reads any status, full', () => {
+  it('director reads any card the parent has approved, full; never a draft', () => {
     const v = { churchId: 'c', personId: 'dir', role: 'director' as const, sandbox: true };
-    expect(canReadCard(base({ viewer: v, card: { childId: 'kid', status: 'returned' }, checkin: null }))).toEqual({ allowed: true, reason: 'director', scope: 'full' });
+    for (const status of ['parent_approved', 'acknowledged', 'returned', 'archived'] as const) {
+      expect(canReadCard(base({ viewer: v, card: { childId: 'kid', status }, checkin: null }))).toEqual({ allowed: true, reason: 'director', scope: 'full' });
+    }
+    expect(canReadCard(base({ viewer: v, card: { childId: 'kid', status: 'draft' }, checkin: null }))).toEqual({ allowed: false, reason: 'draft' });
   });
   it('leader gets safety scope only, even when full is asked', () => {
     const v = { churchId: 'c', personId: 'tom', role: 'leader' as const, sandbox: true };
     expect(canReadCard(base({ viewer: v, assignment: null }))).toEqual({ allowed: true, reason: 'room_safety', scope: 'safety' });
+  });
+  it('leader keeps the safety lines of a re-approved or sent-back card; not of a draft', () => {
+    const v = { churchId: 'c', personId: 'tom', role: 'leader' as const, sandbox: true };
+    for (const status of ['parent_approved', 'acknowledged', 'returned'] as const) {
+      expect(canReadCard(base({ viewer: v, assignment: null, card: { childId: 'kid', status } }))).toEqual({ allowed: true, reason: 'room_safety', scope: 'safety' });
+    }
+    for (const status of ['draft', 'archived'] as const) {
+      expect(canReadCard(base({ viewer: v, assignment: null, card: { childId: 'kid', status } }))).toEqual({ allowed: false, reason: 'not_acknowledged' });
+    }
   });
   it('leader needs an active check-in in the window', () => {
     const v = { churchId: 'c', personId: 'tom', role: 'leader' as const, sandbox: true };

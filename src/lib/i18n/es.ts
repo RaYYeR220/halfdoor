@@ -663,6 +663,7 @@ export const es: Record<MessageKey, string> = {
 
   'buddy.safety.title': 'Seguridad',
   'buddy.safety.exact': 'Palabras exactas de la familia',
+  'buddy.updating': 'La tarjeta completa se está actualizando. Las líneas de seguridad siguen aquí; el resto se abre de nuevo cuando el equipo de niños lea la nueva versión.',
   'buddy.loves.hint': 'Buenos temas de conversación',
   'buddy.team': 'Del equipo de niños',
   'buddy.tr.fromEs': 'Traducido del español',

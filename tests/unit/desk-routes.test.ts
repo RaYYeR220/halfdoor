@@ -10,6 +10,8 @@ import { createSandbox } from '@/db/sandbox';
 import { insertAiCall } from '@/db/repo/aiCalls';
 import { insertAssignments } from '@/db/repo/assignments';
 import { getChurch } from '@/db/repo/churches';
+import { listAccessForChild } from '@/db/repo/access';
+import { getCardForChild, updateCard } from '@/db/repo/cards';
 import { insertMoments } from '@/db/repo/moments';
 import { listPeople } from '@/db/repo/people';
 import { listServices } from '@/db/repo/services';
@@ -198,7 +200,7 @@ describe('desk loaders', () => {
   it("patterns show Leo's 4 of 5 worship times, every Sunday behind it, and what helped the good one", async () => {
     const w = await world();
     const church = (await getChurch(w.churchId))!;
-    const boards = await loadPatternsBoard(church, new Date());
+    const boards = await loadPatternsBoard(church, new Date(), w.p('Hannah').id);
     expect(boards.map((b) => b.firstName)).toEqual(['Leo']);
     const [p] = boards[0].patterns;
     expect(p).toMatchObject({ segment: 'worship', kind: 'hard', count: 4, outOf: 5 });
@@ -210,5 +212,33 @@ describe('desk loaders', () => {
     // Only this church's services, all finished.
     const own = new Set((await listServices(w.churchId)).map((s) => s.id));
     expect(p.services.every((s) => own.has(s.serviceId) && Date.parse(s.startsAt) < Date.now())).toBe(true);
+  });
+
+  it("the patterns board decrypts card lines, so it logs a director read: once per director, child and day", async () => {
+    const w = await world();
+    const church = (await getChurch(w.churchId))!;
+    const hannah = w.p('Hannah').id;
+    const t0 = new Date();
+    const reads = async () => (await listAccessForChild(w.p('Leo').id)).filter((e) => e.reason === 'director' && e.viewerId === hannah && e.openedAt >= t0);
+    await loadPatternsBoard(church, new Date(), hannah);
+    await loadPatternsBoard(church, new Date(), hannah);
+    const rows = await reads();
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({ role: 'director', serviceId: null, cardId: (await getCardForChild(w.churchId, w.p('Leo').id))!.id });
+    expect(rows[0].closedAt?.getTime()).toBe(rows[0].openedAt.getTime());
+    // Another director's read is their own row.
+    await loadPatternsBoard(church, new Date(), w.p('Maria').id);
+    expect((await listAccessForChild(w.p('Leo').id)).filter((e) => e.reason === 'director' && e.openedAt >= t0)).toHaveLength(2);
+  });
+
+  it("a draft card stays with the parent: the patterns board neither reads nor logs it", async () => {
+    const w = await world();
+    const church = (await getChurch(w.churchId))!;
+    const card = (await getCardForChild(w.churchId, w.p('Leo').id))!;
+    await updateCard(card.id, { status: 'draft' });
+    const t0 = new Date();
+    const boards = await loadPatternsBoard(church, new Date(), w.p('Hannah').id);
+    expect(boards[0].patterns[0].services.flatMap((s) => s.moments).flatMap((m) => m.helped)).toEqual([]);
+    expect((await listAccessForChild(w.p('Leo').id)).filter((e) => e.reason === 'director' && e.openedAt >= t0)).toEqual([]);
   });
 });

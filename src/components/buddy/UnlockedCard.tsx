@@ -59,6 +59,13 @@ export function UnlockedCard({ card, lang, idBase }: Props) {
         </div>
       )}
 
+      {card.status !== 'acknowledged' && (
+        <p role="status" className="flex items-start gap-2 rounded-sharp border border-hairline bg-surface-2 px-3 py-2.5 text-15 text-ink-2 text-pretty">
+          <Icon name="lock" size={14} className="mt-[3px] shrink-0 text-ink-muted" />
+          {t('buddy.updating')}
+        </p>
+      )}
+
       {safety.length > 0 && (
         <SafetyBanner
           headingId={`${idBase}-safety`}

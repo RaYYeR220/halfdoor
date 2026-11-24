@@ -8,7 +8,8 @@ import { setDbForTests, type Db } from '@/db/client';
 import * as schema from '@/db/schema';
 import { createSandbox } from '@/db/sandbox';
 import { insertAssignments } from '@/db/repo/assignments';
-import { getCardForChild } from '@/db/repo/cards';
+import { listAccessForChild } from '@/db/repo/access';
+import { getCardForChild, updateCard } from '@/db/repo/cards';
 import { getChurch } from '@/db/repo/churches';
 import { listMoments, listMomentsForChild } from '@/db/repo/moments';
 import { listPeople } from '@/db/repo/people';
@@ -128,6 +129,27 @@ describe('notes: context, save, approve, read', () => {
   const save = (w: World, sentences: unknown, approve: boolean) =>
     notesRoute.POST(post('/api/notes', { serviceId: w.service.id, childId: w.p('Leo').id, sentences, approve }));
   const read = (w: World) => notesRoute.GET(get(`/api/notes?child=${w.p('Leo').id}`));
+
+  it('context decrypts card lines, so it logs a director read once per day; a draft card is neither read nor logged', async () => {
+    const { w } = await withMoments();
+    const hannah = w.p('Hannah').id;
+    const t0 = new Date();
+    const reads = async () => (await listAccessForChild(w.p('Leo').id)).filter((e) => e.reason === 'director' && e.viewerId === hannah && e.openedAt >= t0);
+    h.viewer = w.as('Hannah', 'director');
+    expect((await ctx(w)).status).toBe(200);
+    expect((await ctx(w)).status).toBe(200);
+    expect(await reads()).toHaveLength(1);
+    const card = (await getCardForChild(w.churchId, w.p('Leo').id))!;
+    expect((await reads())[0]).toMatchObject({ cardId: card.id, role: 'director', serviceId: null });
+
+    const other = await withMoments();
+    const t1 = new Date();
+    await updateCard((await getCardForChild(other.w.churchId, other.w.p('Leo').id))!.id, { status: 'draft' });
+    h.viewer = other.w.as('Hannah', 'director');
+    const body = await (await ctx(other.w)).json();
+    expect(body.moments.flatMap((m: { helped: string[] }) => m.helped)).toEqual([]);
+    expect((await listAccessForChild(other.w.p('Leo').id)).filter((e) => e.reason === 'director' && e.openedAt >= t1)).toEqual([]);
+  });
 
   it('context is director-only and returns only helped item texts', async () => {
     const { w, a } = await withMoments();

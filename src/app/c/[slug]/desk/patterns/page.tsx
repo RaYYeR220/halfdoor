@@ -20,9 +20,9 @@ async function Patterns({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const ctx = await deskViewer(slug);
   if (!ctx) return <NotForYou />;
-  const { church } = ctx;
+  const { church, viewer } = ctx;
   const now = new Date();
-  const boards = await loadPatternsBoard(church, now);
+  const boards = await loadPatternsBoard(church, now, viewer.personId);
   const carded = new Set((await listCards(church.id)).map((c) => c.childId));
   const shown = new Set(boards.map((b) => b.childId));
   const without = (await listPeople(church.id))

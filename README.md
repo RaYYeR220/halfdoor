@@ -58,7 +58,7 @@ The app's own words ([`attestation.ts`](src/lib/crypto/attestation.ts)), shown u
 | The enclave | The story with the child's first name replaced, to draft the card. |
 | Phala PCCS | The browser's IP address. No child data. |
 
-- **Access gate, in code** ([`gate.ts`](src/lib/access/gate.ts)): a buddy opens a card only with a match the director approved for that service, a card the director acknowledged, and the child checked in and not checked out, from 30 minutes before the service to 30 minutes after. Room leaders see safety lines only.
+- **Access gate, in code** ([`gate.ts`](src/lib/access/gate.ts)): a buddy opens a card only with a match the director approved for that service, a card the director acknowledged, and the child checked in and not checked out, from 30 minutes before the service to 30 minutes after. While a card is being updated (the parent changed it, or the director sent it back) the buddy keeps only its safety lines. Room leaders see safety lines only. The director's reads are logged too, and the director never sees a draft.
 - **Access log:** every opening by the team is shown to the parent: "Priya opened Leo's card · Sun 8:52–10:14 (while Leo was checked in)".
 - **AI ledger:** every AI call with its purpose, model, protection and cost. Prompts and answers are never stored.
 - **Retention:** cards are deleted 12 months after the child's last check-in, or whenever the parent deletes them.

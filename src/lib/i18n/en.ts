@@ -662,6 +662,7 @@ export const en = {
 
   'buddy.safety.title': 'Safety',
   'buddy.safety.exact': "The parent's exact words",
+  'buddy.updating': "Full card is being updated. The safety lines stay here; the rest opens again once the kids' team has read the new version.",
   'buddy.loves.hint': 'Good to talk about',
   'buddy.team': "From the kids' team",
   'buddy.tr.fromEs': 'Translated from Spanish',
