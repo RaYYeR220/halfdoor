@@ -226,7 +226,7 @@ export function ParentPage({ data, family, base }: Props) {
       )}
 
       {view === 'drafting' && flow?.kind === 'drafting' && (
-        <DraftProgress childName={name} progress={flow.progress} onStop={stop} focusToken={focusToken} lang={lang} />
+        <DraftProgress childName={name} progress={flow.progress} onStop={stop} focusToken={focusToken} lang={lang} time={{ tz: data.tz, shiftMs: data.clockShiftMs }} />
       )}
 
       {view === 'review' && flow?.kind === 'review' && (
@@ -246,6 +246,7 @@ export function ParentPage({ data, family, base }: Props) {
           onEdit={editWords}
           focusToken={focusToken}
           lang={lang}
+          time={{ tz: data.tz, shiftMs: data.clockShiftMs }}
         />
       )}
 

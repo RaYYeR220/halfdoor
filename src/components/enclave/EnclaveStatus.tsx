@@ -14,17 +14,23 @@ import { Spinner } from '@/components/ui/Spinner';
 export type EnclaveFailure = { error: 'binding' | 'signature' | 'unavailable'; reason?: string };
 export type EnclaveStatusValue = AttestationSummary | 'pending' | EnclaveFailure;
 
-type Props = { value: EnclaveStatusValue; lang?: Lang; className?: string };
+/** The page's clock: the church's time zone and the demo church's display offset (lib/demo/clock), like every other time shown. */
+export type StatusClock = { tz: string; shiftMs: number };
+
+type Props = { value: EnclaveStatusValue; lang?: Lang; className?: string; time?: StatusClock };
 
 const isFailure = (v: EnclaveStatusValue): v is EnclaveFailure => typeof v === 'object' && 'error' in v;
 
-function clock(iso: string, lang: Lang): string {
+/** "9:04 AM": the check's time, shifted by the demo clock and shown in the church's time zone when the page has one. */
+export function checkedAtLabel(iso: string, lang: Lang, time?: StatusClock): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
-  return new Intl.DateTimeFormat(lang === 'es' ? 'es-419' : 'en-US', { hour: 'numeric', minute: '2-digit' }).format(d);
+  return new Intl.DateTimeFormat(lang === 'es' ? 'es-419' : 'en-US', { hour: 'numeric', minute: '2-digit', ...(time ? { timeZone: time.tz } : {}) }).format(
+    new Date(d.getTime() + (time?.shiftMs ?? 0)),
+  );
 }
 
-export function EnclaveStatus({ value, lang = 'en', className }: Props) {
+export function EnclaveStatus({ value, lang = 'en', className, time }: Props) {
   const copy = lang === 'es' ? ENCLAVE_COPY_ES : ENCLAVE_COPY;
 
   if (value === 'pending' || isFailure(value)) {
@@ -113,7 +119,7 @@ export function EnclaveStatus({ value, lang = 'en', className }: Props) {
         <div className="flex flex-col gap-3 pb-1 pl-5 text-15 text-ink-2 text-pretty">
           <p>{copy.bindingOk}</p>
           <p>{signatureText(s, lang)}</p>
-          <p suppressHydrationWarning>{copy.freshness(clock(s.checkedAt, lang))}</p>
+          <p suppressHydrationWarning>{copy.freshness(checkedAtLabel(s.checkedAt, lang, time))}</p>
           <p>
             {copy.measurement(q.mrtdShort).split(q.mrtdShort)[0]}
             <code className="font-mono text-13 text-ink">{q.mrtdShort}</code>

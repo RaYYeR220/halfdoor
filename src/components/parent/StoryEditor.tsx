@@ -113,7 +113,7 @@ export function StoryEditor(p: Props) {
         {p.failure && (
           <div ref={failureRef} tabIndex={-1} className="mt-6 flex flex-col gap-3 outline-none">
             {p.failure.kind === 'enclave' ? (
-              <EnclaveStatus value={p.failure.status} lang={p.lang} />
+              <EnclaveStatus value={p.failure.status} lang={p.lang} time={{ tz: p.tz, shiftMs: p.shiftMs ?? 0 }} />
             ) : (
               <Banner tone="safety" role="alert" title={t('parent.error.title')}>
                 {t(p.failure.key, { min: num(STORY_MIN), max: num(STORY_MAX) })}

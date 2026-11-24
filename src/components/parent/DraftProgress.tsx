@@ -8,7 +8,7 @@ import type { Lang } from '@/lib/i18n';
 import { useT } from '@/lib/i18n/client';
 import { plural } from '@/lib/parent/plural';
 import { isFixture } from '@/lib/venice/fixtureChat';
-import { EnclaveStatus } from '@/components/enclave/EnclaveStatus';
+import { EnclaveStatus, type StatusClock } from '@/components/enclave/EnclaveStatus';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { Spinner } from '@/components/ui/Spinner';
@@ -26,9 +26,9 @@ export type DraftProgressState = {
 
 type StepState = 'todo' | 'active' | 'done';
 
-type Props = { childName: string; progress: DraftProgressState; onStop: () => void; focusToken: number; lang: Lang };
+type Props = { childName: string; progress: DraftProgressState; onStop: () => void; focusToken: number; lang: Lang; time?: StatusClock };
 
-export function DraftProgress({ childName, progress, onStop, focusToken, lang }: Props) {
+export function DraftProgress({ childName, progress, onStop, focusToken, lang, time }: Props) {
   const t = useT();
   const headingRef = useAutoFocus<HTMLHeadingElement>(focusToken);
   const { binding, attestation: att, result } = progress;
@@ -121,7 +121,7 @@ export function DraftProgress({ childName, progress, onStop, focusToken, lang }:
         </Button>
       </div>
 
-      <EnclaveStatus value={summary ?? 'pending'} lang={lang} className="mt-8" />
+      <EnclaveStatus value={summary ?? 'pending'} lang={lang} className="mt-8" time={time} />
     </div>
   );
 }

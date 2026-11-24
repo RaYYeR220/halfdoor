@@ -329,7 +329,7 @@ export function NoteComposer({ service, child, clock, onSaved }: Props) {
             {draft.kind === 'failed' && (
               <div className="mb-4">
                 {draft.enclave ? (
-                  <EnclaveStatus value={draft.enclave} />
+                  <EnclaveStatus value={draft.enclave} time={clock} />
                 ) : (
                   <Banner tone="accent" icon="alert" role="alert" title={t('desk.note.failedTitle')}>
                     {draft.key ? t(draft.key) : null}
@@ -346,7 +346,7 @@ export function NoteComposer({ service, child, clock, onSaved }: Props) {
         )}
 
         {draft.kind === 'ready' && draft.attestation && (
-          <EnclaveStatus value={draft.attestation} className="mt-6" />
+          <EnclaveStatus value={draft.attestation} className="mt-6" time={clock} />
         )}
       </section>
     </div>

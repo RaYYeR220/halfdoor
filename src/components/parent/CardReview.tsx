@@ -9,7 +9,7 @@ import type { Lang } from '@/lib/i18n';
 import { useT } from '@/lib/i18n/client';
 import { markSources } from '@/lib/parent/highlight';
 import { plural } from '@/lib/parent/plural';
-import { EnclaveStatus } from '@/components/enclave/EnclaveStatus';
+import { EnclaveStatus, type StatusClock } from '@/components/enclave/EnclaveStatus';
 import { Banner } from '@/components/ui/Banner';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -48,6 +48,7 @@ type Props = {
   onEdit: () => void;
   focusToken: number;
   lang: Lang;
+  time?: StatusClock;
 };
 
 const wide = () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches;
@@ -55,7 +56,7 @@ const smooth = (): ScrollBehavior =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
 
 export function CardReview({
-  childName, review, onPatch, onAcceptPrompt, onDeclinePrompt, onSpanishCopy, onRetryTranslation, onApprove, onEdit, focusToken, lang,
+  childName, review, onPatch, onAcceptPrompt, onDeclinePrompt, onSpanishCopy, onRetryTranslation, onApprove, onEdit, focusToken, lang, time,
 }: Props) {
   const t = useT();
   const uid = useId();
@@ -224,7 +225,7 @@ export function CardReview({
             </div>
           </Card>
           <div className="mt-4">
-            <EnclaveStatus value={review.attestation} lang={lang} />
+            <EnclaveStatus value={review.attestation} lang={lang} time={time} />
           </div>
         </div>
       </div>
